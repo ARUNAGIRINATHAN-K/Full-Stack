@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>StyleCart</title>
+    </head>
+    <style>
+        body {
+            background-color: whitesmoke;
+        }
+        .navbar{
+            background-color: greenyellow;
+            display:flex;
+            justify-content: right;
+            padding: 5px;
+        }
+        .navbar div{
+            padding:10px 20px;
+        }
+        .navbar a{
+            float: left;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 16px;
+            font-family: sans-serif
+        }
+        .navbar a.active {
+            background-color: white;
+            color: black;
+        }
+        h1 {
+            text-align:center;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        h3 {
+            text-align: center;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        .btn {
+            background-color:greenyellow;
+            border-color: greenyellow;
+            color: black;
+            padding: 10px 20px;
+        }
+        .btnCont {
+            display-flex ;
+            justify-content: left;
+            padding: 15px;
+        }
+        .container {
+            overflow: hidden;
+        }
+        .filterdiv {
+            float:left;
+        }
+    </style>
+    <body>
+        <div class="navbar">
+            <a href="index.html"><stron>HOME</stron></a>
+            <a class = "active" href="men.html">MEN</a>
+            <a href="women.html">WOMEN</a>
+            <a href="acces.html">ACCESSORIES</a>
+            <a href="contact.html">CONTACT</a>
+        </div>
+        <br>
+        <div id="BtnCont">
+            <button class="btn active" onclick="filterSelection('show all')"> Show all</button>
+            <button class="btn" onclick="filterSelection('T-shirts')">T-shirts</button>
+            <button class="btn" onclick="filterSelection('Shirts')">shirts</button>
+            <button class="btn" onclick="filterSelection('Jeans & Trousers')">Jeans & Trousers</button>
+            <button class="btn" onclick="filterSelection('Jeans & Trousers')">Footwear</button>
+        </div>
+        <div class="container">
+            <div class="filterDiv T-shirts">BMW</div>
+            <div class="filterDiv T-shirts">BMW</div>
+            <div class="filterDiv T-shirts">BMW</div>
+            <div class="filterDiv T-shirts">BMW</div>
+            <div class="filterDiv T-shirts">BMW</div>
+            <div class="filterDiv T-shirts">BMW</div>
+            <div class="filterDiv T-shirts">BMW</div>
+            <div class="filterDiv T-shirts">BMW</div>
+
+            <div class="filterDiv colors fruits">Orange</div>
+            <div class="filterDiv T-shirts">Volvo</div>
+            <div class="filterDiv colors">Red</div>
+            <div class="filterDiv cars">Ford</div>
+            <div class="filterDiv colors">Blue</div>
+            <div class="filterDiv animals">Cat</div> 
+            <div class="filterDiv animals">Dog</div>
+            <div class="filterDiv fruits">Melon</div>
+            <div class="filterDiv fruits animals">Kiwi</div>
+            <div class="filterDiv fruits">Banana</div>
+            <div class="filterDiv fruits">Lemon</div>
+            <div class="filterDiv animals">Cow</div>
+        </div>
+    </body>
