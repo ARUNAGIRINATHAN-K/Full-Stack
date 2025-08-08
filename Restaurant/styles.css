@@ -82,7 +82,8 @@ p {
 
 /* Caption text */
 .text {
-    color: #f2f2f2;
+    font-weight: bold;
+    color: white;
     font-size: 15px;
     padding: 8px 12px;
     position: absolute;
