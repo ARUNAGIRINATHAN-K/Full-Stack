@@ -169,28 +169,27 @@ div.scroll-container img {
   height: 150px;
 }
 * {box-sizing: border-box}
-
-/* Container needed to position the overlay. Adjust the width as needed */
 .container {
   position: relative;
   width: 250px;
   height: 200px;
 }
-
-/* Make the image to responsive */
 .image {
   display: block;
   width: 250px;
   height: 200px;
-  height: auto;
 }
-
-/* The overlay effect - lays on top of the container and over the image */
+.row {
+  display: flex;
+  flex-wrap: wrap; /* Allows items to wrap to the next line */
+  justify-content: flex-start; /* Aligns items to the beginning of the row */
+  margin: -10px; /* Counteracts the margin on the containers */
+}
 .overlay {
   position: absolute;
   bottom: 0;
   background: rgb(0, 0, 0);
-  background: rgba(0, 0, 0, 0.5); /* Black see-through */
+  background: rgba(0, 0, 0, 0.5);
   color: #f1f1f1;
   width: 100%;
   transition: .5s ease;
@@ -200,8 +199,6 @@ div.scroll-container img {
   padding: 20px;
   text-align: center;
 }
-
-/* When you mouse over the container, fade in the overlay title */
 .container:hover .overlay {
   opacity: 1;
 }
