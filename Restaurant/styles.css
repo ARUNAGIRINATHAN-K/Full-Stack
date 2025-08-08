@@ -1,0 +1,22 @@
+.navbar-nav .nav-link.active {
+            color: #fff;
+            background-color: #007bff;
+            border-radius: 30px;   
+        }
+        h2 {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 38px;
+            font-family:Playfair Display, serif;
+        }
+        h4 {
+            font-family: sans-serif;
+            text-align: center;
+            font-size: 18px;
+        }
+        p {
+            font-family: Lato, sans-serif;
+            font-size: 16p;
+            text-align: center;
+            inline-size: 1.8;
+        }
