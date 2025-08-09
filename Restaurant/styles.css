@@ -171,6 +171,7 @@ div.scroll-container img {
 * {box-sizing: border-box}
 .container {
   position: relative;
+  margin: 15px;
   width: 250px;
   height: 200px;
 }
@@ -181,9 +182,9 @@ div.scroll-container img {
 }
 .row {
   display: flex;
-  flex-wrap: wrap; /* Allows items to wrap to the next line */
-  justify-content: flex-start; /* Aligns items to the beginning of the row */
-  margin: -10px; /* Counteracts the margin on the containers */
+  flex-wrap: wrap; 
+  justify-content: center; 
+  margin: -10px; 
 }
 .overlay {
   position: absolute;
