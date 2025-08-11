@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Inventory Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <ul class="nav-bar">
+        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample"
+            aria-controls="offcanvasExample"><img src="img/nav.png"></button>
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample"
+            aria-labelledby="offcanvasExampleLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasExampleLabel">MENU</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                    aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <div>Get Started</div><br>
+                <div class="btn-group-vertical">
+                    <button type="button" class="btn btn-light"><a href="index.html">Home</a></button><br>
+                    <button type="button" class="btn btn-light"><a href="MP.html">Manage Products</a></button><br>
+                    <button type="button" class="btn btn-light"><a href="MS.html">Manage Suppliers</a></button><br>
+                    <button type="button" class="btn btn-light"><a href="VO.html">View Orders</a></button><br>
+                </div>
+            </div>
+        </div>
+    </ul>
+    <h2>Product Management</h2>
+    <div class="d-flex justify-content-end mb-3">
+    <button type="button" class="btn btn-primar" data-bs-toggle="modal" data-bs-target="#exampleModal">
+       Supplier Management
+    </button>
+  </div>
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Supplier Information</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="formGroupExampleInput" class="form-label">Company Name</label>
+            <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Example input placeholder">
+          </div>
+          <div class="mb-3">
+            <label for="formGroupExampleInput2" class="form-label">Contact Person</label>
+            <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Another input placeholder">
+          </div>
+          <div class="mb-3">
+            <label for="formGroupExampleInput2" class="form-label">Phone Number</label>
+            <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Another input placeholder">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+  </div>
+  <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Company Name</th>
+      <th scope="col">Contact Person</th>
+      <th scope="col">Phone Number</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>Starline Traders</td>
+      <td>Ramesh Kumar</td>
+      <td>+91 1236547889</td>
+    </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td>FreshMart Supplies</td>
+      <td>Priya Sharma</td>
+      <td>+91 123654789</td>
+    </tr>
+    <tr>
+      <th scope="row">3</th>
+      <td>GlobalTech Imports</td>
+      <td>Arjun Mehta</td>
+      <td>+91 123456987</td>
+    </tr>
+  </tbody>
+</table>
+</body>
+
+</html>
