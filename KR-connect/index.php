@@ -202,6 +202,7 @@
 
         .container-fluid {
             padding: 20px;
+            justify-content-center;
         }
 
 
@@ -276,6 +277,10 @@
         .breadcrumb-item a:hover {
             color: #224abe;
         }
+        .col-md-4.mb-3:hover {
+            transform: scale(1.05); 
+      transition: transform 0.3s ease;
+        }
     </style>
 </head>
 
@@ -302,41 +307,65 @@
                 </ol>
             </nav>
         </div>
+        <div class="container">
+  <div class="row justify-content-center">
+    
+    <div class="col-md-4 mb-3">
+      <div class="card text-white bg-primary">
+        <div class="card-header text-center">NAME</div>
+        <div class="card-body">
+          <h5 class="card-title text-center">ARUNAGIRINATHAN</h5>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-4 mb-3">
+      <div class="card text-white bg-secondary">
+        <div class="card-header text-center">Batch</div>
+        <div class="card-body">
+          <h5 class="card-title text-center">2023-2027</h5>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-4 mb-3">
+      <div class="card text-white bg-success">
+        <div class="card-header text-center">Department</div>
+        <div class="card-body">
+          <h5 class="card-title text-center">AI&DS</h5>
+        </div>
+      </div>
+    </div>
 
-        <!-- Content Area -->
-        <div class="container-fluid">
-            <div class="custom-tabs">
-                <ul class="nav nav-tabs" role="tablist"> <!-- Center the main tabs -->
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link active" data-bs-toggle="tab" id="family-main-tab" href="#family" role="tab" aria-selected="true">
-                            <span class="hidden-xs-down" style="font-size: 0.9em;"><i class="fas fa-book tab-icon"></i> Family</span>
-                        </a>
-                    </li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane fade show active" id="family" role="tabpanel">
-                        <ul class="nav navs-tabs justify-content-center ">
-                            <li class="nav-item" style="margin-right: 10px;"> <!-- Add margin between tabs -->
-                                <a class="nav-link active" style="font-size: 0.9em;" id="family-tab" data-bs-toggle="tab" href="#family" role="tab" aria-selected="true">
-                                    Family
-                                </a>
-                            </li>
-
-                        </ul>
-                        <div class="tab-content">
-                            <div class="tab-pane p-20 active" id="family" role="tabpanel">
-                                
-                            </div>
-
-                        </div>
-                    </div>
-
-
-
-
-
-                </div>
-            </div>
+    <div class="col-md-4 mb-3">
+      <div class="card text-white bg-danger">
+        <div class="card-header text-center">Mentor</div>
+        <div class="card-body">
+          <h5 class="card-title text-center">NITHYASRI A</h5>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-4 mb-3">
+      <div class="card text-dark bg-warning">
+        <div class="card-header text-center">Family Member</div>
+        <div class="card-body">
+          <h5 class="card-title text-center">4</h5>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-4 mb-3">
+      <div class="card text-dark bg-info">
+        <div class="card-header text-center">DOB</div>
+        <div class="card-body">
+          <h5 class="card-title text-center">31-03-2006</h5>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
         </div>
        
         <!-- Footer -->
