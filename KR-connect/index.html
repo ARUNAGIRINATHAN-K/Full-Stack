@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .project-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        .section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .social-icon {
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .social-icon:hover {
+            transform: scale(1.2);
+        }
+        #badge {
+            transition: opacity 0.3s ease;
+        }
+        .profile-photo {
+            transition: transform 0.3s ease;
+        }
+
+        .profile-photo:hover {
+            transform: scale(1.05);
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 1.5rem;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: #3b82f6;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 3rem;
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 1.25rem;
+            top: 0.5rem;
+            width: 12px;
+            height: 12px;
+            background: #ffffff;
+            border: 2px solid #3b82f6;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+    <nav class="fixed top-0 w-full bg-white dark:bg-gray-800 shadow-md z-50">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold">My Portfolio</h1>
+            <div class="space-x-4">
+                <a href="#hero" class="hover:text-blue-500 transition-colors">Home</a>
+                <a href="#about" class="hover:text-blue-500 transition-colors">About</a>
+                <a href="#projects" class="hover:text-blue-500 transition-colors">Projects</a>
+                <a href="#skills" class="hover:text-blue-500 transition-colors">Skills</a>
+                <a href="#certifications" class="hover:text-blue-500 transition-colors">Certifications</a>
+                <a href="#timeline" class="hover:text-blue-500 transition-colors">Timeline</a>
+                <a href="#contact" class="hover:text-blue-500 transition-colors">Contact</a>
+                <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path id="sun" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        <path id="moon" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+    <section id="hero"
+        class="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+        <div class="container mx-auto px-4 text-center section">
+            <h2 class="text-4xl md:text-6xl font-bold mb-4">ARUNAGIRINATHAN-K</h2>
+            <p class="text-lg md:text-xl mb-6">AI Enthusiast | Aspiring Data Scientist | Building Intelligent Systems
+                for a Smarter Tomorrow</p>
+            <a href="#projects"
+                class="inline-block bg-white text-blue-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-200 transition">Explore
+                My Work</a>
+        </div>
+    </section>
+    <section id="about" class="py-20 bg-gray-100 dark:bg-gray-900">
+        <div class="container mx-auto px-4 section">
+            <h2 class="text-3xl font-bold text-center mb-8">About Me</h2>
+            <div class="flex flex-col items-center">
+                <img src="proof/My-pic.jpg" alt="Profile Photo of [Your Name]"
+                    class="profile-photo w-32 h-32 md:w-40 md:h-40 rounded-full shadow-md mb-6 object-cover">
+                <div class="max-w-2xl mx-auto text-center">
+                    <h3 class="text-xl font-semibold mb-4">Short Bio</h3>
+                    <p class="text-lg mb-6">Hi, I'm Arunagirinathan, a passionate and purpose-driven tech innovator
+                        currently pursuing my B.Tech in Artificial Intelligence and Data Science. My journey is focused
+                        on transforming raw data into intelligent, real-world solutions that make an impact.</p>
+                    <h3 class="text-xl font-semibold mb-4">Vision/Mission</h3>
+                    <p class="text-lg mb-6">My mission is To empower the world with intelligent, ethical, and accessible
+                        AI systems that drive innovation, solve real-world problems, and shape the future of technology
+                        for the betterment of society.</p>
+                    <h3 class="text-xl font-semibold mb-4">My Story</h3>
+                    <p class="text-lg">I started my journey with a deep curiosity for how technology works and how it
+                        can solve real problems. While studying AI and Data Science, I built projects that turned ideas
+                        into impact—like analyzing resumes with AI or predicting supply chain delays.</p>
+                    <h3 class="text-xl font-semibold mb-4">My Goals</h3>
+                    <p class="text-lg">To evolve into a globally recognized AI Researcher and Tech Entrepreneur,
+                        building scalable products at the intersection of AI, data, and quantum systems, while
+                        contributing to open-source communities, mentoring upcoming talent, and eventually building a
+                        startup that transforms industries.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="projects" class="py-20 bg-white dark:bg-gray-800">
+        <div class="container mx-auto px-4 section">
+            <h2 class="text-3xl font-bold text-center mb-8">My Projects</h2>
+            <div class="mb-8 flex justify-center space-x-4">
+                <button class="filter-btn active bg-blue-600 text-white px-4 py-2 rounded-lg"
+                    data-category="all">All</button>
+                <button class="filter-btn bg-gray-200 dark:bg-gray-700 px-4 py-2 rounded-lg"
+                    data-category="ai-ml">AI/ML</button>
+                <button class="filter-btn bg-gray-200 dark:bg-gray-700 px-4 py-2 rounded-lg"
+                    data-category="data-science">Data Science</button>
+                <button class="filter-btn bg-gray-200 dark:bg-gray-700 px-4 py-2 rounded-lg" data-category="web-dev">Web
+                    Dev</button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="project-card bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-md" data-category="ai-ml">
+                    <h3 class="text-xl font-semibold mb-2"> Resume_Analyzer</h3>
+                    <p class="mb-2"><strong>Tools:</strong> HTML, CSS, JavaScript, NLP, Python</p>
+                    <p class="mb-2"><strong>Features:</strong> A web-based Resume Analyzer that uses Natural Language
+                        Processing (NLP) to compare resumes with job descriptions and provides compatibility scores with
+                        actionable improvement suggestions.</p>
+                    <a href="https://github.com/ARUNAGIRINATHAN-K/Resume_Analyzer" target="_blank"
+                        class="text-blue-500 hover:underline">GitHub</a>
+                </div>
+                <div class="project-card bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-md" data-category="ai-ml">
+                    <h3 class="text-xl font-semibold mb-2">Neural-networks-from-scratch-math-projects</h3>
+                    <p class="mb-2"><strong>Tools:</strong> Python, TensorFlow, Neural Networks, Numpy, Pandas</p>
+                    <p class="mb-2"><strong>Features:</strong>This repository showcases **10 curated projects** that
+                        demonstrate the mathematics behind Artificial Neural Networks (ANNs) using practical Python
+                        implementations.</p>
+                    <a href="https://github.com/ARUNAGIRINATHAN-K/neural-networks-from-scratch-math-projects" target="_blank"
+                        class="text-blue-500 hover:underline">GitHub</a>
+                </div>
+                <div class="project-card bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-md"
+                    data-category="data-science,ai-ml">
+                    <h3 class="text-xl font-semibold mb-2"> Text Classifier using-NLP_Techniques</h3>
+                    <p class="mb-2"><strong>Tools:</strong> Python, NLP, Pandas, Scikit-learn, Jupyter</p>
+                    <p class="mb-2"><strong>Features:</strong>A Text Classification using NLP Techniques.</p>
+                    <a href="https://github.com/ARUNAGIRINATHAN-K/Text-Classifier-using-NLP_Techniques" target="_blank"
+                        class="text-blue-500 hover:underline">GitHub</a>
+                </div>
+                <div class="project-card bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-md"
+                    data-category="data-science,ai-ml">
+                    <h3 class="text-xl font-semibold mb-2">Text-to-Image-Generator-using-sd-v1.5</h3>
+                    <p class="mb-2"><strong>Tools:</strong> Python, NLP, Pandas, Scikit-learn, Jupyter, Hugging face
+                        model</p>
+                    <p class="mb-2"><strong>Features:</strong>A user-friendly web application that transforms plain text
+                        prompts into high-quality images using the sd-v1.5 model from Hugging Face. </p>
+                    <a href="https://github.com/ARUNAGIRINATHAN-K/Text-to-Image-Generator-using-sd-v1.5" target="_blank"
+                        class="text-blue-500 hover:underline">GitHub</a>
+                </div>
+                <div class="project-card bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-md"
+                    data-category="data-science">
+                    <h3 class="text-xl font-semibold mb-2"> Data-Analyst-Project-Portfolio</h3>
+                    <p class="mb-2"><strong>Tools:</strong> Python, Pandas, Scikit-learn, Jupyter</p>
+                    <p class="mb-2"><strong>Features:</strong>This repository contains a curated collection of
+                        intermediate-level projects showcasing skills in data cleaning, analysis, visualization, and
+                        business insights.</p>
+                    <a href="https://github.com/ARUNAGIRINATHAN-K/Data-Analyst-Project-Portfolio" target="_blank"
+                        class="text-blue-500 hover:underline">GitHub</a>
+                </div>
+                <div class="project-card bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-md" data-category="web-dev">
+                    <h3 class="text-xl font-semibold mb-2">Event-Management-system</h3>
+                    <p class="mb-2"><strong>Tools:</strong> Python, hmtl, Css, Js, SQL</p>
+                    <p class="mb-2"><strong>Features:</strong>A full-stack web application for creating, managing, and
+                        attending events with integrated user roles, ticket booking, and real-time event tracking.</p>
+                    <a href="https://github.com/ARUNAGIRINATHAN-K/Event-Management-system" target="_blank"
+                        class="text-blue-500 hover:underline">GitHub</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="skills" class="py-20 bg-gray-100 dark:bg-gray-900">
+        <div class="container mx-auto px-4 section">
+            <h2 class="text-3xl font-bold text-center mb-8">Skills</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-center">
+                    <i class="fab fa-python text-3xl text-blue-500 mb-2"></i>
+                    <p>Python</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-center">
+                    <i class="fas fa-database text-3xl text-blue-500 mb-2"></i>
+                    <p>SQL</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-center">
+                    <i class="fas fa-chart-bar text-3xl text-blue-500 mb-2"></i>
+                    <p>Power BI</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-center">
+                    <i class="fas fa-table text-3xl text-blue-500 mb-2"></i>
+                    <p>Tableau</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-center">
+                    <i class="fas fa-chart-line text-3xl text-blue-500 mb-2"></i>
+                    <p>Matplotlib</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-center">
+                    <i class="fas fa-robot text-3xl text-blue-500 mb-2"></i>
+                    <p>Apache Spark</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-center">
+                    <i class="fas fa-book text-3xl text-blue-500 mb-2"></i>
+                    <p>Jupyter Notebook</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-center">
+                    <i class="fab fa-git-alt text-3xl text-blue-500 mb-2"></i>
+                    <p>Git & GitHub</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-center">
+                    <i class="fas fa-brain text-3xl text-blue-500 mb-2"></i>
+                    <p>scikit-learn</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-center">
+                    <i class="fas fa-cogs text-3xl text-blue-500 mb-2"></i>
+                    <p>PyTorch (basic)</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-center">
+                    <i class="fas fa-comment-dots text-3xl text-blue-500 mb-2"></i>
+                    <p>NLP (spaCy, NLTK)</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-center">
+                    <i class="fas fa-search-dollar text-3xl text-blue-500 mb-2"></i>
+                    <p>Data Analysis</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-center">
+                    <i class="fas fa-calculator text-3xl text-blue-500 mb-2"></i>
+                    <p>Statistical Analysis</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-center">
+                    <i class="fas fa-chart-pie text-3xl text-blue-500 mb-2"></i>
+                    <p>Data Visualization</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-center">
+                    <i class="fab fa-html5 text-3xl text-blue-500 mb-2"></i>
+                    <p>HTML</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-center">
+                    <i class="fab fa-css3-alt text-3xl text-blue-500 mb-2"></i>
+                    <p>CSS</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-center">
+                    <i class="fab fa-js text-3xl text-blue-500 mb-2"></i>
+                    <p>JavaScript</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-center">
+                    <i class="fas fa-users text-3xl text-blue-500 mb-2"></i>
+                    <p>Teamwork</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-center">
+                    <i class="fas fa-comments text-3xl text-blue-500 mb-2"></i>
+                    <p>Communication</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-center">
+                    <i class="fas fa-sync-alt text-3xl text-blue-500 mb-2"></i>
+                    <p>Adaptability</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="certifications" class="py-20 bg-white dark:bg-gray-800">
+        <div class="container mx-auto px-4 section">
+            <h2 class="text-3xl font-bold text-center mb-8">Certifications & Courses</h2>
+            <div class="max-w-2xl mx-auto space-y-6">
+                <div class="bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-2">Google Data Analytics Professional Certificate</h3>
+                    <p class="mb-2"><strong>Provider:</strong> Coursera</p>
+                    <p>Learned essential data analysis skills, including data cleaning, visualization, and using tools
+                        like spreadsheets, SQL, and R.</p>
+                </div>
+                <div class="bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-2">IBM Data Analyst Professional Certificate</h3>
+                    <p class="mb-2"><strong>Provider:</strong> Coursera</p>
+                    <p>Gained hands-on experience with data analysis tools, including Python, Excel, and SQL, to prepare
+                        for entry-level roles.</p>
+                </div>
+                <div class="bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-2">AWS Cloud Practitioner Architecture</h3>
+                    <p class="mb-2"><strong>Provider:</strong> Forage</p>
+                    <p>Developed a foundational understanding of AWS cloud services and architectural principles through
+                        a virtual job simulation.</p>
+                </div>
+                <div class="bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-2">SQL for Data Science</h3>
+                    <p class="mb-2"><strong>Provider:</strong> Coursera</p>
+                    <p>Mastered the fundamentals of SQL for data science, including writing complex queries and working
+                        with relational databases.</p>
+                </div>
+                <div class="bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-2">Data Science Professional Certificate</h3>
+                    <p class="mb-2"><strong>Provider:</strong> IBM</p>
+                    <p>Covered data visualization, statistical analysis, and machine learning with Python.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="timeline" class="py-20 bg-gray-100 dark:bg-gray-900">
+        <div class="container mx-auto px-4 section">
+            <h2 class="text-3xl font-bold text-center mb-8">My Journey</h2>
+            <div class="max-w-2xl mx-auto space-y-8">
+                <div class="timeline-item">
+                    <h3 class="text-xl font-semibold mb-2">2023 – Present: B.Tech in AI & Data Science</h3>
+                    <p>Enrolled in B.Tech focusing on Artificial Intelligence and Data Science. Acquired skills in
+                        Python, Java, Power BI, and core AI fundamentals.</p>
+                </div>
+                <div class="timeline-item">
+                    <h3 class="text-xl font-semibold mb-2">2024: Skill Building & Certifications
+                    </h3>
+                    <p>Completed the Google Advanced Data Analytics and IBM Data Analyst
+                        Professional Certificates, expanding my expertise in data analysis.</p>
+                </div>
+                <div class="timeline-item">
+                    <h3 class="text-xl font-semibold mb-2">2025: Member of Techknowlogy Innovation
+                        Hub</h3>
+                    <p>Joined the Techknowlogy Innovation Hub as a Full Stack Developer,
+                        contributing to real-world projects and enhancing my development skills.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+    <section id="contact" class="py-20 bg-gray-100 dark:bg-gray-900">
+        <div class="container mx-auto px-4 section">
+            <h2 class="text-3xl font-bold text-center mb-8">Get in Touch</h2>
+            <div class="max-w-lg mx-auto">
+                <div class="text-center mb-6">
+                    <a href="proof/ARUNAGIRINATHAN_RESUME.pdf" download
+                        class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+                        <i class="fas fa-download mr-2"></i> Download My Resume
+                    </a>
+                </div>
+                <div class="flex justify-center space-x-6 mb-6">
+                    <a href="https://github.com/ARUNAGIRINATHAN-K" target="_blank"
+                        class="social-icon text-gray-600 dark:text-gray-300 hover:text-blue-500">
+                        <i class="fab fa-github fa-2x"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/arunagirinathan-k" target="_blank"
+                        class="social-icon text-gray-600 dark:text-gray-300 hover:text-blue-500">
+                        <i class="fab fa-linkedin fa-2x"></i>
+                    </a>
+                </div>
+                <div id="badge" class="hidden text-center bg-green-500 text-white p-4 rounded-lg">
+                    Congrats! You've explored the entire portfolio!
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const PortfolioApp = {
+            initDarkMode: function () {
+                const themeToggle = document.getElementById('theme-toggle');
+                const sunIcon = document.getElementById('sun');
+                const moonIcon = document.getElementById('moon');
+                const currentTheme = localStorage.getItem('theme') || 'light';
+
+                if (currentTheme === 'dark') {
+                    document.body.classList.add('dark');
+                    sunIcon.classList.add('hidden');
+                    moonIcon.classList.remove('hidden');
+                }
+
+                themeToggle.addEventListener('click', () => {
+                    document.body.classList.toggle('dark');
+                    sunIcon.classList.toggle('hidden');
+                    moonIcon.classList.toggle('hidden');
+                    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+                });
+            },
+            initSectionAnimations: function () {
+                const sections = document.querySelectorAll('.section');
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                sections.forEach(section => observer.observe(section));
+            },
+
+
+            initExplorationBadge: function () {
+                const visitedSections = new Set();
+                const sections = document.querySelectorAll('.section');
+                const badgeEl = document.getElementById('badge');
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            visitedSections.add(entry.target.id);
+                            if (visitedSections.size === sections.length) {
+                                badgeEl.classList.remove('hidden');
+                            }
+                        }
+                    });
+                }, { threshold: 0.5 });
+
+                sections.forEach(section => observer.observe(section));
+            },
+
+            initProjectFiltering: function () {
+                const filterButtons = document.querySelectorAll('.filter-btn');
+                const projectCards = document.querySelectorAll('.project-card');
+
+                filterButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+
+                        filterButtons.forEach(btn => btn.classList.remove('active', 'bg-blue-600', 'text-white'));
+                        button.classList.add('active', 'bg-blue-600', 'text-white');
+
+                        const category = button.dataset.category;
+                        projectCards.forEach(card => {
+                            if (category === 'all' || card.dataset.category === category) {
+                                card.classList.remove('hidden');
+                            } else {
+                                card.classList.add('hidden');
+                            }
+                        });
+                    });
+                });
+            },
+            init: function () {
+                this.initDarkMode();
+                this.initSectionAnimations();
+                this.initExplorationBadge();
+                this.initProjectFiltering();
+            }
+        };
+        PortfolioApp.init();
+    </script>
+</body>
+
+</html>
