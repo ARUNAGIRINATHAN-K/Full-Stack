@@ -105,7 +105,6 @@
             --bs-table-bg: transparent;
             --bs-table-color: white;
             background: linear-gradient(135deg, #4CAF50, #2196F3) !important;
-
             text-align: center;
             font-size: 0.9em;
 
@@ -276,8 +275,8 @@
         .breadcrumb-item a:hover {
             color: #224abe;
         }
-        
-         /* Custom modal slide-in animation */
+
+        /* Custom modal slide-in animation */
         .modal.fade .modal-dialog {
             transform: translate(0, -50px);
             opacity: 0;
@@ -294,7 +293,7 @@
 <body>
     <?php include 'sidebar.php'; ?>
 
-    <div class="content">
+    <div class="content" id="contentWrapper">
 
         <div class="loader-container" id="loaderContainer">
             <div class="loader"></div>
@@ -325,14 +324,14 @@
                         <a class="nav-link" id="family-main-tab" data-bs-toggle="tab" href="#family" role="tab"
                             aria-controls="family" aria-selected="false">
                             <span class="hidden-xs-down" style="font-size: 0.9em;"><i
-                                    class="fas fa-book tab-icon"></i>Family Details</span>
+                                    class="fas fa-users tab-icon"></i>Family Details</span>
                         </a>
                     </li>
                     <li class="nav-item" role="presentation">
                         <a class="nav-link" id="parents-main-tab" data-bs-toggle="tab" href="#parents" role="tab"
                             aria-controls="parents" aria-selected="false">
                             <span class="hidden-xs-down" style="font-size: 0.9em;"><i
-                                    class="fas fa-book tab-icon"></i>Parents Meeting</span>
+                                    class="fas fa-handshake tab-icon"></i>Parents Meeting</span>
                         </a>
                     </li>
                 </ul>
@@ -344,39 +343,46 @@
                         <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#academicModal">
                             Add details
                         </button>
-                        <table class="table table-bordered table-striped">
-                            <thead class="gradient-header">
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Course</th>
-                                    <th scope="col">institute Name</th>
-                                    <th scope="col">Board/University</th>
-                                    <th scope="col">Year of Passing</th>
-                                    <th scope="col">Percentage/CGPA</th>
-                                    <th scope="col">Certificate</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>10th</td>
-                                    <td>TNPL</td>
-                                    <td>CBSE</td>
-                                    <td>2021</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>12th</td>
-                                    <td>TNPL</td>
-                                    <td>CBSE</td>
-                                    <td>2023</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped" id="academicTable">
+                                <thead class="gradient-header">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Course</th>
+                                        <th scope="col">Institute Name</th>
+                                        <th scope="col">Board/University</th>
+                                        <th scope="col">Year of Passing</th>
+                                        <th scope="col">Percentage/CGPA</th>
+                                        <th scope="col">Certificate</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    include 'db_connect.php'; // Include the database connection
+                                    $sql = "SELECT * FROM academic_details ORDER BY id DESC"; // Order by ID to show newest first
+                                    $result = $conn->query($sql);
+
+                                    if ($result->num_rows > 0) {
+                                        $i = 1;
+                                        while ($row = $result->fetch_assoc()) {
+                                            echo "<tr>";
+                                            echo "<th scope='row'>" . $i++ . "</th>";
+                                            echo "<td>" . htmlspecialchars($row['course']) . "</td>";
+                                            echo "<td>" . htmlspecialchars($row['institute_name']) . "</td>";
+                                            echo "<td>" . htmlspecialchars($row['board_university']) . "</td>";
+                                            echo "<td>" . htmlspecialchars($row['year_of_passing']) . "</td>";
+                                            echo "<td>" . htmlspecialchars($row['percentage_cgpa']) . "</td>";
+                                            echo "<td>" . htmlspecialchars($row['certificate']) . "</td>";
+                                            echo "</tr>";
+                                        }
+                                    } else {
+                                        echo "<tr><td colspan='7' class='text-center'>No academic details found.</td></tr>";
+                                    }
+                                    $conn->close(); // Close the connection after fetching
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <div class="tab-pane fade" id="family" role="tabpanel" aria-labelledby="family-main-tab">
@@ -384,36 +390,44 @@
                         <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#familyModal">
                             Add Details
                         </button>
-                        <table class="table table-bordered table-striped">
-                            <thead class="gradient-header">
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Relationship</th>
-                                    <th scope="col">Occupation</th>
-                                    <th scope="col">Organization</th>
-                                    <th scope="col">Mobile number</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>fathers-name</td>
-                                    <td>father</td>
-                                    <td>Engineer</td>
-                                    <td>Government</td>
-                                    <td>123654789</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>mothers-name</td>
-                                    <td>Mother</td>
-                                    <td>House wife</td>
-                                    <td>--</td>
-                                    <td>123654789</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped" id="familyTable">
+                                <thead class="gradient-header">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Relationship</th>
+                                        <th scope="col">Occupation</th>
+                                        <th scope="col">Organization</th>
+                                        <th scope="col">Mobile number</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    include 'db_connect.php'; // Re-include as this is a separate block that might be processed independently
+                                    $sql = "SELECT * FROM family_details ORDER BY id DESC";
+                                    $result = $conn->query($sql);
+
+                                    if ($result->num_rows > 0) {
+                                        $i = 1;
+                                        while ($row = $result->fetch_assoc()) {
+                                            echo "<tr>";
+                                            echo "<th scope='row'>" . $i++ . "</th>";
+                                            echo "<td>" . htmlspecialchars($row['name']) . "</td>";
+                                            echo "<td>" . htmlspecialchars($row['relationship']) . "</td>";
+                                            echo "<td>" . htmlspecialchars($row['occupation']) . "</td>";
+                                            echo "<td>" . htmlspecialchars($row['organization']) . "</td>";
+                                            echo "<td>" . htmlspecialchars($row['mobile_number']) . "</td>";
+                                            echo "</tr>";
+                                        }
+                                    } else {
+                                        echo "<tr><td colspan='6' class='text-center'>No family details found.</td></tr>";
+                                    }
+                                    $conn->close();
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <div class="tab-pane fade" id="parents" role="tabpanel" aria-labelledby="parents-main-tab">
@@ -421,44 +435,44 @@
                         <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#parentsModal">
                             Add details
                         </button>
-                        <table class="table table-bordered table-striped">
-                            <thead class="gradient-header">
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Purpose of Meeting</th>
-                                    <th scope="col">Points Discussed</th>
-                                    <th scope="col">Action</th>
-                                    <th scope="col">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped" id="parentsTable">
+                                <thead class="gradient-header">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Purpose of Meeting</th>
+                                        <th scope="col">Points Discussed</th>
+                                        <th scope="col">Action</th>
+                                        <th scope="col">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    include 'db_connect.php'; // Re-include
+                                    $sql = "SELECT * FROM parents_meeting ORDER BY id DESC";
+                                    $result = $conn->query($sql);
+
+                                    if ($result->num_rows > 0) {
+                                        $i = 1;
+                                        while ($row = $result->fetch_assoc()) {
+                                            echo "<tr>";
+                                            echo "<th scope='row'>" . $i++ . "</th>";
+                                            echo "<td>" . htmlspecialchars($row['meeting_date']) . "</td>";
+                                            echo "<td>" . htmlspecialchars($row['purpose_of_meeting']) . "</td>";
+                                            echo "<td>" . htmlspecialchars($row['points_discussed']) . "</td>";
+                                            echo "<td>" . htmlspecialchars($row['action']) . "</td>";
+                                            echo "<td>" . htmlspecialchars($row['status']) . "</td>";
+                                            echo "</tr>";
+                                        }
+                                    } else {
+                                        echo "<tr><td colspan='6' class='text-center'>No parent meeting details found.</td></tr>";
+                                    }
+                                    $conn->close();
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -472,37 +486,43 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form>
-                            <select class="form-select" aria-label="Default select example">
-  <option selected>Course</option>
-  <option value="1">SSLC</option>
-  <option value="2">HSC</option>
-</select>
+                        <form id="academicForm" method="POST" action="save_academic_details.php">
                             <div class="mb-3">
-                                <label for="academicField2" class="form-label">Institution Name</label>
-                                <input type="text" class="form-control" id="academicField2">
+                                <label for="academicCourse" class="form-label">Course</label>
+                                <select class="form-select" id="academicCourse" name="course" required>
+                                    <option selected disabled>Select Course</option>
+                                    <option value="SSLC">SSLC</option>
+                                    <option value="HSC">HSC</option>
+                                    <option value="Diploma">Diploma</option>
+                                    <option value="UG">Undergraduate</option>
+                                    <option value="PG">Postgraduate</option>
+                                    </select>
                             </div>
                             <div class="mb-3">
-                                <label for="academicField2" class="form-label">Board/University</label>
-                                <input type="text" class="form-control" id="academicField2">
+                                <label for="academicInstitute" class="form-label">Institution Name</label>
+                                <input type="text" class="form-control" id="academicInstitute" name="institute_name" required>
                             </div>
                             <div class="mb-3">
-                                <label for="academicField2" class="form-label">Year of Passing</label>
-                                <input type="text" class="form-control" id="academicField2">
+                                <label for="academicBoard" class="form-label">Board/University</label>
+                                <input type="text" class="form-control" id="academicBoard" name="board_university" required>
                             </div>
                             <div class="mb-3">
-                                <label for="academicField2" class="form-label">Percentage/CGPA	</label>
-                                <input type="text" class="form-control" id="academicField2">
+                                <label for="academicYear" class="form-label">Year of Passing</label>
+                                <input type="number" class="form-control" id="academicYear" name="year_of_passing" required min="1900" max="2100">
                             </div>
                             <div class="mb-3">
-                                <label for="academicField3" class="form-label">Certificate</label>
-                                <input type="text" class="form-control" id="academicField3">
+                                <label for="academicPercentage" class="form-label">Percentage/CGPA</label>
+                                <input type="text" class="form-control" id="academicPercentage" name="percentage_cgpa">
+                            </div>
+                            <div class="mb-3">
+                                <label for="academicCertificate" class="form-label">Certificate (e.g., URL or Filename)</label>
+                                <input type="text" class="form-control" id="academicCertificate" name="certificate">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
                             </div>
                         </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
                     </div>
                 </div>
             </div>
@@ -516,32 +536,32 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form>
+                        <form id="familyForm" method="POST" action="save_family_details.php">
                             <div class="mb-3">
-                                <label for="familyField1" class="form-label">Name</label>
-                                <input type="text" class="form-control" id="familyField1">
+                                <label for="familyName" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="familyName" name="name" required>
                             </div>
                             <div class="mb-3">
-                                <label for="familyField3" class="form-label">Relationship</label>
-                                <input type="tel" class="form-control" id="familyField3">
+                                <label for="familyRelationship" class="form-label">Relationship</label>
+                                <input type="text" class="form-control" id="familyRelationship" name="relationship" required>
                             </div>
                             <div class="mb-3">
-                                <label for="familyField2" class="form-label">Occupation</label>
-                                <input type="text" class="form-control" id="familyField2">
+                                <label for="familyOccupation" class="form-label">Occupation</label>
+                                <input type="text" class="form-control" id="familyOccupation" name="occupation">
                             </div>
                             <div class="mb-3">
-                                <label for="familyField3" class="form-label">Organization</label>
-                                <input type="tel" class="form-control" id="familyField3">
+                                <label for="familyOrganization" class="form-label">Organization</label>
+                                <input type="text" class="form-control" id="familyOrganization" name="organization">
                             </div>
                             <div class="mb-3">
-                                <label for="familyField3" class="form-label">Mobile Number</label>
-                                <input type="tel" class="form-control" id="familyField3">
+                                <label for="familyMobile" class="form-label">Mobile Number</label>
+                                <input type="tel" class="form-control" id="familyMobile" name="mobile_number">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
                             </div>
                         </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
                     </div>
                 </div>
             </div>
@@ -555,32 +575,41 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form>
+                        <form id="parentsForm" method="POST" action="save_parents_meeting.php">
                             <div class="mb-3">
-                                <label for="parentsField1" class="form-label">Date</label>
-                                <input type="date" class="form-control" id="parentsField1">
+                                <label for="parentsDate" class="form-label">Date</label>
+                                <input type="date" class="form-control" id="parentsDate" name="meeting_date" required>
                             </div>
                             <div class="mb-3">
-                                <label for="parentsField2" class="form-label">Purpose of Meeting</label>
-                                <input type="text" class="form-control" id="parentsField2">
+                                <label for="parentsPurpose" class="form-label">Purpose of Meeting</label>
+                                <input type="text" class="form-control" id="parentsPurpose" name="purpose_of_meeting" required>
                             </div>
                             <div class="mb-3">
-                                <label for="parentsField3" class="form-label">Purpose of Meeting</label>
-                                <textarea class="form-control" id="parentsField3" rows="3"></textarea>
+                                <label for="parentsDiscussed" class="form-label">Points Discussed</label>
+                                <textarea class="form-control" id="parentsDiscussed" name="points_discussed" rows="3"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="parentsAction" class="form-label">Action</label>
+                                <input type="text" class="form-control" id="parentsAction" name="action">
+                            </div>
+                            <div class="mb-3">
+                                <label for="parentsStatus" class="form-label">Status</label>
+                                <input type="text" class="form-control" id="parentsStatus" name="status">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
                             </div>
                         </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <?php include 'footer.php'; ?>
     </div>
     <script>
+        // Loader logic (from your original code)
         const loaderContainer = document.getElementById('loaderContainer');
 
         function showLoader() {
@@ -591,93 +620,218 @@
             loaderContainer.classList.remove('show');
         }
 
-        //    automatic loader
         document.addEventListener('DOMContentLoaded', function() {
-            const loaderContainer = document.getElementById('loaderContainer');
             const contentWrapper = document.getElementById('contentWrapper');
             let loadingTimeout;
 
-            function hideLoader() {
+            function hideLoaderOnLoad() { // Renamed to avoid conflict
                 loaderContainer.classList.add('hide');
                 contentWrapper.classList.add('show');
             }
 
             function showError() {
                 console.error('Page load took too long or encountered an error');
-                // You can add custom error handling here
+                // You can add custom error handling here (e.g., show an error message on the page)
             }
 
-            // Set a maximum loading time (10 seconds)
-            loadingTimeout = setTimeout(showError, 10000);
+            loadingTimeout = setTimeout(showError, 10000); // Set a maximum loading time
 
-            // Hide loader when everything is loaded
             window.onload = function() {
                 clearTimeout(loadingTimeout);
-
-                // Add a small delay to ensure smooth transition
-                setTimeout(hideLoader, 500);
+                setTimeout(hideLoaderOnLoad, 500); // Add a small delay for smooth transition
             };
 
-            // Error handling
             window.onerror = function(msg, url, lineNo, columnNo, error) {
                 clearTimeout(loadingTimeout);
                 showError();
                 return false;
             };
-        });
 
-        // Toggle Sidebar
-        const hamburger = document.getElementById('hamburger');
-        const sidebar = document.getElementById('sidebar');
-        const body = document.body;
-        const mobileOverlay = document.getElementById('mobileOverlay');
+            // Toggle Sidebar
+            const hamburger = document.getElementById('hamburger');
+            const sidebar = document.getElementById('sidebar');
+            const body = document.body;
+            const mobileOverlay = document.getElementById('mobileOverlay');
 
-        function toggleSidebar() {
-            if (window.innerWidth <= 768) {
-                sidebar.classList.toggle('mobile-show');
-                mobileOverlay.classList.toggle('show');
-                body.classList.toggle('sidebar-open');
-            } else {
-                sidebar.classList.toggle('collapsed');
+            function toggleSidebar() {
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.toggle('mobile-show');
+                    mobileOverlay.classList.toggle('show');
+                    body.classList.toggle('sidebar-open');
+                } else {
+                    sidebar.classList.toggle('collapsed');
+                }
             }
-        }
-        hamburger.addEventListener('click', toggleSidebar);
-        mobileOverlay.addEventListener('click', toggleSidebar);
-        // Toggle User Menu
-        const userMenu = document.getElementById('userMenu');
-        const dropdownMenu = userMenu.querySelector('.dropdown-menu');
+            // Ensure hamburger and mobileOverlay elements exist before adding listeners
+            if (hamburger) {
+                hamburger.addEventListener('click', toggleSidebar);
+            }
+            if (mobileOverlay) {
+                mobileOverlay.addEventListener('click', toggleSidebar);
+            }
 
-        userMenu.addEventListener('click', (e) => {
-            e.stopPropagation();
-            dropdownMenu.classList.toggle('show');
-        });
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', () => {
-            dropdownMenu.classList.remove('show');
-        });
+            // Toggle User Menu
+            const userMenu = document.getElementById('userMenu');
+            // Check if userMenu exists before trying to access its children
+            if (userMenu) {
+                const dropdownMenu = userMenu.querySelector('.dropdown-menu');
+                userMenu.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (dropdownMenu) { // Check if dropdownMenu exists
+                        dropdownMenu.classList.toggle('show');
+                    }
+                });
 
-        // Toggle Submenu
-        const menuItems = document.querySelectorAll('.has-submenu');
-        menuItems.forEach(item => {
-            item.addEventListener('click', () => {
-                const submenu = item.nextElementSibling;
-                item.classList.toggle('active');
-                submenu.classList.toggle('active');
+                // Close dropdown when clicking outside
+                document.addEventListener('click', () => {
+                    if (dropdownMenu) { // Check if dropdownMenu exists
+                        dropdownMenu.classList.remove('show');
+                    }
+                });
+            }
+
+            // Toggle Submenu
+            const menuItems = document.querySelectorAll('.has-submenu');
+            menuItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const submenu = item.nextElementSibling;
+                    item.classList.toggle('active');
+                    if (submenu) { // Check if submenu exists
+                        submenu.classList.toggle('active');
+                    }
+                });
             });
-        });
 
-        // Handle responsive behavior
-        window.addEventListener('resize', () => {
-            if (window.innerWidth <= 768) {
-                sidebar.classList.remove('collapsed');
-                sidebar.classList.remove('mobile-show');
-                mobileOverlay.classList.remove('show');
-                body.classList.remove('sidebar-open');
+            // Handle responsive behavior
+            window.addEventListener('resize', () => {
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.remove('collapsed');
+                    sidebar.classList.remove('mobile-show');
+                    mobileOverlay.classList.remove('show');
+                    body.classList.remove('sidebar-open');
+                } else {
+                    sidebar.style.transform = '';
+                    mobileOverlay.classList.remove('show');
+                    body.classList.remove('sidebar-open');
+                }
+            });
+
+            // AJAX Form Submissions and SweetAlert Integration
+            // Academic Form
+            $('#academicForm').on('submit', function(e) {
+                e.preventDefault(); // Prevent default form submission
+
+                const form = $(this);
+                showLoader(); // Show loader on form submission
+
+                $.ajax({
+                    url: 'save_academic_details.php',
+                    type: 'POST',
+                    data: form.serialize(),
+                    success: function(response) {
+                        // The PHP script save_academic_details.php now directly includes SweetAlert JS and
+                        // the Swal.fire calls. So, we'll let the response handle the alert.
+                        // However, for a smooth AJAX experience, we should not reload the page
+                        // and instead update the table dynamically.
+                        // For this complete code, I'm sticking to a full page reload after SweetAlert
+                        // as a simplified approach, similar to what your PHP scripts are doing.
+                        // In a real application, you'd process the PHP response here and
+                        // update the #academicTable content.
+                        hideLoader(); // Hide loader after response
+                        $('#academicModal').modal('hide'); // Close the modal
+                        form[0].reset(); // Clear the form
+                        // To update the table dynamically, you would:
+                        // 1. Fetch updated data from a PHP endpoint (e.g., get_academic_data.php that returns JSON)
+                        // 2. Clear existing table rows in #academicTable
+                        // 3. Iterate over the fetched JSON data and append new rows.
+                        location.reload(); // Simple reload for demonstration
+                    },
+                    error: function(xhr, status, error) {
+                        hideLoader(); // Hide loader on error
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'An error occurred during academic details submission.',
+                            showConfirmButton: true
+                        });
+                        $('#academicModal').modal('hide'); // Close the modal
+                    }
+                });
+            });
+
+            // Family Form
+            $('#familyForm').on('submit', function(e) {
+                e.preventDefault();
+                const form = $(this);
+                showLoader();
+
+                $.ajax({
+                    url: 'save_family_details.php',
+                    type: 'POST',
+                    data: form.serialize(),
+                    success: function(response) {
+                        hideLoader();
+                        $('#familyModal').modal('hide');
+                        form[0].reset();
+                        location.reload(); // Simple reload for demonstration
+                    },
+                    error: function(xhr, status, error) {
+                        hideLoader();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'An error occurred during family details submission.',
+                            showConfirmButton: true
+                        });
+                        $('#familyModal').modal('hide');
+                    }
+                });
+            });
+
+            // Parents Meeting Form
+            $('#parentsForm').on('submit', function(e) {
+                e.preventDefault();
+                const form = $(this);
+                showLoader();
+
+                $.ajax({
+                    url: 'save_parents_meeting.php',
+                    type: 'POST',
+                    data: form.serialize(),
+                    success: function(response) {
+                        hideLoader();
+                        $('#parentsModal').modal('hide');
+                        form[0].reset();
+                        location.reload(); // Simple reload for demonstration
+                    },
+                    error: function(xhr, status, error) {
+                        hideLoader();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'An error occurred during parents meeting submission.',
+                            showConfirmButton: true
+                        });
+                        $('#parentsModal').modal('hide');
+                    }
+                });
+            });
+
+            // Tab persistence using localStorage
+            $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+                localStorage.setItem('lastTab', $(e.target).attr('href'));
+            });
+
+            var lastTab = localStorage.getItem('lastTab');
+            if (lastTab) {
+                // Ensure the tab content is loaded before trying to show the tab
+                setTimeout(function() {
+                    $('[href="' + lastTab + '"]').tab('show');
+                }, 100); // Small delay to ensure tabs are initialized
             } else {
-                sidebar.style.transform = '';
-                mobileOverlay.classList.remove('show');
-                body.classList.remove('sidebar-open');
+                // If no last tab is stored, show the first tab by default
+                $('#academic-main-tab').tab('show');
             }
         });
     </script>
