@@ -197,8 +197,10 @@ display: inline-block;
             <i class="fa-solid fa-user"></i>
             <span>Student Corner</span>
         </a>
-
-      
+        <a href="index.html" class="menu-item">
+            <i class="fa-solid fa-user"></i>
+            <span>Profile</span>
+        </a> 
     </div>
 </div>
 
