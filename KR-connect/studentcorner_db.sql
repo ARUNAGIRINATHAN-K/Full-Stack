@@ -32,3 +32,12 @@ CREATE TABLE IF NOT EXISTS parents_meeting (
     action VARCHAR(255),
     status VARCHAR(50)
 );
+
+-- OD Apply Table
+CREATE TABLE IF NOT EXISTS od_apply (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    od_date DATE NOT NULL,
+    od_reason TEXT NOT NULL,
+    od_duration INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
