@@ -64,6 +64,15 @@ function createRecord($conn, $table) {
         $sql = "INSERT INTO parents_meeting (meeting_date, purpose_of_meeting, points_discussed, action, status) VALUES (?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("sssss", $meeting_date, $purpose_of_meeting, $points_discussed, $action, $status);
+    } elseif ($table == 'od_apply') {
+        $student_name = $_POST['student_name'] ?? '';
+        $reg_no = $_POST['reg_no'] ?? '';
+        $od_date = $_POST['od_date'] ?? '';
+        $od_reason = $_POST['od_reason'] ?? '';
+        $od_duration = $_POST['od_duration'] ?? '';
+        $sql = "INSERT INTO od_apply (student_name, reg_no, od_date, od_reason, od_duration) VALUES (?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ssssi", $student_name, $reg_no, $od_date, $od_reason, $od_duration);
     } else {
         echo json_encode(['success' => false, 'message' => 'Invalid table']);
         return;
@@ -77,7 +86,8 @@ function createRecord($conn, $table) {
 }
 
 function readRecords($conn, $table) {
-    if (!in_array($table, ['academic_details', 'family_details', 'parents_meeting'])) {
+    $allowed_tables = ['academic_details', 'family_details', 'parents_meeting', 'od_apply'];
+    if (!in_array($table, $allowed_tables)) {
         error_log('Invalid table requested: ' . $table);
         echo json_encode(['success' => false, 'message' => 'Invalid table']);
         return;
@@ -127,6 +137,11 @@ function updateRecord($conn, $table) {
         $sql = "UPDATE parents_meeting SET meeting_date=?, purpose_of_meeting=?, points_discussed=?, action=?, status=? WHERE id=?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("sssssi", $meeting_date, $purpose_of_meeting, $points_discussed, $action, $status, $id);
+    } elseif ($table == 'od_apply') {
+        $status = $_POST['status'] ?? '';
+        $sql = "UPDATE od_apply SET status=? WHERE id=?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("si", $status, $id);
     } else {
         echo json_encode(['success' => false, 'message' => 'Invalid table']);
         return;
