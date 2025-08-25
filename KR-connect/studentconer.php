@@ -334,6 +334,13 @@
                                     class="fas fa-handshake tab-icon"></i>Parents Meeting</span>
                         </a>
                     </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="od-main-tab" data-bs-toggle="tab" href="#od" role="tab"
+                            aria-controls="od" aria-selected="false">
+                            <span class="hidden-xs-down" style="font-size: 0.9em;"><i
+                                    class="fas fa-file-alt tab-icon"></i>OD Apply</span>
+                        </a>
+                    </li>
                 </ul>
 
                         <div class="tab-content">
@@ -407,6 +414,29 @@
                                             </tr>
                                         </thead>
                                         <tbody id="parentsTableBody"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="od" role="tabpanel" aria-labelledby="od-main-tab">
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="mt-4">OD Apply</h5>
+                                <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#odModal">Apply OD</button>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped" id="odTable">
+                                        <thead class="gradient-header">
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Date</th>
+                                                <th scope="col">Reason</th>
+                                                <th scope="col">Duration (Hours)</th>
+                                                <th scope="col">Applied At</th>
+                                                <th scope="col">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="odTableBody"></tbody>
                                     </table>
                                 </div>
                             </div>
@@ -689,6 +719,7 @@
     </div>
 
     <script>
+        // Function to load Academic Details table
         function loadAcademicTable() {
             $.ajax({
                 url: 'student_api.php',
@@ -696,7 +727,6 @@
                 data: $.param({ action: 'read', table: 'academic_details' }),
                 dataType: 'json',
                 success: function(response) {
-                    console.log('Academic table response:', response);
                     let rows = '';
                     if (response.success && response.data.length > 0) {
                         response.data.forEach(function(item, idx) {
@@ -717,15 +747,19 @@
                     } else {
                         rows = '<tr><td colspan="8" class="text-center">No academic details found.</td></tr>';
                     }
+                    if ($.fn.DataTable.isDataTable('#academicTable')) {
+                        $('#academicTable').DataTable().destroy();
+                    }
                     $('#academicTableBody').html(rows);
+                    $('#academicTable').DataTable();
                 },
                 error: function(xhr) {
-                    console.log('Academic table AJAX error:', xhr.responseText);
                     $('#academicTableBody').html('<tr><td colspan="8" class="text-center text-danger">Error loading data.</td></tr>');
                 }
             });
         }
 
+        // Function to load Family Details table
         function loadFamilyTable() {
             $.ajax({
                 url: 'student_api.php',
@@ -752,7 +786,11 @@
                     } else {
                         rows = '<tr><td colspan="7" class="text-center">No family details found.</td></tr>';
                     }
+                    if ($.fn.DataTable.isDataTable('#familyTable')) {
+                        $('#familyTable').DataTable().destroy();
+                    }
                     $('#familyTableBody').html(rows);
+                    $('#familyTable').DataTable();
                 },
                 error: function(xhr) {
                     $('#familyTableBody').html('<tr><td colspan="7" class="text-center text-danger">Error loading data.</td></tr>');
@@ -760,6 +798,7 @@
             });
         }
 
+        // Function to load Parents Meeting table
         function loadParentsTable() {
             $.ajax({
                 url: 'student_api.php',
@@ -786,7 +825,11 @@
                     } else {
                         rows = '<tr><td colspan="7" class="text-center">No parents meeting details found.</td></tr>';
                     }
+                    if ($.fn.DataTable.isDataTable('#parentsTable')) {
+                        $('#parentsTable').DataTable().destroy();
+                    }
                     $('#parentsTableBody').html(rows);
+                    $('#parentsTable').DataTable();
                 },
                 error: function(xhr) {
                     $('#parentsTableBody').html('<tr><td colspan="7" class="text-center text-danger">Error loading data.</td></tr>');
@@ -794,12 +837,55 @@
             });
         }
 
-        $(document).ready(function() {
-            // Initialize DataTables
-            $('#academicTable').DataTable();
-            $('#familyTable').DataTable();
-            $('#parentsTable').DataTable();
+        // Function to load OD Apply table
+        function loadODTable() {
+            $.ajax({
+                url: 'student_api.php',
+                type: 'POST',
+                data: $.param({ action: 'read', table: 'od_apply' }),
+                dataType: 'json',
+                success: function(response) {
+                    let rows = '';
+                    if (response.success && response.data.length > 0) {
+                        response.data.forEach(function(item, idx) {
+                            let statusBadge;
+                            switch (item.status) {
+                                case 'Approved':
+                                    statusBadge = '<span class="badge bg-success">Approved</span>';
+                                    break;
+                                case 'Rejected':
+                                    statusBadge = '<span class="badge bg-danger">Rejected</span>';
+                                    break;
+                                default:
+                                    statusBadge = '<span class="badge bg-warning text-dark">Pending</span>';
+                            }
+                            rows += `<tr>
+                                <td>${idx + 1}</td>
+                                <td>${item.od_date}</td>
+                                <td>${item.od_reason}</td>
+                                <td>${item.od_duration}</td>
+                                <td>${item.created_at}</td>
+                                <td>${statusBadge}</td>
+                            </tr>`;
+                        });
+                    } else {
+                        rows = '<tr><td colspan="6" class="text-center">No OD applications found.</td></tr>';
+                    }
+                    if ($.fn.DataTable.isDataTable('#odTable')) {
+                        $('#odTable').DataTable().destroy();
+                    }
+                    $('#odTableBody').html(rows);
+                    $('#odTable').DataTable();
+                },
+                error: function(xhr) {
+                    $('#odTableBody').html('<tr><td colspan="6" class="text-center text-danger">Error loading data.</td></tr>');
+                }
+            });
+        }
 
+        // Main document ready function
+        $(document).ready(function() {
+            
             // Show loader on page load
             $(window).on('load', function() {
                 $('.loader-container').fadeOut('slow');
@@ -835,77 +921,41 @@
                     dataType: 'json',
                     success: function(response) {
                         $('#academicLoader').hide();
-                        console.log('Academic details response:', response);
                         if (response.success) {
                             $('#academicModal').modal('hide');
                             form[0].reset();
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success!',
-                                text: 'Academic details saved successfully!',
-                                timer: 1500,
-                                showConfirmButton: false
-                            });
-                            loadAcademicTable(); // Reload table after save
+                            Swal.fire({ icon: 'success', title: 'Success!', text: 'Academic details saved successfully!', timer: 1500, showConfirmButton: false });
+                            loadAcademicTable();
                         } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: response.message || 'Failed to save academic details.',
-                                showConfirmButton: true
-                            });
+                            Swal.fire({ icon: 'error', title: 'Error!', text: response.message || 'Failed to save academic details.', showConfirmButton: true });
                         }
                     },
-                    error: function(xhr, status, error) {
+                    error: function(xhr) {
                         $('#academicLoader').hide();
-                        console.log('Academic details AJAX error:', xhr.responseText);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            text: 'An error occurred during academic details submission.',
-                            showConfirmButton: true
-                        });
+                        Swal.fire({ icon: 'error', title: 'Error!', text: 'An error occurred during submission.', showConfirmButton: true });
                         $('#academicModal').modal('hide');
                     }
                 });
             });
 
-            // Edit form submit handler
             $('#academicEditForm').on('submit', function(e) {
                 e.preventDefault();
-                const form = $(this);
                 $.ajax({
                     url: 'student_api.php',
                     type: 'POST',
-                    data: form.serialize() + '&action=update&table=academic_details',
+                    data: $(this).serialize() + '&action=update&table=academic_details',
                     dataType: 'json',
                     success: function(response) {
                         if (response.success) {
                             $('#academicEditModal').modal('hide');
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success!',
-                                text: 'Academic details updated successfully!',
-                                timer: 1500,
-                                showConfirmButton: false
-                            });
+                            Swal.fire({ icon: 'success', title: 'Success!', text: 'Academic details updated successfully!', timer: 1500, showConfirmButton: false });
                             loadAcademicTable();
                         } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: response.message || 'Failed to update academic details.',
-                                showConfirmButton: true
-                            });
+                            Swal.fire({ icon: 'error', title: 'Error!', text: response.message || 'Failed to update academic details.', showConfirmButton: true });
                         }
                     },
                     error: function(xhr) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            text: 'AJAX error occurred.',
-                            showConfirmButton: true
-                        });
+                        Swal.fire({ icon: 'error', title: 'Error!', text: 'AJAX error occurred.', showConfirmButton: true });
                     }
                 });
             });
@@ -913,42 +963,23 @@
             $('#familyForm').on('submit', function(e) {
                 e.preventDefault();
                 const form = $(this);
-                $('#familyLoader').show();
                 $.ajax({
                     url: 'student_api.php',
                     type: 'POST',
                     data: form.serialize() + '&action=create&table=family_details',
                     dataType: 'json',
                     success: function(response) {
-                        $('#familyLoader').hide();
                         if (response.success) {
                             $('#familyModal').modal('hide');
                             form[0].reset();
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success!',
-                                text: 'Family details saved successfully!',
-                                timer: 1500,
-                                showConfirmButton: false
-                            });
+                            Swal.fire({ icon: 'success', title: 'Success!', text: 'Family details saved successfully!', timer: 1500, showConfirmButton: false });
                             loadFamilyTable();
                         } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: response.message || 'Failed to save family details.',
-                                showConfirmButton: true
-                            });
+                            Swal.fire({ icon: 'error', title: 'Error!', text: response.message || 'Failed to save family details.', showConfirmButton: true });
                         }
                     },
                     error: function(xhr) {
-                        $('#familyLoader').hide();
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            text: 'AJAX error occurred.',
-                            showConfirmButton: true
-                        });
+                        Swal.fire({ icon: 'error', title: 'Error!', text: 'AJAX error occurred.', showConfirmButton: true });
                         $('#familyModal').modal('hide');
                     }
                 });
@@ -960,16 +991,15 @@
                     url: 'student_api.php',
                     type: 'POST',
                     data: $(this).serialize() + '&action=update&table=family_details',
+                    dataType: 'json',
                     success: function(response) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Updated!',
-                            text: 'Family details updated successfully!',
-                            timer: 1500,
-                            showConfirmButton: false
-                        }).then(() => {
-                            location.reload();
-                        });
+                        if (response.success) {
+                            $('#familyEditModal').modal('hide');
+                            Swal.fire({ icon: 'success', title: 'Success!', text: 'Family details updated successfully!', timer: 1500, showConfirmButton: false });
+                            loadFamilyTable();
+                        } else {
+                            Swal.fire({ icon: 'error', title: 'Error!', text: response.message || 'Failed to update family details.', showConfirmButton: true });
+                        }
                     },
                     error: function() {
                         Swal.fire('Error!', 'An error occurred during update.', 'error');
@@ -980,52 +1010,23 @@
             $('#parentsForm').on('submit', function(e) {
                 e.preventDefault();
                 const form = $(this);
-                const dateVal = $('#meetingDate').val();
-                if (!dateVal) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: 'Please select a valid date.',
-                        showConfirmButton: true
-                    });
-                    return;
-                }
-                $('#parentsLoader').show();
                 $.ajax({
                     url: 'student_api.php',
                     type: 'POST',
                     data: form.serialize() + '&action=create&table=parents_meeting',
                     dataType: 'json',
                     success: function(response) {
-                        $('#parentsLoader').hide();
                         if (response.success) {
                             $('#parentsModal').modal('hide');
                             form[0].reset();
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success!',
-                                text: 'Parents meeting details saved successfully!',
-                                timer: 1500,
-                                showConfirmButton: false
-                            });
+                            Swal.fire({ icon: 'success', title: 'Success!', text: 'Parents meeting details saved successfully!', timer: 1500, showConfirmButton: false });
                             loadParentsTable();
                         } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: response.message || 'Failed to save parents meeting details.',
-                                showConfirmButton: true
-                            });
+                            Swal.fire({ icon: 'error', title: 'Error!', text: response.message || 'Failed to save parents meeting details.', showConfirmButton: true });
                         }
                     },
                     error: function(xhr) {
-                        $('#parentsLoader').hide();
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            text: 'AJAX error occurred.',
-                            showConfirmButton: true
-                        });
+                        Swal.fire({ icon: 'error', title: 'Error!', text: 'AJAX error occurred.', showConfirmButton: true });
                         $('#parentsModal').modal('hide');
                     }
                 });
@@ -1037,16 +1038,15 @@
                     url: 'student_api.php',
                     type: 'POST',
                     data: $(this).serialize() + '&action=update&table=parents_meeting',
+                    dataType: 'json',
                     success: function(response) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Updated!',
-                            text: 'Parents meeting details updated successfully!',
-                            timer: 1500,
-                            showConfirmButton: false
-                        }).then(() => {
-                            location.reload();
-                        });
+                        if (response.success) {
+                            $('#parentsEditModal').modal('hide');
+                            Swal.fire({ icon: 'success', title: 'Success!', text: 'Parents meeting details updated successfully!', timer: 1500, showConfirmButton: false });
+                            loadParentsTable();
+                        } else {
+                            Swal.fire({ icon: 'error', title: 'Error!', text: response.message || 'Failed to update parents meeting details.', showConfirmButton: true });
+                        }
                     },
                     error: function() {
                         Swal.fire('Error!', 'An error occurred during update.', 'error');
@@ -1054,14 +1054,39 @@
                 });
             });
 
-            // Edit button handler
-            $(document).on('click', '.academic-edit-btn', function() {
-                const id = $(this).data('id');
+            $('#odForm').on('submit', function(e) {
+                e.preventDefault();
+                const form = $(this);
+                $('#odLoader').show();
                 $.ajax({
                     url: 'student_api.php',
                     type: 'POST',
-                    data: $.param({ action: 'read', table: 'academic_details' }),
+                    data: form.serialize() + '&action=create&table=od_apply',
                     dataType: 'json',
+                    success: function(response) {
+                        $('#odLoader').hide();
+                        if (response.success) {
+                            $('#odModal').modal('hide');
+                            form[0].reset();
+                            Swal.fire({ icon: 'success', title: 'Success!', text: 'OD application submitted!', timer: 1500, showConfirmButton: false });
+                            loadODTable();
+                        } else {
+                            Swal.fire({ icon: 'error', title: 'Error!', text: response.message || 'Failed to submit OD application.', showConfirmButton: true });
+                        }
+                    },
+                    error: function(xhr) {
+                        $('#odLoader').hide();
+                        Swal.fire({ icon: 'error', title: 'Error!', text: 'AJAX error occurred.', showConfirmButton: true });
+                        $('#odModal').modal('hide');
+                    }
+                });
+            });
+
+            // Edit button handlers
+            $(document).on('click', '.academic-edit-btn', function() {
+                const id = $(this).data('id');
+                $.ajax({
+                    url: 'student_api.php', type: 'POST', data: $.param({ action: 'read', table: 'academic_details' }), dataType: 'json',
                     success: function(response) {
                         if (response.success && response.data.length > 0) {
                             const item = response.data.find(row => row.id == id);
@@ -1078,47 +1103,11 @@
                     }
                 });
             });
-            // Delete button handler
-            $(document).on('click', '.academic-delete-btn', function() {
-                const id = $(this).data('id');
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: 'This will permanently delete the academic detail.',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Delete',
-                    cancelButtonText: 'Cancel'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: 'student_api.php',
-                            type: 'POST',
-                            data: $.param({ id: id, action: 'delete', table: 'academic_details' }),
-                            dataType: 'json',
-                            success: function(response) {
-                                if (response.success) {
-                                    Swal.fire('Deleted!', 'Academic detail deleted.', 'success');
-                                    loadAcademicTable();
-                                } else {
-                                    Swal.fire('Error!', response.message || 'Failed to delete.', 'error');
-                                }
-                            },
-                            error: function(xhr) {
-                                Swal.fire('Error!', 'AJAX error occurred.', 'error');
-                            }
-                        });
-                    }
-                });
-            });
 
-            // Family Edit
             $(document).on('click', '.family-edit-btn', function() {
                 const id = $(this).data('id');
                 $.ajax({
-                    url: 'student_api.php',
-                    type: 'POST',
-                    data: $.param({ action: 'read', table: 'family_details' }),
-                    dataType: 'json',
+                    url: 'student_api.php', type: 'POST', data: $.param({ action: 'read', table: 'family_details' }), dataType: 'json',
                     success: function(response) {
                         if (response.success && response.data.length > 0) {
                             const item = response.data.find(row => row.id == id);
@@ -1134,85 +1123,11 @@
                     }
                 });
             });
-            // Family Edit Form Submit
-            $('#familyEditForm').on('submit', function(e) {
-                e.preventDefault();
-                const form = $(this);
-                $.ajax({
-                    url: 'student_api.php',
-                    type: 'POST',
-                    data: form.serialize() + '&action=update&table=family_details',
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.success) {
-                            $('#familyEditModal').modal('hide');
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success!',
-                                text: 'Family details updated successfully!',
-                                timer: 1500,
-                                showConfirmButton: false
-                            });
-                            loadFamilyTable();
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: response.message || 'Failed to update family details.',
-                                showConfirmButton: true
-                            });
-                        }
-                    },
-                    error: function(xhr) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            text: 'AJAX error occurred.',
-                            showConfirmButton: true
-                        });
-                    }
-                });
-            });
-            // Family Delete
-            $(document).on('click', '.family-delete-btn', function() {
-                const id = $(this).data('id');
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: 'This will permanently delete the family detail.',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Delete',
-                    cancelButtonText: 'Cancel'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: 'student_api.php',
-                            type: 'POST',
-                            data: $.param({ id: id, action: 'delete', table: 'family_details' }),
-                            dataType: 'json',
-                            success: function(response) {
-                                if (response.success) {
-                                    Swal.fire('Deleted!', 'Family detail deleted.', 'success');
-                                    loadFamilyTable();
-                                } else {
-                                    Swal.fire('Error!', response.message || 'Failed to delete.', 'error');
-                                }
-                            },
-                            error: function(xhr) {
-                                Swal.fire('Error!', 'AJAX error occurred.', 'error');
-                            }
-                        });
-                    }
-                });
-            });
-            // Parents Edit
+
             $(document).on('click', '.parents-edit-btn', function() {
                 const id = $(this).data('id');
                 $.ajax({
-                    url: 'student_api.php',
-                    type: 'POST',
-                    data: $.param({ action: 'read', table: 'parents_meeting' }),
-                    dataType: 'json',
+                    url: 'student_api.php', type: 'POST', data: $.param({ action: 'read', table: 'parents_meeting' }), dataType: 'json',
                     success: function(response) {
                         if (response.success && response.data.length > 0) {
                             const item = response.data.find(row => row.id == id);
@@ -1228,62 +1143,57 @@
                     }
                 });
             });
-            // Parents Edit Form Submit
-            $('#parentsEditForm').on('submit', function(e) {
-                e.preventDefault();
-                const form = $(this);
-                $.ajax({
-                    url: 'student_api.php',
-                    type: 'POST',
-                    data: form.serialize() + '&action=update&table=parents_meeting',
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.success) {
-                            $('#parentsEditModal').modal('hide');
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success!',
-                                text: 'Parents meeting details updated successfully!',
-                                timer: 1500,
-                                showConfirmButton: false
-                            });
-                            loadParentsTable();
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: response.message || 'Failed to update parents meeting details.',
-                                showConfirmButton: true
-                            });
-                        }
-                    },
-                    error: function(xhr) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            text: 'AJAX error occurred.',
-                            showConfirmButton: true
+
+            // Delete button handlers
+            $(document).on('click', '.academic-delete-btn', function() {
+                const id = $(this).data('id');
+                Swal.fire({ title: 'Are you sure?', text: 'This will permanently delete the academic detail.', icon: 'warning', showCancelButton: true, confirmButtonText: 'Delete', cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: 'student_api.php', type: 'POST', data: $.param({ id: id, action: 'delete', table: 'academic_details' }), dataType: 'json',
+                            success: function(response) {
+                                if (response.success) {
+                                    Swal.fire('Deleted!', 'Academic detail deleted.', 'success');
+                                    loadAcademicTable();
+                                } else {
+                                    Swal.fire('Error!', response.message || 'Failed to delete.', 'error');
+                                }
+                            },
+                            error: function(xhr) { Swal.fire('Error!', 'AJAX error occurred.', 'error'); }
                         });
                     }
                 });
             });
-            // Parents Delete
-            $(document).on('click', '.parents-delete-btn', function() {
+
+            $(document).on('click', '.family-delete-btn', function() {
                 const id = $(this).data('id');
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: 'This will permanently delete the parents meeting detail.',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Delete',
-                    cancelButtonText: 'Cancel'
+                Swal.fire({ title: 'Are you sure?', text: 'This will permanently delete the family detail.', icon: 'warning', showCancelButton: true, confirmButtonText: 'Delete', cancelButtonText: 'Cancel'
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: 'student_api.php',
-                            type: 'POST',
-                            data: $.param({ id: id, action: 'delete', table: 'parents_meeting' }),
-                            dataType: 'json',
+                            url: 'student_api.php', type: 'POST', data: $.param({ id: id, action: 'delete', table: 'family_details' }), dataType: 'json',
+                            success: function(response) {
+                                if (response.success) {
+                                    Swal.fire('Deleted!', 'Family detail deleted.', 'success');
+                                    loadFamilyTable();
+                                } else {
+                                    Swal.fire('Error!', response.message || 'Failed to delete.', 'error');
+                                }
+                            },
+                            error: function(xhr) { Swal.fire('Error!', 'AJAX error occurred.', 'error'); }
+                        });
+                    }
+                });
+            });
+
+            $(document).on('click', '.parents-delete-btn', function() {
+                const id = $(this).data('id');
+                Swal.fire({ title: 'Are you sure?', text: 'This will permanently delete the parents meeting detail.', icon: 'warning', showCancelButton: true, confirmButtonText: 'Delete', cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: 'student_api.php', type: 'POST', data: $.param({ id: id, action: 'delete', table: 'parents_meeting' }), dataType: 'json',
                             success: function(response) {
                                 if (response.success) {
                                     Swal.fire('Deleted!', 'Parents meeting detail deleted.', 'success');
@@ -1292,41 +1202,33 @@
                                     Swal.fire('Error!', response.message || 'Failed to delete.', 'error');
                                 }
                             },
-                            error: function(xhr) {
-                                Swal.fire('Error!', 'AJAX error occurred.', 'error');
-                            }
+                            error: function(xhr) { Swal.fire('Error!', 'AJAX error occurred.', 'error'); }
                         });
                     }
                 });
             });
 
-            // Tab persistence using localStorage
-            $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
-                localStorage.setItem('lastTab', $(e.target).attr('href'));
-            });
-
+            // Tab persistence and initial data loading
             var lastTab = localStorage.getItem('lastTab');
             if (lastTab) {
-                // Ensure the tab content is loaded before trying to show the tab
-                setTimeout(function() {
-                    $('[href="' + lastTab + '"]').tab('show');
-                }, 100); // Small delay to ensure tabs are initialized
+                $('[href="' + lastTab + '"]').tab('show');
             } else {
-                // If no last tab is stored, show the first tab by default
                 $('#academic-main-tab').tab('show');
             }
+            
+            loadAcademicTable();
+            loadFamilyTable();
+            loadParentsTable();
+            loadODTable();
 
-            loadAcademicTable(); // Initial load
-            loadFamilyTable(); // Initial load
-            loadParentsTable(); // Initial load
-            $('a[data-bs-toggle="tab"][href="#academic"]').on('shown.bs.tab', function() {
-                loadAcademicTable();
-            });
-            $('a[data-bs-toggle="tab"][href="#family"]').on('shown.bs.tab', function() {
-                loadFamilyTable();
-            });
-            $('a[data-bs-toggle="tab"][href="#parents"]').on('shown.bs.tab', function() {
-                loadParentsTable();
+            $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+                localStorage.setItem('lastTab', $(e.target).attr('href'));
+                // Optional: If you want to reload the table every time you switch to it
+                var targetTab = $(e.target).attr('href');
+                if (targetTab === '#academic') loadAcademicTable();
+                if (targetTab === '#family') loadFamilyTable();
+                if (targetTab === '#parents') loadParentsTable();
+                if (targetTab === '#od') loadODTable();
             });
         });
     </script>
@@ -1334,5 +1236,40 @@
         <?php include 'footer.php'; ?>
 
 </body>
+
+<!-- OD Apply Modal (moved outside .container for correct Bootstrap behavior) -->
+<div class="modal fade" id="odModal" tabindex="-1" aria-labelledby="odModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="odModalLabel">OD Apply Form</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="odForm" method="POST">
+                    <div class="mb-3">
+                        <label for="odDate" class="form-label">Date</label>
+                        <input type="date" class="form-control" id="odDate" name="od_date" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="odReason" class="form-label">Reason</label>
+                        <textarea class="form-control" id="odReason" name="od_reason" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="odDuration" class="form-label">Duration (Days)</label>
+                        <input type="number" class="form-control" id="odDuration" name="od_duration" min="1" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Apply</button>
+                    </div>
+                </form>
+                <div id="odLoader" style="display:none;text-align:center;">
+                    <span class="spinner-border text-primary"></span> Submitting...
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 </html>
