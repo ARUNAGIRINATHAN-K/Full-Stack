@@ -201,6 +201,10 @@ display: inline-block;
             <i class="fa-solid fa-user"></i>
             <span>Profile</span>
         </a> 
+        <a href="teacher.php" class="menu-item">
+            <i class="fa-solid fa-user"></i>
+            <span>Teacher</span>
+        </a>
     </div>
 </div>
 
