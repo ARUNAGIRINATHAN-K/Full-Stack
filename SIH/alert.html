@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Alerts</title>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+    </head>
+    <style>
+    body {
+        background-color: white;
+    }
+
+    :root {
+        --sidebar-width: 250px;
+        --primary-dark: #1e293b;
+        --secondary-dark: #334155;
+        --text-light: #f8fafc;
+        --accent-blue: #3b82f6;
+        --danger-red: #ef4444;
+        --warning-yellow: #f59e0b;
+        --success-green: #10b981;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: var(--sidebar-width);
+        background: linear-gradient(180deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
+        color: var(--text-light);
+        z-index: 1000;
+        transition: transform 0.3s ease;
+    }
+
+    .sidebar-header {
+        padding: 20px;
+        text-align: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .sidebar-header h4 {
+        margin: 0;
+        font-weight: 300;
+        color: var(--accent-blue);
+    }
+
+    .sidebar-nav {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+
+    .sidebar-nav li {
+        margin: 5px 0;
+    }
+
+    .sidebar-nav a {
+        display: flex;
+        align-items: center;
+        padding: 15px 20px;
+        color: var(--text-light);
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .sidebar-nav a:hover,
+    .sidebar-nav a.active {
+        background-color: rgba(59, 130, 246, 0.2);
+        color: var(--accent-blue);
+        border-right: 3px solid var(--accent-blue);
+    }
+
+    .sidebar-nav i {
+        margin-right: 10px;
+        width: 20px;
+        text-align: center;
+    }
+
+    .main-content {
+        margin-left: var(--sidebar-width);
+        padding: 20px;
+        min-height: 100vh;
+        background-color: #f1f5f9;
+    }
+
+    /* Alert System Styles */
+    .alerts-header {
+        background: white;
+        padding: 24px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        border: 1px solid #e2e8f0;
+    }
+
+    .alerts-title {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 16px;
+    }
+
+    .alerts-icon {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, var(--danger-red), #dc2626);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 20px;
+    }
+
+    .alerts-title h1 {
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--primary-dark);
+        margin: 0;
+    }
+
+    .alerts-subtitle {
+        color: #64748b;
+        font-size: 16px;
+        margin: 0;
+    }
+
+    /* Filters and Controls */
+    .alerts-controls {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        border: 1px solid #e2e8f0;
+    }
+
+    .controls-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        align-items: center;
+        margin-bottom: 16px;
+    }
+
+    .control-group {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .control-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .control-select, .control-input {
+        padding: 8px 12px;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        font-size: 14px;
+        min-width: 140px;
+        transition: border-color 0.3s ease;
+    }
+
+    .control-select:focus, .control-input:focus {
+        outline: none;
+        border-color: var(--accent-blue);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .refresh-btn {
+        padding: 8px 16px;
+        background: var(--accent-blue);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: background-color 0.3s ease;
+    }
+
+    .refresh-btn:hover {
+        background: #2563eb;
+    }
+
+    /* Alerts Layout */
+    .alerts-layout {
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: 20px;
+        height: calc(100vh - 200px);
+    }
+
+    .alerts-list-container {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        border: 1px solid #e2e8f0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .alerts-table-header {
+        background: #f8fafc;
+        padding: 16px;
+        border-bottom: 1px solid #e2e8f0;
+        font-weight: 600;
+        color: var(--primary-dark);
+        display: grid;
+        grid-template-columns: 100px 120px 180px 200px 80px 140px 100px 120px;
+        gap: 12px;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .alerts-table-body {
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    .alert-row {
+        padding: 16px;
+        border-bottom: 1px solid #f1f5f9;
+        display: grid;
+        grid-template-columns: 100px 120px 180px 200px 80px 140px 100px 120px;
+        gap: 12px;
+        align-items: center;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+
+    .alert-row:hover {
+        background: #f8fafc;
+    }
+
+    .alert-row.selected {
+        background: rgba(59, 130, 246, 0.05);
+        border-left: 4px solid var(--accent-blue);
+    }
+
+    /* Severity Indicators */
+    .severity-badge {
+        padding: 4px 8px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .severity-critical {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--danger-red);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .severity-medium {
+        background: rgba(245, 158, 11, 0.1);
+        color: var(--warning-yellow);
+        border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+
+    .severity-low {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--success-green);
+        border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    /* Status Badges */
+    .status-badge {
+        padding: 4px 8px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .status-new {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--danger-red);
+    }
+
+    .status-acknowledged {
+        background: rgba(245, 158, 11, 0.1);
+        color: var(--warning-yellow);
+    }
+
+    .status-assigned {
+        background: rgba(59, 130, 246, 0.1);
+        color: var(--accent-blue);
+    }
+
+    .status-resolved {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--success-green);
+    }
+
+    /* Type Icons */
+    .type-icon {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        color: white;
+    }
+
+    .type-panic { background: var(--danger-red); }
+    .type-theft { background: #dc2626; }
+    .type-scam { background: var(--warning-yellow); }
+    .type-missing { background: #7c2d12; }
+    .type-anomaly { background: #64748b; }
+
+    /* Alert Details Panel */
+    .alert-details-panel {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        border: 1px solid #e2e8f0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .panel-header {
+        background: var(--primary-dark);
+        color: white;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .panel-content {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+    }
+
+    .detail-section {
+        margin-bottom: 24px;
+    }
+
+    .detail-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--primary-dark);
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .detail-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+
+    .detail-label {
+        color: #64748b;
+        font-weight: 500;
+    }
+
+    .detail-value {
+        color: var(--primary-dark);
+        font-weight: 600;
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+        padding: 20px;
+        border-top: 1px solid #e2e8f0;
+        background: #f8fafc;
+    }
+
+    .action-btn {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 8px;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .btn-acknowledge {
+        background: var(--accent-blue);
+        color: white;
+    }
+
+    .btn-assign {
+        background: var(--warning-yellow);
+        color: white;
+    }
+
+    .btn-response {
+        background: var(--danger-red);
+        color: white;
+    }
+
+    .btn-resolve {
+        background: var(--success-green);
+        color: white;
+    }
+
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Map Container */
+    .map-container {
+        height: 250px;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+        margin: 12px 0;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+        .alerts-layout {
+            grid-template-columns: 1fr;
+            height: auto;
+        }
+        
+        .alert-details-panel {
+            height: 400px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .alerts-table-header,
+        .alert-row {
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+        
+        .controls-row {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        
+        .control-select,
+        .control-input {
+            min-width: auto;
+        }
+    }
+</style>
+<body>
+    <body>
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-shield-alt fa-2x mb-2"></i>
+            <h4 data-en="Police & Tourism" data-hi="पुलिस और पर्यटन">Tourism Authority of India</h4>
+            <small data-en="Authority Dashboard" data-hi="प्राधिकरण डैशबोर्ड">Authority Dashboard</small>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="index.html" class="nav-link" data-section="dashboard">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span data-en="Dashboard" data-hi="डैशबोर्ड">Dashboard</span>
+                </a></li>
+            <li><a href="alert.html" class="nav-link active" data-section="alerts">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span data-en="Alerts" data-hi="अलर्ट">Alerts</span>
+                </a></li>
+            <li><a href="tourist.html" class="nav-link" data-section="tourists">
+                    <i class="fas fa-users"></i>
+                    <span data-en="Tourists" data-hi="पर्यटक">Tourists</span>
+                </a></li>
+            <li><a href="reports.html" class="nav-link" data-section="reports">
+                    <i class="fas fa-chart-bar"></i>
+                    <span data-en="Reports" data-hi="रिपोर्ट्स">Reports</span>
+                </a></li>
+            <li><a href="#" class="nav-link" data-section="settings">
+                    <i class="fas fa-cog"></i>
+                    <span data-en="Settings" data-hi="सेटिंग्स">Settings</span>
+                </a></li>
+        </ul>
+    </nav>
+
+    <div class="main-content">
+        <!-- Alerts Header -->
+        <div class="alerts-header">
+            <div class="alerts-title">
+                <div class="alerts-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div>
+                    <h1>Alerts Management</h1>
+                    <p class="alerts-subtitle">Monitor and respond to tourist safety incidents across India</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters and Controls -->
+        <div class="alerts-controls">
+            <div class="controls-row">
+                <div class="control-group">
+                    <label class="control-label">Alert Type</label>
+                    <select class="control-select" id="typeFilter">
+                        <option value="">All Types</option>
+                        <option value="panic">Panic Button</option>
+                        <option value="theft">Theft</option>
+                        <option value="scam">Scam/Fraud</option>
+                        <option value="missing">Missing Person</option>
+                        <option value="anomaly">Anomaly</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label class="control-label">Severity</label>
+                    <select class="control-select" id="severityFilter">
+                        <option value="">All Severities</option>
+                        <option value="critical">Critical</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label class="control-label">Status</label>
+                    <select class="control-select" id="statusFilter">
+                        <option value="">All Status</option>
+                        <option value="new">New</option>
+                        <option value="acknowledged">Acknowledged</option>
+                        <option value="assigned">Assigned</option>
+                        <option value="resolved">Resolved</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label class="control-label">Location</label>
+                    <input type="text" class="control-input" id="locationFilter" placeholder="Search location...">
+                </div>
+                
+                <div class="control-group">
+                    <label class="control-label">Sort By</label>
+                    <select class="control-select" id="sortBy">
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="severity">By Severity</option>
+                        <option value="type">By Type</option>
+                    </select>
+                </div>
+                
+                <button class="refresh-btn" onclick="refreshAlerts()">
+                    <i class="fas fa-sync-alt"></i>
+                    Refresh
+                </button>
+            </div>
+        </div>
+
+        <!-- Alerts Layout -->
+        <div class="alerts-layout">
+            <!-- Alerts List -->
+            <div class="alerts-list-container">
+                <div class="alerts-table-header">
+                    <div>Alert ID</div>
+                    <div>Type</div>
+                    <div>Tourist Name/ID</div>
+                    <div>Location</div>
+                    <div>Severity</div>
+                    <div>Timestamp</div>
+                    <div>Status</div>
+                    <div>Actions</div>
+                </div>
+                
+                <div class="alerts-table-body" id="alertsTableBody">
+                    <!-- Alert rows will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Alert Details Panel -->
+            <div class="alert-details-panel">
+                <div class="panel-header">
+                    <h3 id="panelTitle">Select an Alert</h3>
+                    <p id="panelSubtitle">Click on an alert to view details</p>
+                </div>
+                
+                <div class="panel-content" id="panelContent">
+                    <div style="text-align: center; color: #64748b; margin-top: 50px;">
+                        <i class="fas fa-mouse-pointer" style="font-size: 48px; margin-bottom: 16px; opacity: 0.3;"></i>
+                        <p>Select an alert from the list to view detailed information</p>
+                    </div>
+                </div>
+                
+                <div class="action-buttons" id="actionButtons" style="display: none;">
+                    <button class="action-btn btn-acknowledge" onclick="acknowledgeAlert()">
+                        <i class="fas fa-check"></i>
+                        Acknowledge Alert
+                    </button>
+                    <button class="action-btn btn-assign" onclick="assignOfficer()">
+                        <i class="fas fa-user-shield"></i>
+                        Assign Officer
+                    </button>
+                    <button class="action-btn btn-response" onclick="sendResponseTeam()">
+                        <i class="fas fa-ambulance"></i>
+                        Send Response Team
+                    </button>
+                    <button class="action-btn btn-resolve" onclick="markResolved()">
+                        <i class="fas fa-check-circle"></i>
+                        Mark Resolved
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Global variables
+    let alerts = [];
+    let filteredAlerts = [];
+    let selectedAlert = null;
+    let alertMap = null;
+
+    // Mock alert data
+    const mockAlerts = [
+        {
+            id: 'ALT-2024-001',
+            type: 'panic',
+            touristName: 'Anish Kumar',
+            touristId: 'TID-2024-001234',
+            location: 'Taj Mahal, Agra',
+            coordinates: [27.1751, 78.0421],
+            severity: 'critical',
+            timestamp: new Date(Date.now() - 30 * 60000), // 30 minutes ago
+            status: 'new',
+            description: 'Tourist activated panic button near the main entrance',
+            emergencyContact: 'Jane Smith - +1-555-0124',
+            passport: 'US123456789',
+            nationality: 'United States',
+            itinerary: 'Delhi → Agra → Jaipur (Golden Triangle Tour)',
+            alertHistory: [
+                { time: new Date(Date.now() - 30 * 60000), action: 'Alert triggered', officer: 'System' }
+            ]
+        },
+        {
+            id: 'ALT-2024-002',
+            type: 'theft',
+            touristName: 'Kiara',
+            touristId: 'TID-2024-001235',
+            location: 'Red Fort, Delhi',
+            coordinates: [28.6562, 77.2410],
+            severity: 'medium',
+            timestamp: new Date(Date.now() - 2 * 3600000), // 2 hours ago
+            status: 'acknowledged',
+            description: 'Reported theft of wallet and documents',
+            emergencyContact: 'Carlos Garcia - +34-600-123457',
+            passport: 'ES987654321',
+            nationality: 'Spain',
+            itinerary: 'Delhi → Mumbai → Goa',
+            alertHistory: [
+                { time: new Date(Date.now() - 2 * 3600000), action: 'Alert created', officer: 'Tourist' },
+                { time: new Date(Date.now() - 90 * 60000), action: 'Alert acknowledged', officer: 'Officer Sharma' }
+            ]
+        },
+        {
+            id: 'ALT-2024-003',
+            type: 'scam',
+            touristName: 'Lakshmi',
+            touristId: 'TID-2024-001236',
+            location: 'Gateway of India, Mumbai',
+            coordinates: [18.9220, 72.8347],
+            severity: 'medium',
+            timestamp: new Date(Date.now() - 4 * 3600000), // 4 hours ago
+            status: 'assigned',
+            description: 'Tourist reported overcharging by taxi driver',
+            emergencyContact: 'Sarah Wilson - +44-20-1234-5678',
+            passport: 'UK456789123',
+            nationality: 'United Kingdom',
+            itinerary: 'Mumbai → Goa → Kerala',
+            alertHistory: [
+                { time: new Date(Date.now() - 4 * 3600000), action: 'Alert created', officer: 'Tourist' },
+                { time: new Date(Date.now() - 3 * 3600000), action: 'Alert acknowledged', officer: 'Officer Patel' },
+                { time: new Date(Date.now() - 2 * 3600000), action: 'Assigned to Officer Kumar', officer: 'Officer Patel' }
+            ]
+        },
+        {
+            id: 'ALT-2024-004',
+            type: 'missing',
+            touristName: 'Meera',
+            touristId: 'TID-2024-001237',
+            location: 'Jaisalmer Fort, Rajasthan',
+            coordinates: [26.9124, 70.9083],
+            severity: 'critical',
+            timestamp: new Date(Date.now() - 6 * 3600000), // 6 hours ago
+            status: 'assigned',
+            description: 'Tourist has not returned to hotel, last seen at fort',
+            emergencyContact: 'Michael Chen - +86-138-0013-8000',
+            passport: 'CN789123456',
+            nationality: 'China',
+            itinerary: 'Rajasthan Cultural Tour',
+            alertHistory: [
+                { time: new Date(Date.now() - 6 * 3600000), action: 'Missing person report filed', officer: 'Hotel Manager' },
+                { time: new Date(Date.now() - 5 * 3600000), action: 'Alert acknowledged', officer: 'Officer Singh' },
+                { time: new Date(Date.now() - 4 * 3600000), action: 'Search team deployed', officer: 'Officer Singh' }
+            ]
+        },
+        {
+            id: 'ALT-2024-005',
+            type: 'anomaly',
+            touristName: 'Rohan',
+            touristId: 'TID-2024-001238',
+            location: 'Calicut, Kerala',
+            coordinates: [11.2588, 75.7804],
+            severity: 'low',
+            timestamp: new Date(Date.now() - 12 * 3600000), // 12 hours ago
+            status: 'resolved',
+            description: 'Unusual movement pattern detected by tracking system',
+            emergencyContact: 'Fatima Hassan - +971-50-123-4567',
+            passport: 'AE654321987',
+            nationality: 'UAE',
+            itinerary: 'Kerala Backwaters Tour',
+            alertHistory: [
+                { time: new Date(Date.now() - 12 * 3600000), action: 'Anomaly detected', officer: 'System' },
+                { time: new Date(Date.now() - 10 * 3600000), action: 'Investigated - false alarm', officer: 'Officer Nair' },
+                { time: new Date(Date.now() - 9 * 3600000), action: 'Case resolved', officer: 'Officer Nair' }
+            ]
+        }
+    ];
+
+    // Initialize alerts system
+    document.addEventListener('DOMContentLoaded', function() {
+        alerts = [...mockAlerts];
+        filteredAlerts = [...alerts];
+        renderAlerts();
+        setupEventListeners();
+    });
+
+    // Setup event listeners for filters
+    function setupEventListeners() {
+        document.getElementById('typeFilter').addEventListener('change', applyFilters);
+        document.getElementById('severityFilter').addEventListener('change', applyFilters);
+        document.getElementById('statusFilter').addEventListener('change', applyFilters);
+        document.getElementById('locationFilter').addEventListener('input', applyFilters);
+        document.getElementById('sortBy').addEventListener('change', applyFilters);
+    }
+
+    // Apply filters and sorting
+    function applyFilters() {
+        const typeFilter = document.getElementById('typeFilter').value;
+        const severityFilter = document.getElementById('severityFilter').value;
+        const statusFilter = document.getElementById('statusFilter').value;
+        const locationFilter = document.getElementById('locationFilter').value.toLowerCase();
+        const sortBy = document.getElementById('sortBy').value;
+
+        filteredAlerts = alerts.filter(alert => {
+            return (!typeFilter || alert.type === typeFilter) &&
+                   (!severityFilter || alert.severity === severityFilter) &&
+                   (!statusFilter || alert.status === statusFilter) &&
+                   (!locationFilter || alert.location.toLowerCase().includes(locationFilter));
+        });
+
+        // Sort alerts
+        filteredAlerts.sort((a, b) => {
+            switch(sortBy) {
+                case 'newest':
+                    return new Date(b.timestamp) - new Date(a.timestamp);
+                case 'oldest':
+                    return new Date(a.timestamp) - new Date(b.timestamp);
+                case 'severity':
+                    const severityOrder = { critical: 3, medium: 2, low: 1 };
+                    return severityOrder[b.severity] - severityOrder[a.severity];
+                case 'type':
+                    return a.type.localeCompare(b.type);
+                default:
+                    return 0;
+            }
+        });
+
+        renderAlerts();
+    }
+
+    // Render alerts table
+    function renderAlerts() {
+        const tbody = document.getElementById('alertsTableBody');
+        tbody.innerHTML = '';
+
+        filteredAlerts.forEach(alert => {
+            const row = createAlertRow(alert);
+            tbody.appendChild(row);
+        });
+    }
+
+    // Create alert row
+    function createAlertRow(alert) {
+        const row = document.createElement('div');
+        row.className = 'alert-row';
+        row.onclick = () => selectAlert(alert);
+
+        const typeIcon = getTypeIcon(alert.type);
+        const severityBadge = getSeverityBadge(alert.severity);
+        const statusBadge = getStatusBadge(alert.status);
+        const timeAgo = getTimeAgo(alert.timestamp);
+
+        row.innerHTML = `
+            <div style="font-weight: 600; color: var(--primary-dark);">${alert.id}</div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                ${typeIcon}
+                <span style="text-transform: capitalize;">${alert.type}</span>
+            </div>
+            <div>
+                <div style="font-weight: 600;">${alert.touristName}</div>
+                <div style="font-size: 12px; color: #64748b;">${alert.touristId}</div>
+            </div>
+            <div style="font-size: 13px;">${alert.location}</div>
+            <div>${severityBadge}</div>
+            <div style="font-size: 12px; color: #64748b;">${timeAgo}</div>
+            <div>${statusBadge}</div>
+            <div>
+                <button class="btn btn-sm btn-outline-primary" onclick="event.stopPropagation(); selectAlert(${JSON.stringify(alert).replace(/"/g, '&quot;')})">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </div>
+        `;
+
+        return row;
+    }
+
+    // Helper functions for UI elements
+    function getTypeIcon(type) {
+        const icons = {
+            panic: '<div class="type-icon type-panic"><i class="fas fa-exclamation"></i></div>',
+            theft: '<div class="type-icon type-theft"><i class="fas fa-user-times"></i></div>',
+            scam: '<div class="type-icon type-scam"><i class="fas fa-dollar-sign"></i></div>',
+            missing: '<div class="type-icon type-missing"><i class="fas fa-search"></i></div>',
+            anomaly: '<div class="type-icon type-anomaly"><i class="fas fa-question"></i></div>'
+        };
+        return icons[type] || '';
+    }
+
+    function getSeverityBadge(severity) {
+        return `<span class="severity-badge severity-${severity}">${severity}</span>`;
+    }
+
+    function getStatusBadge(status) {
+        return `<span class="status-badge status-${status}">${status}</span>`;
+    }
+
+    function getTimeAgo(timestamp) {
+        const now = new Date();
+        const diff = now - new Date(timestamp);
+        const minutes = Math.floor(diff / 60000);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+
+        if (days > 0) return `${days}d ago`;
+        if (hours > 0) return `${hours}h ago`;
+        return `${minutes}m ago`;
+    }
+
+    // Select alert and show details
+    function selectAlert(alert) {
+        selectedAlert = alert;
+        
+        // Update selected row styling
+        document.querySelectorAll('.alert-row').forEach(row => row.classList.remove('selected'));
+        event.currentTarget.classList.add('selected');
+
+        // Update panel
+        document.getElementById('panelTitle').textContent = `Alert ${alert.id}`;
+        document.getElementById('panelSubtitle').textContent = `${alert.type.toUpperCase()} - ${alert.severity.toUpperCase()} SEVERITY`;
+
+        // Show alert details
+        const panelContent = document.getElementById('panelContent');
+        panelContent.innerHTML = `
+            <div class="detail-section">
+                <div class="detail-title">Alert Information</div>
+                <div class="detail-item">
+                    <span class="detail-label">Type:</span>
+                    <span class="detail-value">${alert.type.charAt(0).toUpperCase() + alert.type.slice(1)}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Severity:</span>
+                    <span class="detail-value">${getSeverityBadge(alert.severity)}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Status:</span>
+                    <span class="detail-value">${getStatusBadge(alert.status)}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Description:</span>
+                    <span class="detail-value">${alert.description}</span>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-title">Tourist Information</div>
+                <div class="detail-item">
+                    <span class="detail-label">Name:</span>
+                    <span class="detail-value">${alert.touristName}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Digital ID:</span>
+                    <span class="detail-value">${alert.touristId}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Passport:</span>
+                    <span class="detail-value">${alert.passport}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Nationality:</span>
+                    <span class="detail-value">${alert.nationality}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Emergency Contact:</span>
+                    <span class="detail-value">${alert.emergencyContact}</span>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-title">Location & Itinerary</div>
+                <div class="detail-item">
+                    <span class="detail-label">Current Location:</span>
+                    <span class="detail-value">${alert.location}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Planned Itinerary:</span>
+                    <span class="detail-value">${alert.itinerary}</span>
+                </div>
+                <div id="alertMap" class="map-container"></div>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-title">Alert History</div>
+                ${alert.alertHistory.map(entry => `
+                    <div class="detail-item" style="flex-direction: column; align-items: flex-start; margin-bottom: 12px; padding: 8px; background: #f8fafc; border-radius: 4px;">
+                        <div style="font-size: 12px; color: #64748b;">${entry.time.toLocaleString()}</div>
+                        <div style="font-weight: 600; margin: 4px 0;">${entry.action}</div>
+                        <div style="font-size: 12px; color: #64748b;">by ${entry.officer}</div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+
+        // Show action buttons
+        document.getElementById('actionButtons').style.display = 'block';
+
+        // Initialize map for this alert
+        setTimeout(() => initAlertMap(alert), 100);
+    }
+
+    // Initialize map for selected alert
+    function initAlertMap(alert) {
+        const mapContainer = document.getElementById('alertMap');
+        if (!mapContainer) return;
+
+        if (alertMap) {
+            alertMap.remove();
+        }
+
+        alertMap = L.map('alertMap').setView(alert.coordinates, 13);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(alertMap);
+
+        // Add incident marker
+        const incidentIcon = L.divIcon({
+            html: '<div style="background: #ef4444; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px;"><i class="fas fa-exclamation"></i></div>',
+            iconSize: [20, 20],
+            className: 'custom-div-icon'
+        });
+
+        L.marker(alert.coordinates, { icon: incidentIcon })
+            .addTo(alertMap)
+            .bindPopup(`<strong>${alert.type.toUpperCase()}</strong><br>${alert.location}<br>${alert.description}`);
+
+        // Add nearby police stations (mock data)
+        const policeStations = [
+            { name: 'Tourist Police Station', coords: [alert.coordinates[0] + 0.01, alert.coordinates[1] + 0.01] },
+            { name: 'Local Police Station', coords: [alert.coordinates[0] - 0.01, alert.coordinates[1] - 0.01] }
+        ];
+
+        policeStations.forEach(station => {
+            const policeIcon = L.divIcon({
+                html: '<div style="background: #3b82f6; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px;"><i class="fas fa-shield"></i></div>',
+                iconSize: [16, 16],
+                className: 'custom-div-icon'
+            });
+
+            L.marker(station.coords, { icon: policeIcon })
+                .addTo(alertMap)
+                .bindPopup(`<strong>${station.name}</strong><br>Police Station`);
+        });
+
+        setTimeout(() => alertMap.invalidateSize(), 100);
+    }
+
+    // Action button functions
+    function acknowledgeAlert() {
+        if (!selectedAlert) return;
+        
+        selectedAlert.status = 'acknowledged';
+        selectedAlert.alertHistory.push({
+            time: new Date(),
+            action: 'Alert acknowledged',
+            officer: 'Current Officer'
+        });
+        
+        updateAlertStatus();
+        applyFilters();
+    }
+
+    function assignOfficer() {
+        if (!selectedAlert) return;
+        
+        const officer = prompt('Enter officer name to assign:');
+        if (officer) {
+            selectedAlert.status = 'assigned';
+            selectedAlert.alertHistory.push({
+                time: new Date(),
+                action: `Assigned to ${officer}`,
+                officer: 'Current Officer'
+            });
+            
+            updateAlertStatus();
+            applyFilters();
+        }
+    }
+
+    function sendResponseTeam() {
+        if (!selectedAlert) return;
+        
+        if (confirm('Send emergency response team to this location?')) {
+            selectedAlert.alertHistory.push({
+                time: new Date(),
+                action: 'Emergency response team dispatched',
+                officer: 'Current Officer'
+            });
+            
+            alert('Emergency response team has been notified and dispatched!');
+            updateAlertStatus();
+        }
+    }
+
+    function markResolved() {
+        if (!selectedAlert) return;
+        
+        const notes = prompt('Enter resolution notes:');
+        if (notes !== null) {
+            selectedAlert.status = 'resolved';
+            selectedAlert.alertHistory.push({
+                time: new Date(),
+                action: `Case resolved: ${notes}`,
+                officer: 'Current Officer'
+            });
+            
+            updateAlertStatus();
+            applyFilters();
+        }
+    }
+
+    function updateAlertStatus() {
+        if (selectedAlert) {
+            selectAlert(selectedAlert);
+        }
+    }
+
+    function refreshAlerts() {
+        // Simulate new alerts or status updates
+        const refreshBtn = document.querySelector('.refresh-btn i');
+        refreshBtn.classList.add('fa-spin');
+        
+        setTimeout(() => {
+            refreshBtn.classList.remove('fa-spin');
+            // In real implementation, this would fetch from API
+            applyFilters();
+        }, 1000);
+    }
+</script>
+</body>
+</html>

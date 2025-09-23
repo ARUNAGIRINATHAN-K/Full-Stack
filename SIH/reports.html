@@ -1,0 +1,1844 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Report Dashboard</title>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+    </head>
+    <style>
+    body {
+        background-color: white;
+    }
+
+    :root {
+        --sidebar-width: 250px;
+        --primary-dark: #1e293b;
+        --secondary-dark: #334155;
+        --text-light: #f8fafc;
+        --accent-blue: #3b82f6;
+        --danger-red: #ef4444;
+        --warning-yellow: #f59e0b;
+        --success-green: #10b981;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: var(--sidebar-width);
+        background: linear-gradient(180deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
+        color: var(--text-light);
+        z-index: 1000;
+        transition: transform 0.3s ease;
+    }
+
+    .sidebar-header {
+        padding: 20px;
+        text-align: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .sidebar-header h4 {
+        margin: 0;
+        font-weight: 300;
+        color: var(--accent-blue);
+    }
+
+    .sidebar-nav {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+
+    .sidebar-nav li {
+        margin: 5px 0;
+    }
+
+    .sidebar-nav a {
+        display: flex;
+        align-items: center;
+        padding: 15px 20px;
+        color: var(--text-light);
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .sidebar-nav a:hover,
+    .sidebar-nav a.active {
+        background-color: rgba(59, 130, 246, 0.2);
+        color: var(--accent-blue);
+        border-right: 3px solid var(--accent-blue);
+    }
+
+    .sidebar-nav i {
+        margin-right: 10px;
+        width: 20px;
+        text-align: center;
+    }
+
+    /* Main Content Styles */
+    .main-content {
+        margin-left: var(--sidebar-width);
+        padding: 0;
+        min-height: 100vh;
+        background-color: #f8fafc;
+    }
+
+    .header-section {
+        background: white;
+        padding: 20px 30px;
+        border-bottom: 1px solid #e2e8f0;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* Quick Stats Cards */
+    .quick-stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e2e8f0;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .quick-stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.2rem;
+    }
+
+    .stat-content h3 {
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--primary-dark);
+    }
+
+    .stat-content p {
+        margin: 0;
+        color: #64748b;
+        font-size: 0.9rem;
+    }
+
+    /* Report Sections */
+    .report-section {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e2e8f0;
+        margin-bottom: 20px;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .section-header h4 {
+        margin: 0;
+        color: var(--primary-dark);
+        font-weight: 600;
+    }
+
+    .section-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .chart-container {
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 20px;
+        height: 100%;
+    }
+
+    .chart-container h6 {
+        margin-bottom: 15px;
+        color: var(--primary-dark);
+        font-weight: 600;
+        text-align: center;
+    }
+
+    /* Category Stats */
+    .category-stats .category-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 15px;
+        padding: 10px;
+        background: white;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .category-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.1rem;
+    }
+
+    .category-icon.crime { background-color: var(--danger-red); }
+    .category-icon.accident { background-color: var(--warning-yellow); }
+    .category-icon.health { background-color: var(--accent-blue); }
+    .category-icon.fraud { background-color: var(--secondary-dark); }
+
+    .category-details {
+        flex: 1;
+    }
+
+    .category-name {
+        display: block;
+        font-weight: 600;
+        color: var(--primary-dark);
+        margin-bottom: 2px;
+    }
+
+    .category-count {
+        display: block;
+        font-size: 0.85rem;
+        color: #64748b;
+        margin-bottom: 5px;
+    }
+
+    .category-bar {
+        width: 100%;
+        height: 6px;
+        background: #e2e8f0;
+        border-radius: 3px;
+        overflow: hidden;
+    }
+
+    .category-progress {
+        height: 100%;
+        border-radius: 3px;
+        transition: width 0.3s ease;
+    }
+
+    /* Severity Donut */
+    .severity-donut {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .donut-chart {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: conic-gradient(
+            var(--danger-red) 0deg 115deg,
+            var(--warning-yellow) 115deg 288deg,
+            var(--success-green) 288deg 360deg
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .donut-chart::after {
+        content: '';
+        width: 80px;
+        height: 80px;
+        background: #f8fafc;
+        border-radius: 50%;
+        position: absolute;
+    }
+
+    .donut-center {
+        z-index: 1;
+        text-align: center;
+    }
+
+    .donut-total {
+        display: block;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-dark);
+    }
+
+    .donut-label {
+        font-size: 0.8rem;
+        color: #64748b;
+    }
+
+    .severity-legend {
+        flex: 1;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        padding: 5px 0;
+    }
+
+    .legend-color {
+        width: 12px;
+        height: 12px;
+        border-radius: 2px;
+        margin-right: 8px;
+    }
+
+    .legend-color.high { background-color: var(--danger-red); }
+    .legend-color.medium { background-color: var(--warning-yellow); }
+    .legend-color.low { background-color: var(--success-green); }
+
+    .legend-text {
+        flex: 1;
+        font-size: 0.9rem;
+        color: var(--primary-dark);
+    }
+
+    .legend-percent {
+        font-weight: 600;
+        color: #64748b;
+    }
+
+    /* Registration Stats */
+    .registration-stats {
+        text-align: center;
+    }
+
+    .stat-circle {
+        display: inline-block;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        margin: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+    }
+
+    .stat-circle.active { background-color: var(--success-green); }
+    .stat-circle.inactive { background-color: var(--secondary-dark); }
+
+    .circle-content {
+        text-align: center;
+    }
+
+    .circle-number {
+        display: block;
+        font-size: 1.1rem;
+        font-weight: 700;
+    }
+
+    .circle-label {
+        font-size: 0.7rem;
+        opacity: 0.9;
+    }
+
+    .registration-total {
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    /* Nationality List */
+    .nationality-list .nationality-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+        padding: 8px;
+        background: white;
+        border-radius: 6px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .nationality-item .flag {
+        font-size: 1.2rem;
+    }
+
+    .nationality-item .country {
+        flex: 1;
+        font-size: 0.9rem;
+        color: var(--primary-dark);
+    }
+
+    .nationality-item .count {
+        font-weight: 600;
+        color: var(--accent-blue);
+        font-size: 0.9rem;
+    }
+
+    .nationality-bar {
+        width: 100%;
+        height: 4px;
+        background: #e2e8f0;
+        border-radius: 2px;
+        margin-top: 5px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: var(--accent-blue);
+        border-radius: 2px;
+        transition: width 0.3s ease;
+    }
+
+    /* Safety Scores */
+    .safety-scores .score-item {
+        margin-bottom: 15px;
+    }
+
+    .region-name {
+        display: block;
+        font-weight: 600;
+        color: var(--primary-dark);
+        margin-bottom: 5px;
+        font-size: 0.9rem;
+    }
+
+    .score-bar {
+        position: relative;
+        width: 100%;
+        height: 20px;
+        background: #e2e8f0;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .score-fill {
+        height: 100%;
+        border-radius: 10px;
+        transition: width 0.3s ease;
+    }
+
+    .score-value {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: white;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .overall-score {
+        margin-top: 20px;
+        padding-top: 15px;
+        border-top: 1px solid #e2e8f0;
+        text-align: center;
+    }
+
+    /* Map Container */
+    .map-container {
+        position: relative;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+    }
+
+    .heatmap-legend {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 10px;
+        padding: 10px;
+        background: white;
+        border-radius: 6px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .legend-title {
+        font-weight: 600;
+        color: var(--primary-dark);
+        font-size: 0.9rem;
+    }
+
+    .density-scale {
+        display: flex;
+        gap: 10px;
+    }
+
+    .scale-item {
+        padding: 4px 12px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        color: white;
+        font-weight: 500;
+    }
+
+    .scale-item.low { background-color: var(--success-green); }
+    .scale-item.medium { background-color: var(--warning-yellow); }
+    .scale-item.high { background-color: #ff6b35; }
+    .scale-item.very-high { background-color: var(--danger-red); }
+
+    /* Trend Summary */
+    .trend-summary {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .trend-metric {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 12px;
+        background: white;
+        border-radius: 6px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .metric-label {
+        font-size: 0.9rem;
+        color: var(--primary-dark);
+    }
+
+    .metric-value {
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .mini-chart {
+        background: white;
+        border-radius: 6px;
+        padding: 10px;
+        border: 1px solid #e2e8f0;
+        margin-bottom: 20px;
+    }
+
+    /* Hotspot List */
+    .hotspot-list h6 {
+        margin-bottom: 10px;
+        color: var(--primary-dark);
+        font-size: 0.9rem;
+    }
+
+    .hotspot-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 10px;
+        background: white;
+        border-radius: 4px;
+        border: 1px solid #e2e8f0;
+        margin-bottom: 6px;
+    }
+
+    .hotspot-name {
+        font-size: 0.85rem;
+        color: var(--primary-dark);
+    }
+
+    .hotspot-count {
+        font-size: 0.8rem;
+        color: var(--danger-red);
+        font-weight: 600;
+    }
+
+    /* Config Panel */
+    .config-panel {
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 20px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .config-panel h6 {
+        margin-bottom: 15px;
+        color: var(--primary-dark);
+        font-weight: 600;
+    }
+
+    /* Templates Panel */
+    .templates-panel {
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 20px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .template-card {
+        background: white;
+        border-radius: 8px;
+        padding: 15px;
+        border: 1px solid #e2e8f0;
+        margin-bottom: 15px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .template-card:hover {
+        border-color: var(--accent-blue);
+        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+    }
+
+    .template-card.selected {
+        border-color: var(--accent-blue);
+        background: rgba(59, 130, 246, 0.05);
+    }
+
+    .template-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+    }
+
+    .template-name {
+        font-weight: 600;
+        color: var(--primary-dark);
+    }
+
+    .template-description {
+        font-size: 0.85rem;
+        color: #64748b;
+        margin-bottom: 8px;
+        line-height: 1.4;
+    }
+
+    .template-includes {
+        font-size: 0.75rem;
+        color: #94a3b8;
+    }
+
+    /* Preview Panel */
+    .preview-panel {
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 20px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .report-preview {
+        background: white;
+        border-radius: 6px;
+        padding: 15px;
+        border: 1px solid #e2e8f0;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .preview-header h5 {
+        margin: 0 0 5px 0;
+        color: var(--primary-dark);
+        font-size: 1rem;
+    }
+
+    .preview-section {
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .preview-section:last-child {
+        border-bottom: none;
+    }
+
+    .preview-section strong {
+        display: block;
+        margin-bottom: 5px;
+        color: var(--primary-dark);
+        font-size: 0.9rem;
+    }
+
+    .preview-section p {
+        margin: 0;
+        font-size: 0.8rem;
+        color: #64748b;
+        line-height: 1.4;
+    }
+
+    .preview-section ul {
+        margin: 0;
+        padding-left: 15px;
+        font-size: 0.8rem;
+        color: #64748b;
+    }
+
+    .preview-chart {
+        background: #f8fafc;
+        border: 1px dashed #cbd5e1;
+        border-radius: 4px;
+        padding: 8px;
+        margin: 5px 0;
+        font-size: 0.75rem;
+        color: #64748b;
+        text-align: center;
+    }
+
+    .generation-status {
+        margin-top: 15px;
+        padding: 15px;
+        background: rgba(59, 130, 246, 0.05);
+        border-radius: 6px;
+        border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .main-content {
+            margin-left: 0;
+        }
+
+        .sidebar {
+            transform: translateX(-100%);
+        }
+
+        .sidebar.show {
+            transform: translateX(0);
+        }
+
+        .header-section {
+            padding: 15px 20px;
+        }
+
+        .quick-stat-card {
+            margin-bottom: 15px;
+        }
+
+        .section-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .chart-container {
+            margin-bottom: 20px;
+        }
+
+        .severity-donut {
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .heatmap-legend {
+            flex-wrap: wrap;
+        }
+
+        .density-scale {
+            flex-wrap: wrap;
+        }
+
+        .template-card {
+            margin-bottom: 10px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .header-actions {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 8px;
+        }
+
+        .section-actions {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 8px;
+        }
+
+        .trend-summary {
+            gap: 8px;
+        }
+
+        .nationality-item {
+            font-size: 0.8rem;
+        }
+
+        .hotspot-item {
+            font-size: 0.8rem;
+        }
+    }
+    </style>
+<body>
+    <body>
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-shield-alt fa-2x mb-2"></i>
+            <h4 data-en="Police & Tourism" data-hi="पुलिस और पर्यटन">Tourism Authority of India</h4>
+            <small data-en="Authority Dashboard" data-hi="प्राधिकरण डैशबोर्ड">Authority Dashboard</small>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="index.html" class="nav-link" data-section="dashboard">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span data-en="Dashboard" data-hi="डैशबोर्ड">Dashboard</span>
+                </a></li>
+            <li><a href="alert.html" class="nav-link" data-section="alerts">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span data-en="Alerts" data-hi="अलर्ट">Alerts</span>
+                </a></li>
+            <li><a href="tourist.html" class="nav-link" data-section="tourists">
+                    <i class="fas fa-users"></i>
+                    <span data-en="Tourists" data-hi="पर्यटक">Tourists</span>
+                </a></li>
+            <li><a href="reports.html" class="nav-link active" data-section="reports">
+                    <i class="fas fa-chart-bar"></i>
+                    <span data-en="Reports" data-hi="रिपोर्ट्स">Reports</span>
+                </a></li>
+            <li><a href="#" class="nav-link" data-section="settings">
+                    <i class="fas fa-cog"></i>
+                    <span data-en="Settings" data-hi="सेटिंग्स">Settings</span>
+                </a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header-section">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2><i class="fas fa-chart-bar me-2"></i>Reports & Analytics</h2>
+                    <p class="text-muted">Comprehensive reporting and data visualization</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-outline-primary me-2" id="refreshData">
+                        <i class="fas fa-sync-alt"></i> Refresh Data
+                    </button>
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle"></i> Admin Panel
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports Container -->
+        <div class="container-fluid">
+            <!-- Quick Stats Row -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="quick-stat-card">
+                        <div class="stat-icon bg-danger">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalIncidents">247</h3>
+                            <p>Total Incidents</p>
+                            <small class="text-danger">+12% this month</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="quick-stat-card">
+                        <div class="stat-icon bg-primary">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalTourists">1,847</h3>
+                            <p>Active Tourists</p>
+                            <small class="text-success">+8% this month</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="quick-stat-card">
+                        <div class="stat-icon bg-warning">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="riskZones">23</h3>
+                            <p>High-Risk Zones</p>
+                            <small class="text-warning">3 new zones</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="quick-stat-card">
+                        <div class="stat-icon bg-success">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="safetyScore">87%</h3>
+                            <p>Avg Safety Score</p>
+                            <small class="text-success">+2% improvement</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Incident Reports Overview Section -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="report-section">
+                        <div class="section-header">
+                            <h4><i class="fas fa-exclamation-circle me-2"></i>Incident Reports Overview</h4>
+                            <div class="section-actions">
+                                <button class="btn btn-sm btn-outline-primary me-2" id="exportIncidents">
+                                    <i class="fas fa-download"></i> Export
+                                </button>
+                                <select class="form-select form-select-sm" id="incidentTimeRange" style="width: auto; display: inline-block;">
+                                    <option value="7">Last 7 days</option>
+                                    <option value="30" selected>Last 30 days</option>
+                                    <option value="90">Last 3 months</option>
+                                    <option value="365">Last year</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <!-- Incident Categories -->
+                            <div class="col-md-6">
+                                <div class="chart-container">
+                                    <h6>Incidents by Category</h6>
+                                    <div class="category-stats">
+                                        <div class="category-item">
+                                            <div class="category-icon crime">
+                                                <i class="fas fa-mask"></i>
+                                            </div>
+                                            <div class="category-details">
+                                                <span class="category-name">Crime</span>
+                                                <span class="category-count">89 incidents</span>
+                                                <div class="category-bar">
+                                                    <div class="category-progress" style="width: 36%; background-color: var(--danger-red);"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="category-item">
+                                            <div class="category-icon accident">
+                                                <i class="fas fa-car-crash"></i>
+                                            </div>
+                                            <div class="category-details">
+                                                <span class="category-name">Accident</span>
+                                                <span class="category-count">67 incidents</span>
+                                                <div class="category-bar">
+                                                    <div class="category-progress" style="width: 27%; background-color: var(--warning-yellow);"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="category-item">
+                                            <div class="category-icon health">
+                                                <i class="fas fa-heartbeat"></i>
+                                            </div>
+                                            <div class="category-details">
+                                                <span class="category-name">Health Emergency</span>
+                                                <span class="category-count">54 incidents</span>
+                                                <div class="category-bar">
+                                                    <div class="category-progress" style="width: 22%; background-color: var(--accent-blue);"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="category-item">
+                                            <div class="category-icon fraud">
+                                                <i class="fas fa-credit-card"></i>
+                                            </div>
+                                            <div class="category-details">
+                                                <span class="category-name">Fraud/Scam</span>
+                                                <span class="category-count">37 incidents</span>
+                                                <div class="category-bar">
+                                                    <div class="category-progress" style="width: 15%; background-color: var(--secondary-dark);"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Severity Breakdown -->
+                            <div class="col-md-6">
+                                <div class="chart-container">
+                                    <h6>Severity Breakdown</h6>
+                                    <div class="severity-donut">
+                                        <div class="donut-chart">
+                                            <div class="donut-center">
+                                                <span class="donut-total">247</span>
+                                                <span class="donut-label">Total</span>
+                                            </div>
+                                        </div>
+                                        <div class="severity-legend">
+                                            <div class="legend-item">
+                                                <span class="legend-color high"></span>
+                                                <span class="legend-text">High (78)</span>
+                                                <span class="legend-percent">32%</span>
+                                            </div>
+                                            <div class="legend-item">
+                                                <span class="legend-color medium"></span>
+                                                <span class="legend-text">Medium (119)</span>
+                                                <span class="legend-percent">48%</span>
+                                            </div>
+                                            <div class="legend-item">
+                                                <span class="legend-color low"></span>
+                                                <span class="legend-text">Low (50)</span>
+                                                <span class="legend-percent">20%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tourist Safety Statistics Section -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="report-section">
+                        <div class="section-header">
+                            <h4><i class="fas fa-users-shield me-2"></i>Tourist Safety Statistics</h4>
+                            <div class="section-actions">
+                                <button class="btn btn-sm btn-outline-primary me-2" id="exportTouristStats">
+                                    <i class="fas fa-download"></i> Export
+                                </button>
+                                <select class="form-select form-select-sm" id="touristStatsRegion" style="width: auto; display: inline-block;">
+                                    <option value="all" selected>All Regions</option>
+                                    <option value="north">North India</option>
+                                    <option value="south">South India</option>
+                                    <option value="east">East India</option>
+                                    <option value="west">West India</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <!-- Tourist Registration Stats -->
+                            <div class="col-md-4">
+                                <div class="chart-container">
+                                    <h6>Tourist Registration</h6>
+                                    <div class="registration-stats">
+                                        <div class="stat-circle active">
+                                            <div class="circle-content">
+                                                <span class="circle-number">1,847</span>
+                                                <span class="circle-label">Active</span>
+                                            </div>
+                                        </div>
+                                        <div class="stat-circle inactive">
+                                            <div class="circle-content">
+                                                <span class="circle-number">342</span>
+                                                <span class="circle-label">Inactive</span>
+                                            </div>
+                                        </div>
+                                        <div class="registration-total">
+                                            <strong>Total Registered: 2,189</strong>
+                                            <br><small class="text-success">84% active rate</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Nationality Distribution -->
+                            <div class="col-md-4">
+                                <div class="chart-container">
+                                    <h6>Top Nationalities</h6>
+                                    <div class="nationality-list">
+                                        <div class="nationality-item">
+                                            <span class="flag">🇺🇸</span>
+                                            <span class="country">United States</span>
+                                            <span class="count">423</span>
+                                            <div class="nationality-bar">
+                                                <div class="progress-fill" style="width: 23%;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="nationality-item">
+                                            <span class="flag">🇬🇧</span>
+                                            <span class="country">United Kingdom</span>
+                                            <span class="count">387</span>
+                                            <div class="nationality-bar">
+                                                <div class="progress-fill" style="width: 21%;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="nationality-item">
+                                            <span class="flag">🇩🇪</span>
+                                            <span class="country">Germany</span>
+                                            <span class="count">298</span>
+                                            <div class="nationality-bar">
+                                                <div class="progress-fill" style="width: 16%;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="nationality-item">
+                                            <span class="flag">🇫🇷</span>
+                                            <span class="country">France</span>
+                                            <span class="count">234</span>
+                                            <div class="nationality-bar">
+                                                <div class="progress-fill" style="width: 13%;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="nationality-item">
+                                            <span class="flag">🇯🇵</span>
+                                            <span class="country">Japan</span>
+                                            <span class="count">198</span>
+                                            <div class="nationality-bar">
+                                                <div class="progress-fill" style="width: 11%;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="nationality-item">
+                                            <span class="flag">🌍</span>
+                                            <span class="country">Others</span>
+                                            <span class="count">649</span>
+                                            <div class="nationality-bar">
+                                                <div class="progress-fill" style="width: 16%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Regional Safety Scores -->
+                            <div class="col-md-4">
+                                <div class="chart-container">
+                                    <h6>Regional Safety Scores</h6>
+                                    <div class="safety-scores">
+                                        <div class="score-item">
+                                            <span class="region-name">North India</span>
+                                            <div class="score-bar">
+                                                <div class="score-fill" style="width: 92%; background-color: var(--success-green);"></div>
+                                                <span class="score-value">92%</span>
+                                            </div>
+                                        </div>
+                                        <div class="score-item">
+                                            <span class="region-name">South India</span>
+                                            <div class="score-bar">
+                                                <div class="score-fill" style="width: 88%; background-color: var(--success-green);"></div>
+                                                <span class="score-value">88%</span>
+                                            </div>
+                                        </div>
+                                        <div class="score-item">
+                                            <span class="region-name">West India</span>
+                                            <div class="score-bar">
+                                                <div class="score-fill" style="width: 85%; background-color: var(--warning-yellow);"></div>
+                                                <span class="score-value">85%</span>
+                                            </div>
+                                        </div>
+                                        <div class="score-item">
+                                            <span class="region-name">East India</span>
+                                            <div class="score-bar">
+                                                <div class="score-fill" style="width: 81%; background-color: var(--warning-yellow);"></div>
+                                                <span class="score-value">81%</span>
+                                            </div>
+                                        </div>
+                                        <div class="overall-score">
+                                            <strong>Overall Average: 87%</strong>
+                                            <br><small class="text-info">+2% improvement this quarter</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Heatmaps & Trends Section -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="report-section">
+                        <div class="section-header">
+                            <h4><i class="fas fa-map-marked-alt me-2"></i>Heatmaps & Trends</h4>
+                            <div class="section-actions">
+                                <button class="btn btn-sm btn-outline-primary me-2" id="exportHeatmaps">
+                                    <i class="fas fa-download"></i> Export
+                                </button>
+                                <div class="btn-group" role="group">
+                                    <input type="radio" class="btn-check" name="trendView" id="dailyView" checked>
+                                    <label class="btn btn-outline-secondary btn-sm" for="dailyView">Daily</label>
+                                    <input type="radio" class="btn-check" name="trendView" id="weeklyView">
+                                    <label class="btn btn-outline-secondary btn-sm" for="weeklyView">Weekly</label>
+                                    <input type="radio" class="btn-check" name="trendView" id="monthlyView">
+                                    <label class="btn btn-outline-secondary btn-sm" for="monthlyView">Monthly</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <!-- Geographic Heatmap -->
+                            <div class="col-md-8">
+                                <div class="chart-container">
+                                    <h6>Geographic Crime/Scam Hotspots</h6>
+                                    <div id="heatmapContainer" class="map-container">
+                                        <div id="reportsHeatmap" style="height: 400px;"></div>
+                                    </div>
+                                    <div class="heatmap-legend">
+                                        <span class="legend-title">Incident Density:</span>
+                                        <div class="density-scale">
+                                            <span class="scale-item low">Low</span>
+                                            <span class="scale-item medium">Medium</span>
+                                            <span class="scale-item high">High</span>
+                                            <span class="scale-item very-high">Very High</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Trends Chart -->
+                            <div class="col-md-4">
+                                <div class="chart-container">
+                                    <h6>Incident Trends Over Time</h6>
+                                    <div class="trend-summary">
+                                        <div class="trend-metric">
+                                            <span class="metric-label">This Week</span>
+                                            <span class="metric-value text-danger">+18%</span>
+                                        </div>
+                                        <div class="trend-metric">
+                                            <span class="metric-label">This Month</span>
+                                            <span class="metric-value text-warning">+12%</span>
+                                        </div>
+                                        <div class="trend-metric">
+                                            <span class="metric-label">This Quarter</span>
+                                            <span class="metric-value text-success">-5%</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mini-chart">
+                                        <canvas id="trendChart" width="300" height="200"></canvas>
+                                    </div>
+                                    
+                                    <div class="hotspot-list">
+                                        <h6>Top Hotspots</h6>
+                                        <div class="hotspot-item">
+                                            <span class="hotspot-name">Connaught Place</span>
+                                            <span class="hotspot-count">23 incidents</span>
+                                        </div>
+                                        <div class="hotspot-item">
+                                            <span class="hotspot-name">India Gate</span>
+                                            <span class="hotspot-count">18 incidents</span>
+                                        </div>
+                                        <div class="hotspot-item">
+                                            <span class="hotspot-name">Red Fort</span>
+                                            <span class="hotspot-count">15 incidents</span>
+                                        </div>
+                                        <div class="hotspot-item">
+                                            <span class="hotspot-name">Janpath Market</span>
+                                            <span class="hotspot-count">12 incidents</span>
+                                        </div>
+                                        <div class="hotspot-item">
+                                            <span class="hotspot-name">Karol Bagh</span>
+                                            <span class="hotspot-count">11 incidents</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Report Generator Section -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="report-section">
+                        <div class="section-header">
+                            <h4><i class="fas fa-file-export me-2"></i>Report Generator</h4>
+                            <div class="section-actions">
+                                <button class="btn btn-sm btn-success me-2" id="generateReport">
+                                    <i class="fas fa-play"></i> Generate Report
+                                </button>
+                                <button class="btn btn-sm btn-outline-secondary" id="saveTemplate">
+                                    <i class="fas fa-save"></i> Save Template
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <!-- Report Configuration -->
+                            <div class="col-md-4">
+                                <div class="config-panel">
+                                    <h6>Report Configuration</h6>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">Report Type</label>
+                                        <select class="form-select" id="reportType">
+                                            <option value="incidents">Incidents Summary</option>
+                                            <option value="safety">Tourist Safety Report</option>
+                                            <option value="fraud">Scam/Fraud Analysis</option>
+                                            <option value="comprehensive">Comprehensive Report</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">Time Period</label>
+                                        <select class="form-select" id="reportPeriod">
+                                            <option value="7">Last 7 days</option>
+                                            <option value="30" selected>Last 30 days</option>
+                                            <option value="90">Last 3 months</option>
+                                            <option value="365">Last year</option>
+                                            <option value="custom">Custom Range</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">Export Format</label>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="exportPDF" checked>
+                                            <label class="form-check-label" for="exportPDF">
+                                                <i class="fas fa-file-pdf text-danger me-1"></i>PDF Report
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="exportExcel">
+                                            <label class="form-check-label" for="exportExcel">
+                                                <i class="fas fa-file-excel text-success me-1"></i>Excel Spreadsheet
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="exportCSV">
+                                            <label class="form-check-label" for="exportCSV">
+                                                <i class="fas fa-file-csv text-primary me-1"></i>CSV Data
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">Include Sections</label>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="includeSummary" checked>
+                                            <label class="form-check-label" for="includeSummary">Executive Summary</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="includeCharts" checked>
+                                            <label class="form-check-label" for="includeCharts">Charts & Visualizations</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="includeDetails" checked>
+                                            <label class="form-check-label" for="includeDetails">Detailed Data</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="includeRecommendations">
+                                            <label class="form-check-label" for="includeRecommendations">Recommendations</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Predefined Templates -->
+                            <div class="col-md-4">
+                                <div class="templates-panel">
+                                    <h6>Predefined Templates</h6>
+                                    
+                                    <div class="template-card" data-template="tourism">
+                                        <div class="template-header">
+                                            <i class="fas fa-building text-primary"></i>
+                                            <span class="template-name">Tourism Department</span>
+                                        </div>
+                                        <div class="template-description">
+                                            Comprehensive tourism safety report with visitor statistics and incident analysis.
+                                        </div>
+                                        <div class="template-includes">
+                                            <small>Includes: Safety metrics, visitor trends, incident summaries</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="template-card" data-template="police">
+                                        <div class="template-header">
+                                            <i class="fas fa-shield-alt text-info"></i>
+                                            <span class="template-name">Police Department</span>
+                                        </div>
+                                        <div class="template-description">
+                                            Crime analysis and law enforcement focused report with detailed incident data.
+                                        </div>
+                                        <div class="template-includes">
+                                            <small>Includes: Crime statistics, response times, resolution rates</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="template-card" data-template="ministry">
+                                        <div class="template-header">
+                                            <i class="fas fa-landmark text-warning"></i>
+                                            <span class="template-name">Ministry Report</span>
+                                        </div>
+                                        <div class="template-description">
+                                            High-level executive summary for ministry officials with policy recommendations.
+                                        </div>
+                                        <div class="template-includes">
+                                            <small>Includes: Executive summary, policy insights, strategic recommendations</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="template-card" data-template="emergency">
+                                        <div class="template-header">
+                                            <i class="fas fa-exclamation-triangle text-danger"></i>
+                                            <span class="template-name">Emergency Response</span>
+                                        </div>
+                                        <div class="template-description">
+                                            Rapid response report for emergency situations and crisis management.
+                                        </div>
+                                        <div class="template-includes">
+                                            <small>Includes: Immediate actions, resource allocation, situation status</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Report Preview -->
+                            <div class="col-md-4">
+                                <div class="preview-panel">
+                                    <h6>Report Preview</h6>
+                                    <div class="report-preview">
+                                        <div class="preview-header">
+                                            <h5>Tourism Safety Report</h5>
+                                            <small class="text-muted">Generated on September 22, 2025</small>
+                                        </div>
+                                        <div class="preview-content">
+                                            <div class="preview-section">
+                                                <strong>Executive Summary</strong>
+                                                <p>Tourist safety metrics for the past 30 days...</p>
+                                            </div>
+                                            <div class="preview-section">
+                                                <strong>Key Statistics</strong>
+                                                <ul>
+                                                    <li>247 total incidents reported</li>
+                                                    <li>1,847 active tourists monitored</li>
+                                                    <li>87% average safety score</li>
+                                                </ul>
+                                            </div>
+                                            <div class="preview-section">
+                                                <strong>Charts & Analysis</strong>
+                                                <div class="preview-chart">📊 Incident Categories Chart</div>
+                                                <div class="preview-chart">🗺️ Geographic Heatmap</div>
+                                                <div class="preview-chart">📈 Trend Analysis</div>
+                                            </div>
+                                        </div>
+                                        <div class="preview-footer">
+                                            <small class="text-muted">Report will include 12 pages with detailed analysis and recommendations.</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="generation-status" id="generationStatus" style="display: none;">
+                                        <div class="progress mb-2">
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+                                        </div>
+                                        <small class="status-text">Preparing report...</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    
+    <script>
+        // Global Variables
+        let reportsMap;
+        let trendChart;
+        let selectedTemplate = null;
+        
+        // Mock Data
+        const mockData = {
+            incidents: {
+                total: 247,
+                categories: {
+                    crime: 89,
+                    accident: 67,
+                    health: 54,
+                    fraud: 37
+                },
+                severity: {
+                    high: 78,
+                    medium: 119,
+                    low: 50
+                },
+                trends: {
+                    daily: [12, 8, 15, 22, 18, 25, 19, 16, 21, 14, 17, 23, 20, 26, 18, 15, 19, 24, 17, 22, 16, 13, 21, 28, 19, 17, 20, 25, 22, 18],
+                    weekly: [87, 92, 78, 85, 91, 88, 82, 79, 94, 87, 83, 89],
+                    monthly: [247, 218, 235, 229, 251, 243, 238, 225, 249, 234, 241, 252]
+                }
+            },
+            tourists: {
+                total: 2189,
+                active: 1847,
+                inactive: 342,
+                nationalities: {
+                    'United States': 423,
+                    'United Kingdom': 387,
+                    'Germany': 298,
+                    'France': 234,
+                    'Japan': 198,
+                    'Others': 649
+                },
+                safetyScores: {
+                    'North India': 92,
+                    'South India': 88,
+                    'West India': 85,
+                    'East India': 81
+                }
+            },
+            hotspots: [
+                { name: 'Connaught Place', lat: 28.6315, lng: 77.2167, incidents: 23 },
+                { name: 'India Gate', lat: 28.6129, lng: 77.2295, incidents: 18 },
+                { name: 'Red Fort', lat: 28.6562, lng: 77.2410, incidents: 15 },
+                { name: 'Janpath Market', lat: 28.6139, lng: 77.2090, incidents: 12 },
+                { name: 'Karol Bagh', lat: 28.6519, lng: 77.1909, incidents: 11 }
+            ]
+        };
+
+        // Initialize Maps
+        function initializeHeatmap() {
+            if (reportsMap) {
+                reportsMap.remove();
+            }
+
+            reportsMap = L.map('reportsHeatmap').setView([28.6139, 77.2090], 11);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(reportsMap);
+
+            // Add hotspot markers
+            mockData.hotspots.forEach(hotspot => {
+                const severity = hotspot.incidents > 20 ? 'very-high' : 
+                               hotspot.incidents > 15 ? 'high' : 
+                               hotspot.incidents > 10 ? 'medium' : 'low';
+                
+                const color = severity === 'very-high' ? '#ef4444' :
+                             severity === 'high' ? '#ff6b35' :
+                             severity === 'medium' ? '#f59e0b' : '#10b981';
+
+                const marker = L.circleMarker([hotspot.lat, hotspot.lng], {
+                    color: color,
+                    fillColor: color,
+                    fillOpacity: 0.6,
+                    radius: Math.max(8, hotspot.incidents / 2),
+                    weight: 2
+                }).addTo(reportsMap);
+
+                marker.bindPopup(`
+                    <div class="popup-content">
+                        <h6>${hotspot.name}</h6>
+                        <p><strong>${hotspot.incidents}</strong> incidents reported</p>
+                        <small>Severity: ${severity.replace('-', ' ')}</small>
+                    </div>
+                `);
+            });
+
+            // Ensure map renders properly
+            setTimeout(() => {
+                reportsMap.invalidateSize();
+            }, 100);
+        }
+
+        // Initialize Trend Chart
+        function initializeTrendChart() {
+            const ctx = document.getElementById('trendChart').getContext('2d');
+            
+            if (trendChart) {
+                trendChart.destroy();
+            }
+
+            const currentPeriod = document.querySelector('input[name="trendView"]:checked').id;
+            let data, labels;
+
+            switch (currentPeriod) {
+                case 'dailyView':
+                    data = mockData.incidents.trends.daily.slice(-7);
+                    labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                    break;
+                case 'weeklyView':
+                    data = mockData.incidents.trends.weekly.slice(-8);
+                    labels = ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7', 'Week 8'];
+                    break;
+                case 'monthlyView':
+                    data = mockData.incidents.trends.monthly;
+                    labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    break;
+            }
+
+            trendChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Incidents',
+                        data: data,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: '#e2e8f0'
+                            },
+                            ticks: {
+                                color: '#64748b',
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#64748b',
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update Statistics
+        function updateStatistics(period = '30') {
+            // Simulate data updates based on period
+            const multiplier = period === '7' ? 0.3 : 
+                             period === '30' ? 1 : 
+                             period === '90' ? 2.8 : 12;
+
+            document.getElementById('totalIncidents').textContent = Math.round(247 * multiplier);
+            
+            // Update category statistics
+            const categories = document.querySelectorAll('.category-count');
+            categories[0].textContent = `${Math.round(89 * multiplier)} incidents`;
+            categories[1].textContent = `${Math.round(67 * multiplier)} incidents`;
+            categories[2].textContent = `${Math.round(54 * multiplier)} incidents`;
+            categories[3].textContent = `${Math.round(37 * multiplier)} incidents`;
+        }
+
+        // Template Selection
+        function selectTemplate(templateType) {
+            // Remove previous selection
+            document.querySelectorAll('.template-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+
+            // Add selection to clicked template
+            const templateCard = document.querySelector(`[data-template="${templateType}"]`);
+            if (templateCard) {
+                templateCard.classList.add('selected');
+                selectedTemplate = templateType;
+                updateReportPreview(templateType);
+            }
+        }
+
+        // Update Report Preview
+        function updateReportPreview(templateType) {
+            const previewContent = document.querySelector('.preview-content');
+            const previews = {
+                tourism: {
+                    title: 'Tourism Safety Report',
+                    summary: 'Comprehensive analysis of tourist safety metrics, visitor patterns, and incident prevention strategies.',
+                    sections: ['Executive Summary', 'Tourist Statistics', 'Safety Metrics', 'Regional Analysis', 'Recommendations']
+                },
+                police: {
+                    title: 'Police Operations Report',
+                    summary: 'Detailed law enforcement analysis focusing on crime patterns, response times, and case resolutions.',
+                    sections: ['Crime Statistics', 'Response Analysis', 'Case Management', 'Resource Allocation', 'Performance Metrics']
+                },
+                ministry: {
+                    title: 'Ministry Strategic Report',
+                    summary: 'High-level strategic overview for policy makers with actionable insights and recommendations.',
+                    sections: ['Executive Summary', 'Key Performance Indicators', 'Policy Impact', 'Strategic Recommendations', 'Resource Planning']
+                },
+                emergency: {
+                    title: 'Emergency Response Report',
+                    summary: 'Rapid assessment report for immediate decision making during crisis situations.',
+                    sections: ['Situation Overview', 'Immediate Actions', 'Resource Status', 'Risk Assessment', 'Next Steps']
+                }
+            };
+
+            const preview = previews[templateType] || previews.tourism;
+            
+            previewContent.innerHTML = `
+                <div class="preview-section">
+                    <strong>Report Title</strong>
+                    <p>${preview.title}</p>
+                </div>
+                <div class="preview-section">
+                    <strong>Executive Summary</strong>
+                    <p>${preview.summary}</p>
+                </div>
+                <div class="preview-section">
+                    <strong>Included Sections</strong>
+                    <ul>
+                        ${preview.sections.map(section => `<li>${section}</li>`).join('')}
+                    </ul>
+                </div>
+                <div class="preview-section">
+                    <strong>Data Visualizations</strong>
+                    <div class="preview-chart">📊 Incident Analysis Charts</div>
+                    <div class="preview-chart">🗺️ Geographic Heatmaps</div>
+                    <div class="preview-chart">📈 Trend Analysis Graphs</div>
+                </div>
+            `;
+        }
+
+        // Generate Report
+        function generateReport() {
+            const reportType = document.getElementById('reportType').value;
+            const period = document.getElementById('reportPeriod').value;
+            const formats = [];
+            
+            if (document.getElementById('exportPDF').checked) formats.push('PDF');
+            if (document.getElementById('exportExcel').checked) formats.push('Excel');
+            if (document.getElementById('exportCSV').checked) formats.push('CSV');
+
+            const statusDiv = document.getElementById('generationStatus');
+            const progressBar = statusDiv.querySelector('.progress-bar');
+            const statusText = statusDiv.querySelector('.status-text');
+            
+            statusDiv.style.display = 'block';
+            
+            // Simulate report generation
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 15 + 5;
+                if (progress > 100) progress = 100;
+                
+                progressBar.style.width = progress + '%';
+                
+                if (progress < 30) {
+                    statusText.textContent = 'Collecting data...';
+                } else if (progress < 60) {
+                    statusText.textContent = 'Generating charts...';
+                } else if (progress < 90) {
+                    statusText.textContent = 'Formatting report...';
+                } else if (progress < 100) {
+                    statusText.textContent = 'Finalizing export...';
+                } else {
+                    statusText.textContent = 'Report generated successfully!';
+                    progressBar.classList.remove('progress-bar-striped', 'progress-bar-animated');
+                    progressBar.classList.add('bg-success');
+                    
+                    setTimeout(() => {
+                        statusDiv.style.display = 'none';
+                        progressBar.classList.add('progress-bar-striped', 'progress-bar-animated');
+                        progressBar.classList.remove('bg-success');
+                        progressBar.style.width = '0%';
+                        
+                        // Show success message
+                        alert(`Report generated successfully!\n\nType: ${reportType}\nPeriod: ${period} days\nFormats: ${formats.join(', ')}\n\nReport would be downloaded in a real application.`);
+                    }, 1000);
+                    
+                    clearInterval(interval);
+                }
+            }, 200);
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize components
+            setTimeout(() => {
+                initializeHeatmap();
+                initializeTrendChart();
+            }, 500);
+
+            // Refresh data button
+            document.getElementById('refreshData').addEventListener('click', function() {
+                this.innerHTML = '<i class="fas fa-spin fa-sync-alt"></i> Refreshing...';
+                setTimeout(() => {
+                    updateStatistics();
+                    initializeTrendChart();
+                    this.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh Data';
+                }, 2000);
+            });
+
+            // Time range selectors
+            document.getElementById('incidentTimeRange').addEventListener('change', function() {
+                updateStatistics(this.value);
+            });
+
+            // Trend view toggles
+            document.querySelectorAll('input[name="trendView"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.checked) {
+                        initializeTrendChart();
+                    }
+                });
+            });
+
+            // Template selection
+            document.querySelectorAll('.template-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const templateType = this.dataset.template;
+                    selectTemplate(templateType);
+                });
+            });
+
+            // Report generation
+            document.getElementById('generateReport').addEventListener('click', generateReport);
+
+            // Export buttons
+            document.getElementById('exportIncidents').addEventListener('click', function() {
+                alert('Incident report exported successfully!\n\nThis would download a detailed incident analysis in the real application.');
+            });
+
+            document.getElementById('exportTouristStats').addEventListener('click', function() {
+                alert('Tourist statistics exported successfully!\n\nThis would download tourist safety data in the real application.');
+            });
+
+            document.getElementById('exportHeatmaps').addEventListener('click', function() {
+                alert('Heatmap data exported successfully!\n\nThis would download geographic analysis data in the real application.');
+            });
+
+            // Report type change
+            document.getElementById('reportType').addEventListener('change', function() {
+                const reportType = this.value;
+                updateReportPreview(reportType);
+            });
+
+            // Initial template selection
+            selectTemplate('tourism');
+        });
+
+        // Window resize handler
+        window.addEventListener('resize', function() {
+            if (reportsMap) {
+                setTimeout(() => {
+                    reportsMap.invalidateSize();
+                }, 100);
+            }
+        });
+    </script>
+</body>
+</html>
