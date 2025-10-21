@@ -5,3 +5,4 @@ CREATE TABLE IF NOT EXISTS `adminlogin` (
   `password` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+INSERT INTO `adminlogin` (`id`, `username`, `password`) VALUES (NULL, 'admin', 'admin'), (NULL, 'admin2', 'admin2');
