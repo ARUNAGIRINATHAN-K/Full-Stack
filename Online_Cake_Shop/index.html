@@ -1,0 +1,472 @@
+<!-- index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>Online Cake Shop</title>
+	<link rel="stylesheet" href=
+"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+	<header class="header">
+		<a href="#" class="logo"> Bakery </a>
+		<nav class="navbar">
+			<a href="#">Home</a>
+			<a href="#shop">Shop</a>
+			<a href="#about">About</a>
+			<a href="#contact">Contact</a>
+		</nav>
+		<div class="icons">
+			<div id="menu-btn" class="fas fa-bars"></div>
+			<div id="search-btn" class="fas fa-search"></div>
+			<div id="cart-btn" class="fas fa-shopping-cart"></div>
+			<div id="login-btn" class="fas fa-user"></div>
+		</div>
+		<div class="hamburger" id="hamburger">
+			<div class="line"></div>
+			<div class="line"></div>
+			<div class="line"></div>
+		</div>
+	</header>
+
+
+	<section class="home" id="home">
+		<div class="slides-container">
+			<div class="slide active">
+				<div class="content">
+					<span>Order Cakes Online </span>
+					<h3>Upto 80% off</h3>
+					<a href="#" class="btn">Buy Now</a>
+				</div>
+				<div class="img">
+					<img decoding="async"
+						src=
+"https://media.geeksforgeeks.org/wp-content/uploads/20240301114007/image1_100.png" alt="">
+				</div>
+			</div>
+			<div class="slide">
+				<div class="content">
+					<span>Customize Ordering</span>
+					<h3>upto 80% off</h3>
+					<a href="#" class="btn">Buy Now</a>
+				</div>
+				<div class="img">
+					<img decoding="async"
+						src=
+"https://media.geeksforgeeks.org/wp-content/uploads/20240301113714/image12_100.png" alt="">
+				</div>
+			</div>
+
+			<div class="slide">
+				<div class="content">
+					<span>Fast Delivery</span>
+					<h3>upto 80% off</h3>
+					<a href="#" class="btn">Buy Now</a>
+				</div>
+				<div class="img">
+					<img decoding="async"
+						src=
+"https://media.geeksforgeeks.org/wp-content/uploads/20240301114007/image1_100.png">
+				</div>
+			</div>
+
+		</div>
+		<div id="next-slide" class="fas fa-angle-right" onclick="next()"></div>
+		<div id="prev-slide" class="fas fa-angle-left" onclick="next()"></div>
+	</section>
+
+	<section class="banner-container">
+
+		<div class="banner">
+			<img decoding="async"
+				src=
+"https://media.geeksforgeeks.org/wp-content/uploads/20240301113714/image12_100.png" alt="">
+			<div class="content">
+				<span>Velvet Cakes</span>
+				<h3>upto 50% off</h3>
+				<a href="#" class="btn">Buy now</a>
+			</div>
+		</div>
+
+		<div class="banner">
+			<img decoding="async"
+				src=
+"https://media.geeksforgeeks.org/wp-content/uploads/20240301113805/image11_100.png" alt="">
+			<div class="content">
+				<span>Marble Cakes</span>
+				<h3>upto 60% off</h3>
+				<a href="#" class="btn">Buy now</a>
+			</div>
+		</div>
+
+		<div class="banner">
+			<img decoding="async"
+				src=
+"https://media.geeksforgeeks.org/wp-content/uploads/20240301113818/image10_100.png" alt="">
+			<div class="content">
+				<span>Chocolate Cakes</span>
+				<h3>upto 50% off</h3>
+				<a href="#" class="btn">Buy now</a>
+			</div>
+		</div>
+
+	</section>
+
+
+	<div class="heading">
+		<h1>The Bakery</h1>
+	</div>
+
+	<section class="category">
+
+		<h1 class="title"> All <span>categories</span> <a href="#">view all >></a> </h1>
+
+		<div class="box-container">
+
+			<a href="#" class="box">
+				<img decoding="async"
+					src=
+"https://media.geeksforgeeks.org/wp-content/uploads/20240301113952/image3_100.png" alt="">
+				<h3>fresh cupcake</h3>
+			</a>
+
+			<a href="#" class="box">
+				<img decoding="async"
+					src=
+"https://media.geeksforgeeks.org/wp-content/uploads/20240301113842/image8_100.png" alt="">
+				<h3>cookies</h3>
+			</a>
+
+			<a href="#" class="box">
+				<img decoding="async"
+					src=
+"https://media.geeksforgeeks.org/wp-content/uploads/20240301113914/image6_100.png" alt="">
+				<h3>brown bread</h3>
+			</a>
+
+			<a href="#" class="box">
+				<img decoding="async"
+					src=
+"https://media.geeksforgeeks.org/wp-content/uploads/20240301113952/image3_100.png" alt="">
+				<h3>Dark chocolate</h3>
+			</a>
+
+			<a href="#" class="box">
+				<img decoding="async"
+					src=
+"https://media.geeksforgeeks.org/wp-content/uploads/20240301113842/image8_100.png" alt="">
+				<h3>Wheat</h3>
+			</a>
+		</div>
+	</section>
+
+
+	<section class="products" id="shop">
+
+		<h1 class="title"> our <span>products</span> <a href="#">view all >></a> </h1>
+
+		<div class="box-container">
+
+			<div class="box">
+				<div class="icons">
+					<a href="#" class="fas fa-shopping-cart"></a>
+					<a href="#" class="fas fa-heart"></a>
+					<a href="#" class="fas fa-eye"></a>
+				</div>
+				<div class="img">
+					<img decoding="async"
+						src=
+"https://media.geeksforgeeks.org/wp-content/uploads/20240301114023/image_100.png" alt="">
+				</div>
+				<div class="content">
+					<h3>fruit cakes</h3>
+					<div class="price">$25</div>
+				</div>
+			</div>
+
+			<div class="box">
+				<div class="icons">
+					<a href="#" class="fas fa-shopping-cart"></a>
+					<a href="#" class="fas fa-heart"></a>
+					<a href="#" class="fas fa-eye"></a>
+				</div>
+				<div class="img">
+					<img decoding="async"
+						src=
+"https://media.geeksforgeeks.org/wp-content/uploads/20240301113939/image4_100.png" alt="">
+				</div>
+				<div class="content">
+					<h3>Donut</h3>
+					<div class="price">$5</div>
+				</div>
+			</div>
+
+			<div class="box">
+				<div class="icons">
+					<a href="#" class="fas fa-shopping-cart"></a>
+					<a href="#" class="fas fa-heart"></a>
+					<a href="#" class="fas fa-eye"></a>
+				</div>
+				<div class="img">
+					<img decoding="async"
+						src=
+"https://media.geeksforgeeks.org/wp-content/uploads/20240301114023/image_100.png" alt="">
+				</div>
+				<div class="content">
+					<h3>Sparkel cake</h3>
+					<div class="price">$15</div>
+				</div>
+			</div>
+
+			<div class="box">
+				<div class="icons">
+					<a href="#" class="fas fa-shopping-cart"></a>
+					<a href="#" class="fas fa-heart"></a>
+					<a href="#" class="fas fa-eye"></a>
+				</div>
+				<div class="img">
+					<img decoding="async"
+						src=
+"https://media.geeksforgeeks.org/wp-content/uploads/20240301113914/image6_100.png" alt="">
+				</div>
+				<div class="content">
+					<h3>Nutella cake</h3>
+					<div class="price">$12</div>
+				</div>
+			</div>
+
+			<div class="box">
+				<div class="icons">
+					<a href="#" class="fas fa-shopping-cart"></a>
+					<a href="#" class="fas fa-heart"></a>
+					<a href="#" class="fas fa-eye"></a>
+				</div>
+				<div class="img">
+					<img decoding="async"
+						src=
+"https://media.geeksforgeeks.org/wp-content/uploads/20240301113939/image4_100.png" alt="">
+				</div>
+				<div class="content">
+					<h3>Choco Cup</h3>
+					<div class="price">$7</div>
+				</div>
+			</div>
+
+			<div class="box">
+				<div class="icons">
+					<a href="#" class="fas fa-shopping-cart"></a>
+					<a href="#" class="fas fa-heart"></a>
+					<a href="#" class="fas fa-eye"></a>
+				</div>
+				<div class="img">
+					<img decoding="async"
+						src=
+"https://media.geeksforgeeks.org/wp-content/uploads/20240301113818/image10_100.png" alt="">
+				</div>
+				<div class="content">
+					<h3>Cranberry Cake</h3>
+					<div class="price">$20</div>
+				</div>
+			</div>
+
+			<div class="box">
+				<div class="icons">
+					<a href="#" class="fas fa-shopping-cart"></a>
+					<a href="#" class="fas fa-heart"></a>
+					<a href="#" class="fas fa-eye"></a>
+				</div>
+				<div class="img">
+					<img decoding="async"
+						src=
+"https://media.geeksforgeeks.org/wp-content/uploads/20240301113805/image11_100.png" alt="">
+				</div>
+				<div class="content">
+					<h3>strawberry red spar cake</h3>
+					<div class="price">$30</div>
+				</div>
+			</div>
+
+			<div class="box">
+				<div class="icons">
+					<a href="#" class="fas fa-shopping-cart"></a>
+					<a href="#" class="fas fa-heart"></a>
+					<a href="#" class="fas fa-eye"></a>
+				</div>
+				<div class="img">
+					<img decoding="async"
+						src=
+"https://media.geeksforgeeks.org/wp-content/uploads/20240301113818/image10_100.png" alt="">
+				</div>
+				<div class="content">
+					<h3>dark chocolate nutella cake</h3>
+					<div class="price">$26</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+
+	<div class="heading">
+		<h1>About us</h1>
+	</div>
+
+	<section class="about" id="about">
+		<div class="img">
+			<img decoding="async"
+				src=
+"https://media.geeksforgeeks.org/wp-content/uploads/20240301113805/image11_100.png" alt="">
+		</div>
+
+		<div class=" content">
+			<h3>The Cake Shop</h3>
+			<p>Welcome to Bakery, where every confection tells
+				a story of passion and dedication. Founded by a team of
+				seasoned bakers with a shared love for crafting
+				delectable treats, our bakery embodies a commitment to
+				quality,
+				creativity, and customer satisfaction. From
+				the finest ingredients sourced locally to the meticulous
+				attention
+				to detail in every recipe, we take pride
+				in delivering indulgent experiences that
+				delight taste buds and
+				warm
+				hearts. With each cake, pastry, and dessert,
+				we strive to create moments of joy and celebration, making
+				every
+				occasion a little sweeter.</p>
+			<p>At Bakery, baking isn't just a profession; it's a labor
+				of love that fuels our imagination and drives our
+				pursuit of perfection. With years of experience and
+				a flair for innovation, our talented team brings
+				together
+				traditional techniques and modern flavors to create
+				signature delicacies that are as visually stunning
+				as they
+				are delicious. Whether it's a custom-designed wedding
+				cake, a batch of freshly baked cookies, or a
+				tempting
+				assortment of pastries for a special event, we pour our
+				passion into every creation, ensuring that each
+				bite is
+				a testament to our dedication to excellence. Join us on a
+				journey of culinary delights, where every bite
+				is a
+				taste of our unwavering commitment to baking brilliance.</p>
+			<a href="#" class="btn">read more</a>
+		</div>
+	</section>
+
+
+	<div class="heading">
+		<h1>Contact us</h1>
+	</div>
+
+	<section class="contact" id="contact">
+		<div class="icons-container">
+
+			<div class="icons">
+				<i class="fas fa-phone"></i>
+				<h3>Contact number</h3>
+				<p>+xx xxxxxxxxxx</p>
+				<p>+xx xxxx xxx xxx</p>
+			</div>
+
+			<div class="icons">
+				<i class="fas fa-envelope"></i>
+				<h3>email</h3>
+				<p>xxxxxxxxxxx@gmail.com</p>
+				<p>xyzabc@gmail.com</p>
+			</div>
+
+			<div class="icons">
+				<i class="fas fa-map-marker-alt"></i>
+				<h3>address</h3>
+				<p>India</p>
+			</div>
+
+		</div>
+
+		<div class="row">
+			<form action="">
+				<h3>get in touch</h3>
+				<div class="inputBox">
+					<input type="text"
+						placeholder="enter your name" class="box">
+					<input type="text"
+						placeholder="enter your email" class="box">
+				</div>
+				<div class="inputBox">
+					<input type="number"
+						placeholder="enter your number" class="box">
+					<input type="text"
+						placeholder="enter your subject" class="box">
+				</div>
+				<textarea placeholder=" your message" cols="30"
+						rows="10"></textarea>
+				<input type="submit" v
+					alue="send message" class="btn">
+			</form>
+		</div>
+
+	</section>
+
+	<div class="space"></div>
+
+	<section class="footer">
+		<div class="box-container">
+			<div class="box">
+				<h3>quick links</h3>
+				<a href="#"> <i class="fas 
+				fa-arrow-right"></i> Home</a>
+				<a href="#"> <i class="fas
+				fa-arrow-right"></i>Shop</a>
+				<a href="#"> <i class="fas
+				fa-arrow-right"></i>About</a>
+				<a href="#"> <i class="fas
+				fa-arrow-right"></i> Review</a>
+				<a href="#"> <i class="fas 
+				fa-arrow-right"></i>Blog</a>
+				<a href="#"> <i class="fas
+				fa-arrow-right"></i>Contact</a>
+			</div>
+
+			<div class="box">
+				<h3>follow us</h3>
+				<a href="#"> <i class="fab 
+				fa-facebook-f"></i> facebook </a>
+				<a href="#"> <i class="fab
+				fa-twitter"></i> twitter </a>
+				<a href="#"> <i class="fab 
+				fa-instagram"></i> instagram </a>
+				<a href="#"> <i class="fab
+				fa-linkedin"></i> linkedin </a>
+				<a href="#"> <i class="fab 
+				fa-pinterest"></i> pinterest </a>
+			</div>
+
+			<div class="box">
+				<h3>newsletter</h3>
+				<p>Dont miss any Offer</p>
+				<form action="">
+					<input type="email" placeholder="your e-mail">
+					<input type="submit" value="subscribe" class="btn">
+				</form>
+			</div>
+		</div>
+	</section>
+
+	<section class="credit">created by <span>@Geek</span></section>
+
+	<script src="script.js" defer data-deferred="1"></script>
+</body>
+
+</html>
