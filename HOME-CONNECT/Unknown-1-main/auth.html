@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sign in or register to Home Connect - Local Service Marketplace">
+  <meta name="keywords" content="login, register, authentication, sign up">
+  <meta name="author" content="Home Connect">
+  <title>Sign In / Register - Home Connect</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link href="common.css" rel="stylesheet">
+
+  <style>
+    .auth-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #004e89 0%, #ff6b35 100%);
+      padding: 2rem 0;
+    }
+
+    .auth-card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      overflow: hidden;
+      max-width: 900px;
+      width: 100%;
+    }
+
+    .auth-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+
+    .auth-form-section {
+      padding: 3rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .auth-info-section {
+      background: linear-gradient(135deg, #004e89 0%, #003d6d 100%);
+      color: white;
+      padding: 3rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .auth-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .auth-header h2 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--secondary-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .auth-header p {
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    .role-selector {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      background: var(--light-bg);
+      padding: 0.5rem;
+      border-radius: 8px;
+    }
+
+    .role-btn {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: 2px solid transparent;
+      background: white;
+      color: var(--secondary-color);
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+
+    .role-btn:hover {
+      background: #f0f0f0;
+    }
+
+    .role-btn.active {
+      background: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      color: var(--secondary-color);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+      outline: none;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    .checkbox-group label {
+      margin: 0;
+      font-weight: 400;
+      color: #666;
+      cursor: pointer;
+      flex: 1;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .btn-submit {
+      flex: 1;
+      padding: 0.85rem 1rem;
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(255, 107, 53, 0.3);
+    }
+
+    .form-toggle {
+      text-align: center;
+      margin-top: 1.5rem;
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    .form-toggle a {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .form-toggle a:hover {
+      text-decoration: underline;
+    }
+
+    .info-item {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      align-items: flex-start;
+    }
+
+    .info-icon {
+      font-size: 1.5rem;
+      color: var(--accent-color);
+      flex-shrink: 0;
+    }
+
+    .info-text h4 {
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .info-text p {
+      font-size: 0.9rem;
+      opacity: 0.9;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .form-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--secondary-color);
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+
+    .form-subtitle {
+      text-align: center;
+      color: #666;
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .auth-content {
+        grid-template-columns: 1fr;
+      }
+
+      .auth-info-section {
+        display: none;
+      }
+
+      .auth-form-section {
+        padding: 2rem 1.5rem;
+      }
+
+      .form-actions {
+        flex-direction: column;
+      }
+    }
+
+    .success-message {
+      background: #d4edda;
+      color: #155724;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      display: none;
+    }
+
+    .error-message {
+      background: #f8d7da;
+      color: #721c24;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Preloader -->
+  <div class="preloader">
+    <div class="spinner-box">
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <!-- Authentication Container -->
+  <div class="auth-container">
+    <div class="auth-card">
+      <!-- Left Side - Form -->
+      <div class="auth-content">
+        <div class="auth-form-section">
+          <!-- Success Message -->
+          <div class="success-message" id="successMessage">
+            <i class="fas fa-check-circle"></i> Registration successful! Redirecting...
+          </div>
+
+          <!-- Error Message -->
+          <div class="error-message" id="errorMessage">
+            <i class="fas fa-exclamation-circle"></i> <span id="errorText"></span>
+          </div>
+
+          <!-- Sign In Form -->
+          <div id="signInForm">
+            <div class="form-title">Welcome Back</div>
+            <div class="form-subtitle">Sign in to your Home Connect account</div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+              <div class="form-group">
+                <label for="loginEmail">Email Address</label>
+                <input type="email" id="loginEmail" placeholder="your@email.com" required>
+              </div>
+
+              <div class="form-group">
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" placeholder="Enter your password" required>
+              </div>
+
+              <div class="checkbox-group">
+                <input type="checkbox" id="rememberMe">
+                <label for="rememberMe">Remember me</label>
+              </div>
+
+              <button type="submit" class="btn-submit">
+                <i class="fas fa-sign-in-alt"></i> Sign In
+              </button>
+            </form>
+
+            <div class="form-toggle">
+              Don't have an account? <a onclick="toggleForms()">Register here</a>
+            </div>
+          </div>
+
+          <!-- Sign Up Form -->
+          <div id="signUpForm" class="hidden">
+            <div class="form-title">Create Account</div>
+            <div class="form-subtitle">Choose your role and get started</div>
+
+            <!-- Role Selection -->
+            <div class="role-selector">
+              <button type="button" id="roleClientBtn" class="role-btn active" onclick="selectRole('client')">
+                <i class="fas fa-briefcase"></i> Client
+              </button>
+              <button type="button" id="roleProviderBtn" class="role-btn" onclick="selectRole('provider')">
+                <i class="fas fa-tools"></i> Provider
+              </button>
+            </div>
+
+            <input type="hidden" id="selectedRole" value="client">
+
+            <form id="registerForm" onsubmit="handleRegister(event)">
+              <div class="form-group">
+                <label for="regFirstName">First Name</label>
+                <input type="text" id="regFirstName" placeholder="John" required>
+              </div>
+
+              <div class="form-group">
+                <label for="regLastName">Last Name</label>
+                <input type="text" id="regLastName" placeholder="Doe" required>
+              </div>
+
+              <div class="form-group">
+                <label for="regEmail">Email Address</label>
+                <input type="email" id="regEmail" placeholder="your@email.com" required>
+              </div>
+
+              <div class="form-group">
+                <label for="regPhone">Phone Number</label>
+                <input type="tel" id="regPhone" placeholder="+91 98765 43210" pattern="[0-9\+\-\s]{10,}" required>
+                <small style="color: #999; font-size: 0.8rem;">Format: +91 98765 43210</small>
+              </div>
+
+              <div class="form-group">
+                <label for="regPassword">Password</label>
+                <input type="password" id="regPassword" placeholder="At least 8 characters" required onkeyup="checkPasswordStrength(this.value)">
+                <small style="color: #999; font-size: 0.8rem;">Must contain: uppercase, lowercase, number, and special character (!@#$%)</small>
+                <div id="passwordStrength" style="margin-top: 0.5rem; display: none;">
+                  <div style="font-size: 0.75rem; color: #999;">Strength: <span id="strengthLevel" style="font-weight: 600;"></span></div>
+                  <div style="background: #f0f0f0; height: 4px; border-radius: 2px; overflow: hidden; margin-top: 0.25rem;">
+                    <div id="strengthBar" style="height: 100%; width: 0%; transition: all 0.3s ease;"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="regConfirmPassword">Confirm Password</label>
+                <input type="password" id="regConfirmPassword" placeholder="Confirm your password" required>
+              </div>
+
+              <div class="form-group">
+                <label for="regAddress">Address</label>
+                <input type="text" id="regAddress" placeholder="Street address" required>
+              </div>
+
+              <div class="form-group">
+                <label for="regCity">City</label>
+                <input type="text" id="regCity" placeholder="Your city" required>
+              </div>
+
+              <!-- Provider-specific fields -->
+              <div id="providerFields" class="hidden">
+                <div class="form-group">
+                  <label for="regServiceCategory">Service Category</label>
+                  <select id="regServiceCategory">
+                    <option value="">Select a category</option>
+                    <option value="cleaning">House Cleaning</option>
+                    <option value="cooking">Cooking & Catering</option>
+                    <option value="laundry">Laundry & Ironing</option>
+                    <option value="appliance">Appliance Repair</option>
+                    <option value="tutoring">Home Tutoring</option>
+                    <option value="childcare">Childcare & Babysitting</option>
+                    <option value="elderly">Elderly Care</option>
+                    <option value="interior">Interior Decoration</option>
+                    <option value="plumbing">Electricians & Plumbers</option>
+                    <option value="carpentry">Carpenters & Painters</option>
+                    <option value="gardening">Gardening & Landscaping</option>
+                    <option value="moving">Packers & Movers</option>
+                    <option value="vehicle">Vehicle Cleaning & Maintenance</option>
+                    <option value="petcare">Pet Grooming & Sitting</option>
+                    <option value="tailoring">Tailoring & Alterations</option>
+                    <option value="events">Event Support</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="regExperience">Years of Experience</label>
+                  <input type="number" id="regExperience" placeholder="e.g., 5" min="0">
+                </div>
+              </div>
+
+              <div class="checkbox-group">
+                <input type="checkbox" id="termsAccept" required>
+                <label for="termsAccept">I agree to the Terms & Conditions and Privacy Policy</label>
+              </div>
+
+              <button type="submit" class="btn-submit">
+                <i class="fas fa-user-plus"></i> Create Account
+              </button>
+            </form>
+
+            <div class="form-toggle">
+              Already have an account? <a onclick="toggleForms()">Sign in here</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side - Info -->
+        <div class="auth-info-section">
+          <h3 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 2rem;">
+            Welcome to Home Connect
+          </h3>
+
+          <!-- Client Info -->
+          <div id="clientInfo">
+            <div class="info-item">
+              <div class="info-icon">
+                <i class="fas fa-briefcase"></i>
+              </div>
+              <div class="info-text">
+                <h4>Post Jobs</h4>
+                <p>Post your project requirements and connect with skilled service providers in your area</p>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-icon">
+                <i class="fas fa-search"></i>
+              </div>
+              <div class="info-text">
+                <h4>Browse Proposals</h4>
+                <p>Review detailed proposals from providers and choose the best fit for your needs</p>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-icon">
+                <i class="fas fa-handshake"></i>
+              </div>
+              <div class="info-text">
+                <h4>Hire & Manage</h4>
+                <p>Hire providers, communicate directly, and monitor project progress</p>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-icon">
+                <i class="fas fa-star"></i>
+              </div>
+              <div class="info-text">
+                <h4>Leave Reviews</h4>
+                <p>Rate your experience and help other clients find quality service providers</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Provider Info -->
+          <div id="providerInfo" class="hidden">
+            <div class="info-item">
+              <div class="info-icon">
+                <i class="fas fa-search"></i>
+              </div>
+              <div class="info-text">
+                <h4>Find Jobs</h4>
+                <p>Browse local job postings that match your skills and expertise</p>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-icon">
+                <i class="fas fa-paper-plane"></i>
+              </div>
+              <div class="info-text">
+                <h4>Submit Proposals</h4>
+                <p>Create compelling proposals to win projects and grow your business</p>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-icon">
+                <i class="fas fa-wallet"></i>
+              </div>
+              <div class="info-text">
+                <h4>Earn & Get Paid</h4>
+                <p>Complete projects and receive payments directly to your account</p>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-icon">
+                <i class="fas fa-trophy"></i>
+              </div>
+              <div class="info-text">
+                <h4>Build Reputation</h4>
+                <p>Earn ratings and reviews to build trust and attract more clients</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+  <!-- Common JS -->
+  <script src="common.js"></script>
+
+  <script>
+    // Toggle between Sign In and Sign Up forms
+    function toggleForms() {
+      const signInForm = document.getElementById('signInForm');
+      const signUpForm = document.getElementById('signUpForm');
+      const clientInfo = document.getElementById('clientInfo');
+      const providerInfo = document.getElementById('providerInfo');
+
+      signInForm.classList.toggle('hidden');
+      signUpForm.classList.toggle('hidden');
+      clientInfo.classList.toggle('hidden');
+      providerInfo.classList.toggle('hidden');
+
+      // Reset forms
+      document.getElementById('loginForm').reset();
+      document.getElementById('registerForm').reset();
+      selectRole('client');
+    }
+
+    // Select user role
+    function selectRole(role) {
+      document.getElementById('selectedRole').value = role;
+      // Update button styles deterministically
+      const clientBtn = document.getElementById('roleClientBtn');
+      const providerBtn = document.getElementById('roleProviderBtn');
+      if (clientBtn && providerBtn) {
+        clientBtn.classList.toggle('active', role === 'client');
+        providerBtn.classList.toggle('active', role === 'provider');
+      }
+
+      // Show/hide provider-specific fields
+      const providerFields = document.getElementById('providerFields');
+      if (role === 'provider') {
+        providerFields.classList.remove('hidden');
+      } else {
+        providerFields.classList.add('hidden');
+      }
+
+      // Update info section
+      const clientInfo = document.getElementById('clientInfo');
+      const providerInfo = document.getElementById('providerInfo');
+      if (role === 'provider') {
+        clientInfo.classList.add('hidden');
+        providerInfo.classList.remove('hidden');
+      } else {
+        clientInfo.classList.remove('hidden');
+        providerInfo.classList.add('hidden');
+      }
+    }
+
+    // Handle Sign In
+    async function handleLogin(event) {
+      event.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+
+      // Validate fields
+      if (!email || !password) {
+        showError('Please fill in all fields');
+        return;
+      }
+
+      // Validate email format
+      if (!isValidEmail(email)) {
+        showError('Please enter a valid email address');
+        return;
+      }
+
+      // Validate password length
+      if (password.length < 8) {
+        showError('Password must be at least 8 characters');
+        return;
+      }
+
+      try {
+        const api = window.FreelanceMarketplace || {};
+        if (!api.loginUser) throw new Error('Client not initialized');
+        const result = await api.loginUser(email, password);
+        if (!result || !result.success) {
+          showError(result?.message || 'Login failed');
+          return;
+        }
+        const role = (result.user && result.user.role) || localStorage.getItem('userRole');
+        showSuccess('Login successful! Redirecting...');
+        setTimeout(() => {
+          if (role === 'provider') window.location.href = 'dashboard-provider.html';
+          else window.location.href = 'dashboard-client.html';
+        }, 800);
+      } catch (e) {
+        console.error(e);
+        showError('Unable to sign in. Please try again.');
+      }
+    }
+
+    // Check password strength
+    function checkPasswordStrength(password) {
+      const strengthDiv = document.getElementById('passwordStrength');
+      const strengthLevel = document.getElementById('strengthLevel');
+      const strengthBar = document.getElementById('strengthBar');
+      
+      if (password.length === 0) {
+        strengthDiv.style.display = 'none';
+        return;
+      }
+
+      strengthDiv.style.display = 'block';
+
+      let strength = 0;
+      let feedback = [];
+
+      // Check length
+      if (password.length >= 8) strength += 20;
+      if (password.length >= 12) strength += 10;
+
+      // Check for uppercase
+      if (/[A-Z]/.test(password)) strength += 20;
+      else feedback.push('uppercase');
+
+      // Check for lowercase
+      if (/[a-z]/.test(password)) strength += 20;
+      else feedback.push('lowercase');
+
+      // Check for numbers
+      if (/[0-9]/.test(password)) strength += 15;
+      else feedback.push('number');
+
+      // Check for special characters
+      if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) strength += 15;
+      else feedback.push('special character');
+
+      // Update bar color and level
+      strengthBar.style.width = strength + '%';
+      
+      if (strength < 40) {
+        strengthLevel.textContent = 'Weak';
+        strengthLevel.style.color = '#f44336';
+        strengthBar.style.background = '#f44336';
+      } else if (strength < 70) {
+        strengthLevel.textContent = 'Fair';
+        strengthLevel.style.color = '#ff9800';
+        strengthBar.style.background = '#ff9800';
+      } else if (strength < 90) {
+        strengthLevel.textContent = 'Good';
+        strengthLevel.style.color = '#ffc107';
+        strengthBar.style.background = '#ffc107';
+      } else {
+        strengthLevel.textContent = 'Strong';
+        strengthLevel.style.color = '#4caf50';
+        strengthBar.style.background = '#4caf50';
+      }
+    }
+
+    // Validate email format
+    function isValidEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    }
+
+    // Validate phone format
+    function isValidPhone(phone) {
+      const phoneRegex = /^[\d\s\+\-()]{10,}$/;
+      return phoneRegex.test(phone);
+    }
+
+    // Handle Sign Up
+    async function handleRegister(event) {
+      event.preventDefault();
+      
+      const firstName = document.getElementById('regFirstName').value.trim();
+      const lastName = document.getElementById('regLastName').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const phone = document.getElementById('regPhone').value.trim();
+      const password = document.getElementById('regPassword').value;
+      const confirmPassword = document.getElementById('regConfirmPassword').value;
+      const address = document.getElementById('regAddress').value.trim();
+      const city = document.getElementById('regCity').value.trim();
+      const role = document.getElementById('selectedRole').value;
+      const termsAccept = document.getElementById('termsAccept').checked;
+
+      // Validate required fields
+      if (!firstName || !lastName || !email || !phone || !password || !confirmPassword || !address || !city) {
+        showError('Please fill in all required fields');
+        return;
+      }
+
+      // Validate first/last names
+      if (firstName.length < 2) {
+        showError('First name must be at least 2 characters');
+        return;
+      }
+
+      if (lastName.length < 2) {
+        showError('Last name must be at least 2 characters');
+        return;
+      }
+
+      // Validate email
+      if (!isValidEmail(email)) {
+        showError('Please enter a valid email address');
+        return;
+      }
+
+      // Validate phone
+      if (!isValidPhone(phone)) {
+        showError('Please enter a valid phone number (at least 10 digits)');
+        return;
+      }
+
+      // Validate password match
+      if (password !== confirmPassword) {
+        showError('Passwords do not match');
+        return;
+      }
+
+      // Validate password strength
+      if (password.length < 8) {
+        showError('Password must be at least 8 characters long');
+        return;
+      }
+
+      const hasUppercase = /[A-Z]/.test(password);
+      const hasLowercase = /[a-z]/.test(password);
+      const hasNumber = /[0-9]/.test(password);
+      const hasSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+
+      if (!hasUppercase || !hasLowercase || !hasNumber || !hasSpecial) {
+        showError('Password must contain uppercase, lowercase, number, and special character (!@#$%^&*)');
+        return;
+      }
+
+      // Validate address and city
+      if (address.length < 5) {
+        showError('Please enter a valid address');
+        return;
+      }
+
+      if (city.length < 2) {
+        showError('Please enter a valid city name');
+        return;
+      }
+
+      // Validate terms acceptance
+      if (!termsAccept) {
+        showError('You must accept the Terms & Conditions');
+        return;
+      }
+
+      // Prepare registration data
+      const registrationData = {
+        first_name: firstName,
+        last_name: lastName,
+        email: email,
+        phone: phone,
+        password: password,
+        address: address,
+        city: city,
+        role: role,
+        created_at: new Date().toISOString()
+      };
+
+      // Add provider-specific fields if role is provider
+      if (role === 'provider') {
+        const serviceCategory = document.getElementById('regServiceCategory').value;
+        const experience = document.getElementById('regExperience').value;
+
+        if (!serviceCategory) {
+          showError('Please select a service category');
+          return;
+        }
+
+        if (!experience || experience < 0) {
+          showError('Please enter valid years of experience');
+          return;
+        }
+
+        registrationData.service_category = serviceCategory;
+        registrationData.years_of_experience = parseInt(experience) || 0;
+      }
+
+      try {
+        const api = window.FreelanceMarketplace || {};
+        if (!api.registerUser) throw new Error('Client not initialized');
+        const result = await api.registerUser({
+          firstName,
+          lastName,
+          email,
+          password,
+          role
+        });
+        if (!result || !result.success) {
+          showError(result?.message || 'Registration failed');
+          return;
+        }
+        showSuccess('Account created successfully! Redirecting...');
+        setTimeout(() => {
+          const userRole = localStorage.getItem('userRole') || role;
+          if (userRole === 'provider') window.location.href = 'dashboard-provider.html';
+          else window.location.href = 'dashboard-client.html';
+        }, 800);
+      } catch (e) {
+        console.error(e);
+        showError('Unable to register. Please try again.');
+      }
+    }
+
+    // If already logged in, redirect to appropriate dashboard
+    (function redirectIfAuthenticated(){
+      try {
+        const token = localStorage.getItem('authToken');
+        const role = localStorage.getItem('userRole');
+        if (token && role) {
+          if (role === 'provider') window.location.replace('dashboard-provider.html');
+          else window.location.replace('dashboard-client.html');
+        }
+      } catch {}
+    })();
+
+    // Show success message
+    function showSuccess(message) {
+      const successMsg = document.getElementById('successMessage');
+      successMsg.textContent = message;
+      successMsg.style.display = 'flex';
+      successMsg.innerHTML = '<i class="fas fa-check-circle me-2"></i>' + message;
+      document.getElementById('errorMessage').style.display = 'none';
+
+      setTimeout(() => {
+        successMsg.style.display = 'none';
+      }, 3000);
+    }
+
+    // Show error message
+    function showError(message) {
+      const errorMsg = document.getElementById('errorMessage');
+      document.getElementById('errorText').textContent = message;
+      errorMsg.style.display = 'flex';
+      document.getElementById('successMessage').style.display = 'none';
+
+      setTimeout(() => {
+        errorMsg.style.display = 'none';
+      }, 3000);
+    }
+  </script>
+</body>
+</html>

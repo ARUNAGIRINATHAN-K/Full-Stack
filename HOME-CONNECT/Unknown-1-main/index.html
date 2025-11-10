@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Home Connect - Connect with skilled service providers in your local area. Find freelancers for any project.">
+  <meta name="keywords" content="freelance marketplace, service providers, local services, hire freelancers">
+  <meta name="author" content="Home Connect">
+  <title>Home Connect - Local Freelance Marketplace</title>
+  <link rel="icon" type="image/x-icon" href="icon/job-work.svg">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link href="common.css" rel="stylesheet">
+
+  <style>
+    /* Index-specific styles */
+    .cta-section {
+      background: linear-gradient(135deg, #004e89 0%, #ff6b35 100%);
+      color: #ffffff;
+      padding: 4rem 0;
+      text-align: center;
+    }
+
+    .feature-icon {
+      font-size: 2.5rem;
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+    }
+
+    .feature-box {
+      padding: 2rem;
+      background-color: var(--light-bg);
+      border-radius: 12px;
+      transition: var(--transition);
+    }
+
+    .feature-box:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+      background-color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+  <!-- Preloader -->
+  <div class="preloader">
+    <div class="spinner-box">
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <i class="fas fa-briefcase"></i> Home Connect
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="index.html">Home</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Services</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="jobs-list.html">Find Jobs</a></li>
+              <li><a class="dropdown-item" href="post-job.html">Post a Job</a></li>
+              <li class="dropdown-submenu">
+                <a class="dropdown-item dropdown-toggle" href="#">Categories</a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">Design & Creative</a></li>
+                  <li><a class="dropdown-item" href="#">Writing & Translation</a></li>
+                  <li><a class="dropdown-item" href="#">Programming & Tech</a></li>
+                  <li><a class="dropdown-item" href="#">Marketing</a></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="dashboard-client.html">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#contact">Contact</a>
+          </li>
+          <li class="nav-item ms-2">
+            <a class="btn btn-primary btn-sm" href="auth.html">Sign In / Register</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Find & Hire Expert Service Providers</h1>
+      <p>Connect with service providers. Fast, reliable, and local.</p>
+      <div class="d-flex gap-3 justify-content-center flex-wrap">
+        <a href="auth.html" class="cta-button">Get Started</a>
+        <a href="jobs-list.html" class="cta-button btn-outline-primary">Browse Jobs</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Fun Facts Section -->
+  <section class="fun-facts">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 fun-fact-item">
+          <div class="fun-fact-number" data-target="2500" data-suffix="+">0+</div>
+          <div class="fun-fact-label">Completed Projects</div>
+        </div>
+        <div class="col-md-4 fun-fact-item">
+          <div class="fun-fact-number" data-target="1200" data-suffix="">0</div>
+          <div class="fun-fact-label">Active Providers</div>
+        </div>
+        <div class="col-md-4 fun-fact-item">
+          <div class="fun-fact-number" data-target="98" data-suffix="%">0%</div>
+          <div class="fun-fact-label">Client Satisfaction</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Service Categories -->
+  <section class="section-padding">
+    <div class="container">
+      <h2 class="section-title">Our Service Categories</h2>
+      <p class="section-subtitle">Explore our wide range of local services and find expert providers</p>
+
+      <div class="row grid-gap justify-content-center">
+        <div class="col-lg-3 col-md-3">
+          <div class="service-card">
+            <div class="service-card-content">
+              <div class="service-card-icon">
+                <i class="fas fa-broom"></i>
+              </div>
+              <h5>House Cleaning</h5>
+              <p>Professional home cleaning services</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-3">
+          <div class="service-card">
+            <div class="service-card-content">
+              <div class="service-card-icon">
+                <i class="fas fa-utensils"></i>
+              </div>
+              <h5>Cooking & Catering</h5>
+              <p>Expert culinary services for any occasion</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-3">
+          <div class="service-card">
+            <div class="service-card-content">
+              <div class="service-card-icon">
+                <i class="fas fa-shirt"></i>
+              </div>
+              <h5>Laundry & Ironing</h5>
+              <p>Professional laundry and garment care</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-3">
+          <div class="service-card">
+            <div class="service-card-content">
+              <div class="service-card-icon">
+                <i class="fas fa-wrench"></i>
+              </div>
+              <h5>Appliance Repair</h5>
+              <p>Quick and reliable appliance fixes</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-3">
+          <div class="service-card">
+            <div class="service-card-content">
+              <div class="service-card-icon">
+                <i class="fas fa-book"></i>
+              </div>
+              <h5>Home Tutoring</h5>
+              <p>Expert tutors for all subjects and levels</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-3">
+          <div class="service-card">
+            <div class="service-card-content">
+              <div class="service-card-icon">
+                <i class="fas fa-baby"></i>
+              </div>
+              <h5>Childcare & Babysitting</h5>
+              <p>Trusted caregivers for your children</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-3">
+          <div class="service-card">
+            <div class="service-card-content">
+              <div class="service-card-icon">
+                <i class="fas fa-heart"></i>
+              </div>
+              <h5>Elderly Care</h5>
+              <p>Compassionate care for seniors</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-3">
+          <div class="service-card">
+            <div class="service-card-content">
+              <div class="service-card-icon">
+                <i class="fas fa-palette"></i>
+              </div>
+              <h5>Interior Decoration</h5>
+              <p>Creative interior design services</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-3">
+          <div class="service-card">
+            <div class="service-card-content">
+              <div class="service-card-icon">
+                <i class="fas fa-bolt"></i>
+              </div>
+              <h5>Electricians & Plumbers</h5>
+              <p>Expert electrical and plumbing work</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-3">
+          <div class="service-card">
+            <div class="service-card-content">
+              <div class="service-card-icon">
+                <i class="fas fa-hammer"></i>
+              </div>
+              <h5>Carpenters & Painters</h5>
+              <p>Professional carpentry and painting</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-3">
+          <div class="service-card">
+            <div class="service-card-content">
+              <div class="service-card-icon">
+                <i class="fas fa-leaf"></i>
+              </div>
+              <h5>Gardening & Landscaping</h5>
+              <p>Beautiful outdoor space management</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-3">
+          <div class="service-card">
+            <div class="service-card-content">
+              <div class="service-card-icon">
+                <i class="fas fa-box"></i>
+              </div>
+              <h5>Packers & Movers</h5>
+              <p>Safe and professional moving services</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-3">
+          <div class="service-card">
+            <div class="service-card-content">
+              <div class="service-card-icon">
+                <i class="fas fa-car"></i>
+              </div>
+              <h5>Vehicle Cleaning & Maintenance</h5>
+              <p>Expert car care and detailing</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-3">
+          <div class="service-card">
+            <div class="service-card-content">
+              <div class="service-card-icon">
+                <i class="fas fa-paw"></i>
+              </div>
+              <h5>Pet Grooming & Sitting</h5>
+              <p>Professional pet care services</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-3">
+          <div class="service-card">
+            <div class="service-card-content">
+              <div class="service-card-icon">
+                <i class="fas fa-scissors"></i>
+              </div>
+              <h5>Tailoring & Alterations</h5>
+              <p>Expert clothing customization</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-3">
+          <div class="service-card">
+            <div class="service-card-content">
+              <div class="service-card-icon">
+                <i class="fas fa-party-horn"></i>
+              </div>
+              <h5>Event Support</h5>
+              <p>Professional event planning and support</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="section-padding" style="background-color: var(--light-bg);">
+    <div class="container">
+      <h2 class="section-title">How It Works</h2>
+
+      <div class="row grid-gap">
+        <div class="col-lg-3 col-md-6">
+          <div class="feature-box text-center">
+            <div class="feature-icon">
+              <i class="fas fa-search"></i>
+            </div>
+            <h5>1. Search</h5>
+            <p>Browse through thousands of service providers or post your job requirements.</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="feature-box text-center">
+            <div class="feature-icon">
+              <i class="fas fa-handshake"></i>
+            </div>
+            <h5>2. Connect</h5>
+            <p>Review profiles, skills, and past projects. Reach out directly to service providers.</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="feature-box text-center">
+            <div class="feature-icon">
+              <i class="fas fa-tasks"></i>
+            </div>
+            <h5>3. Collaborate</h5>
+            <p>Work together with clear communication and agreed-upon terms and timelines.</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="feature-box text-center">
+            <div class="feature-icon">
+              <i class="fas fa-star"></i>
+            </div>
+            <h5>4. Review</h5>
+            <p>Rate and review your experience. Build trust within the community.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Carousel -->
+  <section class="section-padding">
+    <div class="container">
+      <h2 class="section-title">What Our Users Say</h2>
+
+      <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <div class="testimonial-item">
+              <img src="https://via.placeholder.com/80?text=User1" alt="John Doe" class="testimonial-avatar">
+              <p class="testimonial-text">"Home Connect made it easy to find the perfect designer for my project. The quality of work was exceptional and the communication was smooth throughout."</p>
+              <p class="testimonial-author">John Doe</p>
+              <p class="testimonial-role">CEO, TechStart Inc.</p>
+              <div class="text-warning">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <div class="testimonial-item">
+              <img src="https://via.placeholder.com/80?text=User2" alt="Sarah Smith" class="testimonial-avatar">
+              <p class="testimonial-text">"As a freelancer, Home Connect provided me with consistent opportunities to showcase my skills and earn great income. Highly recommended!"</p>
+              <p class="testimonial-author">Sarah Smith</p>
+              <p class="testimonial-role">Graphic Designer</p>
+              <div class="text-warning">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <div class="testimonial-item">
+              <img src="https://via.placeholder.com/80?text=User3" alt="Mike Johnson" class="testimonial-avatar">
+              <p class="testimonial-text">"Finding a reliable web developer was always challenging until I discovered Home Connect. The platform is intuitive and the results speak for themselves."</p>
+              <p class="testimonial-author">Mike Johnson</p>
+              <p class="testimonial-role">Marketing Manager</p>
+              <div class="text-warning">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon"></span>
+          <span class="sr-only">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon"></span>
+          <span class="sr-only">Next</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="container">
+      <h2 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 1.5rem;">Ready to Get Started?</h2>
+      <p style="font-size: 1.2rem; margin-bottom: 2rem;">Join thousands of professionals and clients using Home Connect today</p>
+      <div class="d-flex gap-3 justify-content-center flex-wrap">
+        <button class="btn btn-light btn-lg" style="color: var(--primary-color); font-weight: 700;">Post Your First Job</button>
+        <button class="btn btn-outline-light btn-lg">Browse Opportunities</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="section-padding" id="contact">
+    <div class="container">
+      <h2 class="section-title">Get In Touch</h2>
+
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <form data-validate="true">
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="contactName" class="form-label">Full Name</label>
+                <input type="text" class="form-control" id="contactName" placeholder="Your Name" required>
+              </div>
+              <div class="col-md-6">
+                <label for="contactEmail" class="form-label">Email Address</label>
+                <input type="email" class="form-control" id="contactEmail" placeholder="your@email.com" required>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="contactSubject" class="form-label">Subject</label>
+              <input type="text" class="form-control" id="contactSubject" placeholder="Subject" required>
+            </div>
+            <div class="mb-3">
+              <label for="contactMessage" class="form-label">Message</label>
+              <textarea class="form-control" id="contactMessage" rows="5" placeholder="Your message..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg w-100">Send Message</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-3 footer-section">
+          <h5>Home Connect</h5>
+          <p>Connecting clients with expert service providers in your local area.</p>
+          <div class="social-icons">
+            <a href="#" class="social-icon" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-icon" title="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-icon" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+          </div>
+        </div>
+        <div class="col-lg-3 footer-section">
+          <h5>For Clients</h5>
+          <ul style="list-style: none; padding: 0;">
+            <li><a href="post-job.html">Post a Job</a></li>
+            <li><a href="jobs-list.html">Find Providers</a></li>
+            <li><a href="dashboard-client.html">Dashboard</a></li>
+            <li><a href="#">How It Works</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-3 footer-section">
+          <h5>For Providers</h5>
+          <ul style="list-style: none; padding: 0;">
+            <li><a href="#">Browse Jobs</a></li>
+            <li><a href="profile-provider.html">Create Profile</a></li>
+            <li><a href="#">Get Started</a></li>
+            <li><a href="#">Support</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-3 footer-section">
+          <h5>Company</h5>
+          <ul style="list-style: none; padding: 0;">
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2024 Home Connect. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top Button -->
+  <button class="back-to-top" title="Back to top">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+  <!-- Custom JS -->
+  <script src="common.js"></script>
+</body>
+</html>

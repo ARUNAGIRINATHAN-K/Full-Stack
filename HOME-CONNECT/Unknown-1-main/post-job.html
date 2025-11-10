@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Post a job on Home Connect. Connect with skilled service providers. Quick form to describe your project needs.">
+  <meta name="keywords" content="post job, project posting, find freelancers, service providers">
+  <meta name="author" content="Home Connect">
+  <title>Post a Job - Home Connect</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link href="common.css" rel="stylesheet">
+
+  <style>
+    /* Post-job specific styles */
+    .form-section {
+      background-color: #ffffff;
+      padding: 2rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .form-section-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--secondary-color);
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--primary-color);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .form-section-title i {
+      color: var(--primary-color);
+      font-size: 1.5rem;
+    }
+
+    .step-indicator {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 3rem;
+      position: relative;
+    }
+
+    .step {
+      flex: 1;
+      text-align: center;
+      position: relative;
+    }
+
+    .step::before {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: var(--border-color);
+      z-index: 1;
+    }
+
+    .step:last-child::before {
+      display: none;
+    }
+
+    .step-number {
+      width: 40px;
+      height: 40px;
+      background-color: var(--border-color);
+      color: #666;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 0.5rem;
+      font-weight: 700;
+      position: relative;
+      z-index: 2;
+      transition: var(--transition);
+    }
+
+    .step.active .step-number {
+      background-color: var(--primary-color);
+      color: #ffffff;
+    }
+
+    .step-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #666;
+    }
+
+    .step.active .step-title {
+      color: var(--primary-color);
+      font-weight: 700;
+    }
+
+    .budget-input-group {
+      display: flex;
+      gap: 0.5rem;
+      align-items: flex-end;
+    }
+
+    .budget-input-group .form-control {
+      flex: 1;
+    }
+
+    .budget-preset-buttons {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+
+    .budget-preset-btn {
+      padding: 0.5rem 1rem;
+      border: 2px solid var(--border-color);
+      background-color: #ffffff;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: var(--transition);
+      font-weight: 600;
+      color: var(--dark-text);
+    }
+
+    .budget-preset-btn:hover,
+    .budget-preset-btn.active {
+      border-color: var(--primary-color);
+      background-color: var(--primary-color);
+      color: #ffffff;
+    }
+
+    .file-upload-area {
+      border: 2px dashed var(--primary-color);
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      background-color: rgba(255, 107, 53, 0.05);
+    }
+
+    .file-upload-area:hover {
+      background-color: rgba(255, 107, 53, 0.1);
+      border-color: var(--accent-color);
+    }
+
+    .file-upload-area i {
+      font-size: 2.5rem;
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-check-custom {
+      padding-left: 0;
+    }
+
+    .form-check-custom input {
+      margin-right: 0.75rem;
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .category-option {
+      padding: 1rem;
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      background-color: #ffffff;
+    }
+
+    .category-option:hover {
+      border-color: var(--primary-color);
+    }
+
+    .category-option input[type="radio"]:checked + label {
+      border-color: var(--primary-color);
+      background-color: var(--primary-color);
+      color: #ffffff;
+    }
+
+    .category-option label {
+      margin: 0;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 2rem;
+    }
+
+    .skill-tag {
+      display: inline-block;
+      background-color: var(--light-bg);
+      color: var(--dark-text);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+      border: 1px solid var(--border-color);
+      transition: var(--transition);
+    }
+
+    .skill-tag:hover {
+      background-color: var(--primary-color);
+      color: #ffffff;
+      border-color: var(--primary-color);
+      cursor: pointer;
+    }
+
+    .skill-input-group {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .skill-input-group input {
+      flex: 1;
+    }
+  </style>
+</head>
+<body>
+  <!-- Preloader -->
+  <div class="preloader">
+    <div class="spinner-box">
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <i class="fas fa-briefcase"></i> Home Connect
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle active" href="#" data-bs-toggle="dropdown">Services</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="jobs-list.html">Find Jobs</a></li>
+              <li><a class="dropdown-item" href="post-job.html">Post a Job</a></li>
+              <li class="dropdown-submenu">
+                <a class="dropdown-item dropdown-toggle" href="#">Categories</a>
+                <ul class="dropdown-menu" id="services-categories-menu"></ul>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="dashboard-client.html">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="index.html#contact">Contact</a>
+          </li>
+          <li class="nav-item ms-2">
+            <a class="btn btn-primary btn-sm" href="auth.html">Sign In</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Hero -->
+  <section class="hero" style="padding: 4rem 0; min-height: 300px;">
+    <div class="hero-content">
+      <h1>Post Your Project</h1>
+      <p>Describe your project needs and connect with skilled service providers</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <section class="section-padding">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <!-- Step Indicator -->
+          <div class="step-indicator">
+            <div class="step active">
+              <div class="step-number">1</div>
+              <div class="step-title">Project Details</div>
+            </div>
+            <div class="step">
+              <div class="step-number">2</div>
+              <div class="step-title">Specifications</div>
+            </div>
+            <div class="step">
+              <div class="step-number">3</div>
+              <div class="step-title">Budget & Timeline</div>
+            </div>
+            <div class="step">
+              <div class="step-number">4</div>
+              <div class="step-title">Review</div>
+            </div>
+          </div>
+
+          <form data-validate="true" id="jobPostForm">
+            <!-- Step 1: Project Details -->
+            <div class="form-section step-1">
+              <h3 class="form-section-title">
+                <i class="fas fa-list"></i> Project Details
+              </h3>
+
+              <div class="mb-3">
+                <label for="projectTitle" class="form-label">Project Title *</label>
+                <input type="text" class="form-control" id="projectTitle" placeholder="e.g., E-Commerce Website Redesign" required>
+              </div>
+
+              <div class="mb-3">
+                <label for="projectDescription" class="form-label">Project Description *</label>
+                <textarea class="form-control" id="projectDescription" rows="5" placeholder="Describe your project in detail..." required></textarea>
+                <small class="text-muted">Minimum 50 characters. Be specific about what you need.</small>
+              </div>
+
+              <div class="mb-3">
+                <label for="projectCategory" class="form-label">Category *</label>
+                <select class="form-select" id="projectCategory" required>
+                  <option selected disabled>Select a category...</option>
+                  <option value="design">Design & Creative</option>
+                  <option value="programming">Programming & Tech</option>
+                  <option value="writing">Writing & Content</option>
+                  <option value="marketing">Marketing & SEO</option>
+                  <option value="business">Business Services</option>
+                  <option value="repair">Repairs & Maintenance</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="projectSubcategory" class="form-label">Sub-Category (Optional)</label>
+                <input type="text" class="form-control" id="projectSubcategory" placeholder="e.g., Web Design, Mobile App, etc.">
+              </div>
+
+              <div class="button-group">
+                <button type="button" class="btn btn-outline-primary" onclick="scrollToStep(2)">
+                  <i class="fas fa-chevron-right"></i> Next Step
+                </button>
+              </div>
+            </div>
+
+            <!-- Step 2: Specifications -->
+            <div class="form-section step-2" style="display: none;">
+              <h3 class="form-section-title">
+                <i class="fas fa-sliders-h"></i> Project Specifications
+              </h3>
+
+              <div class="mb-3">
+                <label class="form-label">Required Skills (Select at least one) *</label>
+                <div class="skill-input-group">
+                  <input type="text" class="form-control" id="skillInput" placeholder="Type a skill and press Enter">
+                  <button type="button" class="btn btn-primary" id="addSkillBtn">Add</button>
+                </div>
+                <div id="skillsList"></div>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Experience Level Required *</label>
+                <div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="experienceLevel" id="expert" value="expert" required>
+                    <label class="form-check-label" for="expert">Expert (5+ years)</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="experienceLevel" id="intermediate" value="intermediate">
+                    <label class="form-check-label" for="intermediate">Intermediate (2-5 years)</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="experienceLevel" id="beginner" value="beginner">
+                    <label class="form-check-label" for="beginner">Any Level</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Attachments (Optional)</label>
+                <div class="file-upload-area" id="fileUploadArea">
+                  <i class="fas fa-cloud-upload-alt"></i>
+                  <p style="margin: 0; font-weight: 600;">Drag files here or click to upload</p>
+                  <small>Maximum 5 files, 10MB each</small>
+                  <input type="file" multiple accept=".pdf,.doc,.docx,.jpg,.png,.zip" style="display: none;" id="fileInput">
+                </div>
+              </div>
+
+              <div class="button-group">
+                <button type="button" class="btn btn-outline-secondary" onclick="scrollToStep(1)">
+                  <i class="fas fa-chevron-left"></i> Previous
+                </button>
+                <button type="button" class="btn btn-primary" onclick="scrollToStep(3)">
+                  <i class="fas fa-chevron-right"></i> Next Step
+                </button>
+              </div>
+            </div>
+
+            <!-- Step 3: Budget & Timeline -->
+            <div class="form-section step-3" style="display: none;">
+              <h3 class="form-section-title">
+                <i class="fas fa-dollar-sign"></i> Budget & Timeline
+              </h3>
+
+              <div class="mb-3">
+                <label for="projectBudget" class="form-label">Project Budget (USD) *</label>
+                <div class="budget-input-group">
+                  <span class="input-group-text">$</span>
+                  <input type="number" class="form-control" id="projectBudget" placeholder="0.00" min="0" step="0.01" required>
+                </div>
+                <div class="budget-preset-buttons">
+                  <button type="button" class="budget-preset-btn" data-amount="500">Under $500</button>
+                  <button type="button" class="budget-preset-btn" data-amount="1000">$500-$1k</button>
+                  <button type="button" class="budget-preset-btn" data-amount="5000">$1k-$5k</button>
+                  <button type="button" class="budget-preset-btn" data-amount="10000">$5k+</button>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Payment Type *</label>
+                <div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="paymentType" id="fixed" value="fixed" required>
+                    <label class="form-check-label" for="fixed">Fixed Price</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="paymentType" id="hourly" value="hourly">
+                    <label class="form-check-label" for="hourly">Hourly Rate</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="projectDeadline" class="form-label">Expected Deadline *</label>
+                <input type="date" class="form-control" id="projectDeadline" required>
+              </div>
+
+              <div class="mb-3">
+                <label for="projectLocation" class="form-label">Project Location</label>
+                <div class="input-group">
+                  <input type="text" class="form-control" id="projectLocation" placeholder="City, Country" value="Remote">
+                  <input type="hidden" id="projectLocation-lat">
+                  <input type="hidden" id="projectLocation-lng">
+                  <button class="btn btn-outline-primary" type="button" data-action="get-location" data-target="#projectLocation">
+                    <i class="fas fa-map-marker-alt"></i> Use My Location
+                  </button>
+                </div>
+              </div>
+
+              <div class="button-group">
+                <button type="button" class="btn btn-outline-secondary" onclick="scrollToStep(2)">
+                  <i class="fas fa-chevron-left"></i> Previous
+                </button>
+                <button type="button" class="btn btn-primary" onclick="scrollToStep(4)">
+                  <i class="fas fa-chevron-right"></i> Review & Submit
+                </button>
+              </div>
+            </div>
+
+            <!-- Step 4: Review -->
+            <div class="form-section step-4" style="display: none;">
+              <h3 class="form-section-title">
+                <i class="fas fa-check-circle"></i> Review Your Project
+              </h3>
+
+              <div class="alert alert-info" role="alert">
+                <i class="fas fa-info-circle"></i> Please review your project details before posting. You can edit it later if needed.
+              </div>
+
+              <div id="reviewContent" style="background-color: var(--light-bg); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                <!-- Review content will be populated by JS -->
+              </div>
+
+              <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                <label class="form-check-label" for="agreeTerms">
+                  I agree to Home Connect's <a href="#">Terms of Service</a> and <a href="#">Project Posting Guidelines</a> *
+                </label>
+              </div>
+
+              <div class="button-group">
+                <button type="button" class="btn btn-outline-secondary" onclick="scrollToStep(3)">
+                  <i class="fas fa-chevron-left"></i> Previous
+                </button>
+                <button type="submit" class="btn btn-primary btn-lg">
+                  <i class="fas fa-paper-plane"></i> Post Project Now
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-3 footer-section">
+          <h5>Home Connect</h5>
+          <p>Connecting clients with expert service providers in your local area.</p>
+          <div class="social-icons">
+            <a href="#" class="social-icon" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-icon" title="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-icon" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+          </div>
+        </div>
+        <div class="col-lg-3 footer-section">
+          <h5>For Clients</h5>
+          <ul style="list-style: none; padding: 0;">
+            <li><a href="post-job.html">Post a Job</a></li>
+            <li><a href="jobs-list.html">Find Providers</a></li>
+            <li><a href="dashboard-client.html">Dashboard</a></li>
+            <li><a href="#">How It Works</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-3 footer-section">
+          <h5>For Providers</h5>
+          <ul style="list-style: none; padding: 0;">
+            <li><a href="#">Browse Jobs</a></li>
+            <li><a href="profile-provider.html">Create Profile</a></li>
+            <li><a href="#">Get Started</a></li>
+            <li><a href="#">Support</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-3 footer-section">
+          <h5>Company</h5>
+          <ul style="list-style: none; padding: 0;">
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2024 Home Connect. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top Button -->
+  <button class="back-to-top" title="Back to top">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+  <!-- Custom JS -->
+  <script src="common.js"></script>
+
+  <script>
+    // Post Job Form Logic
+    const form = document.getElementById('jobPostForm');
+    const skillInput = document.getElementById('skillInput');
+    const addSkillBtn = document.getElementById('addSkillBtn');
+    const skillsList = document.getElementById('skillsList');
+    const budgetPresets = document.querySelectorAll('.budget-preset-btn');
+    const fileUploadArea = document.getElementById('fileUploadArea');
+    const fileInput = document.getElementById('fileInput');
+    let skills = [];
+
+    // Add skill functionality
+    addSkillBtn.addEventListener('click', addSkill);
+    skillInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addSkill();
+      }
+    });
+
+    function addSkill() {
+      const skill = skillInput.value.trim();
+      if (skill && !skills.includes(skill)) {
+        skills.push(skill);
+        skillInput.value = '';
+        renderSkills();
+      }
+    }
+
+    function removeSkill(skill) {
+      skills = skills.filter(s => s !== skill);
+      renderSkills();
+    }
+
+    function renderSkills() {
+      skillsList.innerHTML = skills.map(skill => `
+        <span class="skill-tag">
+          ${skill}
+          <i class="fas fa-times" onclick="removeSkill('${skill}')" style="cursor: pointer; margin-left: 0.5rem;"></i>
+        </span>
+      `).join('');
+    }
+
+    // Budget preset buttons
+    budgetPresets.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const amount = btn.dataset.amount;
+        document.getElementById('projectBudget').value = amount;
+        budgetPresets.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+
+    // File upload area
+    fileUploadArea.addEventListener('click', () => fileInput.click());
+    fileUploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      fileUploadArea.style.backgroundColor = 'rgba(255, 107, 53, 0.2)';
+    });
+    fileUploadArea.addEventListener('dragleave', () => {
+      fileUploadArea.style.backgroundColor = 'rgba(255, 107, 53, 0.05)';
+    });
+
+    // Step navigation
+    function scrollToStep(step) {
+      // Hide all steps
+      document.querySelectorAll('.form-section').forEach(section => {
+        section.style.display = 'none';
+      });
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+
+      // Show selected step
+      document.querySelector(`.step-${step}`).style.display = 'block';
+      document.querySelectorAll('.step')[step - 1].classList.add('active');
+
+      // Generate review
+      if (step === 4) {
+        generateReview();
+      }
+
+      // Scroll to top
+      document.querySelector('.form-section:not([style*="display: none"])').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function generateReview() {
+      const reviewContent = document.getElementById('reviewContent');
+      const title = document.getElementById('projectTitle').value;
+      const description = document.getElementById('projectDescription').value;
+      const category = document.getElementById('projectCategory').value;
+      const budget = document.getElementById('projectBudget').value;
+      const deadline = document.getElementById('projectDeadline').value;
+      const paymentType = document.querySelector('input[name="paymentType"]:checked')?.value;
+
+      reviewContent.innerHTML = `
+        <div class="row mb-2">
+          <div class="col-md-6"><strong>Project Title:</strong></div>
+          <div class="col-md-6">${title}</div>
+        </div>
+        <hr>
+        <div class="row mb-2">
+          <div class="col-md-6"><strong>Category:</strong></div>
+          <div class="col-md-6">${category}</div>
+        </div>
+        <hr>
+        <div class="row mb-2">
+          <div class="col-md-6"><strong>Description:</strong></div>
+          <div class="col-md-6">${description.substring(0, 100)}...</div>
+        </div>
+        <hr>
+        <div class="row mb-2">
+          <div class="col-md-6"><strong>Required Skills:</strong></div>
+          <div class="col-md-6">${skills.join(', ') || 'None specified'}</div>
+        </div>
+        <hr>
+        <div class="row mb-2">
+          <div class="col-md-6"><strong>Budget:</strong></div>
+          <div class="col-md-6">$${parseFloat(budget).toFixed(2)} (${paymentType})</div>
+        </div>
+        <hr>
+        <div class="row mb-2">
+          <div class="col-md-6"><strong>Deadline:</strong></div>
+          <div class="col-md-6">${new Date(deadline).toLocaleDateString()}</div>
+        </div>
+      `;
+    }
+
+    // Populate categories in navbar and form select
+    if (window.FreelanceMarketplace && window.FreelanceMarketplace.populateServicesCategories) {
+      window.FreelanceMarketplace.populateServicesCategories();
+    }
+
+    // Form submission -> Backend
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      const res = await window.FreelanceMarketplace.submitJobPosting(fd);
+      if (res.success) {
+        window.FreelanceMarketplace.showToast?.('Project posted successfully!', 'success');
+        form.reset();
+        scrollToStep(1);
+        window.location.href = `job-details.html?id=${res.jobId}`;
+      } else {
+        window.FreelanceMarketplace.showToast?.(res.message || 'Failed to post project', 'danger');
+      }
+    });
+
+    // Make removeSkill global
+    window.removeSkill = removeSkill;
+  </script>
+</body>
+</html>

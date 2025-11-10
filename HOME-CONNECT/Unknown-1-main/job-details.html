@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="View detailed job information and submit proposals on Home Connect.">
+  <meta name="keywords" content="job details, proposal, project information">
+  <meta name="author" content="Home Connect">
+  <title>Job Details - Home Connect</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link href="common.css" rel="stylesheet">
+
+  <style>
+    /* Job Details specific styles */
+    .job-header {
+      background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+      color: #ffffff;
+      padding: 3rem 0;
+    }
+
+    .job-header h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+    }
+
+    .job-meta-header {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.1rem;
+    }
+
+    .client-card {
+      background-color: var(--light-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .client-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--primary-color);
+      margin-bottom: 1rem;
+    }
+
+    .client-name {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--secondary-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .client-rating {
+      color: #ffc107;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .client-info {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .job-details-section {
+      background-color: #ffffff;
+      padding: 2rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .section-heading {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--secondary-color);
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--primary-color);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-heading i {
+      color: var(--primary-color);
+      font-size: 1.5rem;
+    }
+
+    .proposal-form-section {
+      background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .proposal-input {
+      margin-bottom: 1.5rem;
+    }
+
+    .bid-amount {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-end;
+      margin-bottom: 1.5rem;
+    }
+
+    .bid-amount input {
+      flex: 1;
+    }
+
+    .badge-custom {
+      display: inline-block;
+      padding: 0.6rem 1.2rem;
+      border-radius: 20px;
+      font-weight: 600;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .badge-skill {
+      background-color: var(--light-bg);
+      color: var(--primary-color);
+      border: 1px solid var(--primary-color);
+    }
+
+    .badge-category {
+      background-color: rgba(255, 107, 53, 0.2);
+      color: var(--primary-color);
+    }
+
+    .progress-section {
+      margin: 2rem 0;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .similar-jobs {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .similar-job-card {
+      background-color: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.5rem;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .similar-job-card:hover {
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary-color);
+    }
+
+    .similar-job-title {
+      font-weight: 700;
+      color: var(--secondary-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .similar-job-budget {
+      color: var(--primary-color);
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .sidebar-sticky {
+      position: sticky;
+      top: 100px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Preloader -->
+  <div class="preloader">
+    <div class="spinner-box">
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <i class="fas fa-briefcase"></i> Home Connect
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle active" href="#" data-bs-toggle="dropdown">Services</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="jobs-list.html">Find Jobs</a></li>
+              <li><a class="dropdown-item" href="post-job.html">Post a Job</a></li>
+              <li class="dropdown-submenu">
+                <a class="dropdown-item dropdown-toggle" href="#">Categories</a>
+                <ul class="dropdown-menu" id="services-categories-menu"></ul>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="dashboard-client.html">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="index.html#contact">Contact</a>
+          </li>
+          <li class="nav-item ms-2">
+            <a class="btn btn-primary btn-sm" href="auth.html">Sign In</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Job Header -->
+  <section class="job-header">
+    <div class="container">
+      <div class="row align-items-end">
+        <div class="col-lg-8">
+          <h1 id="job-title">Loading…</h1>
+          <p id="job-subtitle" style="font-size: 1.1rem; opacity: 0.95;">Please wait while we load the job details</p>
+          <div class="job-meta-header">
+            <div class="meta-item">
+              <i class="fas fa-briefcase"></i> <span id="job-category">—</span>
+            </div>
+            <div class="meta-item">
+              <i class="fas fa-map-marker-alt"></i> <span id="job-location">—</span>
+            </div>
+            <div class="meta-item">
+              <i class="fas fa-eye"></i> <span id="viewCount">542</span> views
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 text-end">
+          <div style="font-size: 1.1rem; opacity: 0.9; margin-bottom: 0.5rem;">Budget:</div>
+          <div id="job-budget" style="font-size: 2.5rem; font-weight: 800;">—</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <section class="section-padding">
+    <div class="container">
+      <div class="row grid-gap">
+        <!-- Main Content Column -->
+        <div class="col-lg-8">
+          <!-- Job Description -->
+          <div class="job-details-section">
+            <h3 class="section-heading">
+              <i class="fas fa-file-alt"></i> Project Description
+            </h3>
+            <p id="job-description" style="font-size: 1.1rem; color: #333; line-height: 1.8;">Loading description…</p>
+            <h5 style="margin-top: 1.5rem; margin-bottom: 1rem; font-weight: 700; color: var(--secondary-color);">Project Scope:</h5>
+            <ul style="color: #666; line-height: 2;">
+              <li>Kitchen sink and faucet installation with new water lines</li>
+              <li>Bathroom fixtures (toilet, sink, shower) installation</li>
+              <li>Drainage and sewage line replacements</li>
+              <li>Electrical rewiring for kitchen appliances</li>
+              <li>Bathroom exhaust fan and ventilation system</li>
+              <li>Final inspection and testing</li>
+            </ul>
+          </div>
+
+          <!-- Required Skills -->
+          <div class="job-details-section">
+            <h3 class="section-heading">
+              <i class="fas fa-tools"></i> Required Skills & Experience
+            </h3>
+            <div>
+              <span class="badge-custom badge-skill">Plumbing</span>
+              <span class="badge-custom badge-skill">Electrical Work</span>
+              <span class="badge-custom badge-skill">Fixture Installation</span>
+              <span class="badge-custom badge-skill">Drain & Sewage Systems</span>
+              <span class="badge-custom badge-skill">Licensed & Insured</span>
+              <span class="badge-custom badge-skill">5+ Years Experience</span>
+            </div>
+          </div>
+
+          <!-- Job Progress -->
+          <div class="job-details-section">
+            <h3 class="section-heading">
+              <i class="fas fa-chart-line"></i> Project Status
+            </h3>
+            <div class="progress-section">
+              <div class="progress-label">
+                <span>Proposals Received</span>
+                <span>12 proposals</span>
+              </div>
+              <div class="progress">
+                <div class="progress-bar" style="width: 75%;"></div>
+              </div>
+            </div>
+            <div class="progress-section">
+              <div class="progress-label">
+                <span>Timeline Progress</span>
+                <span>4 days remaining</span>
+              </div>
+              <div class="progress">
+                <div class="progress-bar" style="width: 30%;"></div>
+              </div>
+            </div>
+            <div class="alert alert-info mt-3">
+              <i class="fas fa-clock"></i> <strong>Deadline:</strong> Posted 11 days ago • 4 days remaining
+            </div>
+          </div>
+
+          <!-- About Client -->
+          <div class="job-details-section">
+            <h3 class="section-heading">
+              <i class="fas fa-user-circle"></i> About the Client
+            </h3>
+            <div class="client-card">
+              <img src="https://via.placeholder.com/80?text=Client" alt="Client" class="client-avatar">
+              <div class="client-name">Sarah Johnson</div>
+              <div class="client-rating">
+                <i class="fas fa-star"></i> 4.9 (23 reviews)
+              </div>
+              <div class="client-info mb-3">
+                E-commerce Business Owner • Verified Payment Method
+              </div>
+              <button class="btn btn-outline-primary btn-sm w-100">
+                <i class="fas fa-envelope"></i> Send Message
+              </button>
+            </div>
+          </div>
+
+          <!-- Similar Jobs -->
+          <div class="job-details-section">
+            <h3 class="section-heading">
+              <i class="fas fa-briefcase"></i> Similar Jobs
+            </h3>
+            <div class="similar-jobs">
+              <div class="similar-job-card">
+                <div class="similar-job-title">Electrical Rewiring - Office Space</div>
+                <p style="font-size: 0.9rem; color: #666; margin: 0.5rem 0;">Commercial building electrical upgrade</p>
+                <div class="similar-job-budget">₹180,000</div>
+              </div>
+              <div class="similar-job-card">
+                <div class="similar-job-title">Bathroom Plumbing Installation</div>
+                <p style="font-size: 0.9rem; color: #666; margin: 0.5rem 0;">New fixtures and drainage system</p>
+                <div class="similar-job-budget">₹100,000</div>
+              </div>
+              <div class="similar-job-card">
+                <div class="similar-job-title">Emergency Water Line Repair</div>
+                <p style="font-size: 0.9rem; color: #666; margin: 0.5rem 0;">Quick response plumbing service needed</p>
+                <div class="similar-job-budget">₹28,000 - ₹68,000</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+          <!-- Submit Proposal -->
+          <div class="proposal-form-section sidebar-sticky">
+            <h4 style="font-weight: 700; margin-bottom: 1.5rem; color: var(--secondary-color);">
+              <i class="fas fa-paper-plane"></i> Submit Your Proposal
+            </h4>
+
+            <form id="proposalForm" data-validate="true">
+              <div class="proposal-input">
+                <label for="bidAmount" class="form-label">Your Bid Amount (USD)</label>
+                <div class="bid-amount">
+                  <span class="input-group-text">$</span>
+                  <input type="number" class="form-control" id="bidAmount" placeholder="3500" min="1" step="0.01" required>
+                </div>
+              </div>
+
+              <div class="proposal-input">
+                <label for="deliveryTime" class="form-label">Delivery Time</label>
+                <select class="form-select" id="deliveryTime" required>
+                  <option selected disabled>Select delivery time...</option>
+                  <option value="1">1 week</option>
+                  <option value="2">2 weeks</option>
+                  <option value="3">3 weeks</option>
+                  <option value="4">4 weeks or more</option>
+                </select>
+              </div>
+
+              <div class="proposal-input">
+                <label for="coverLetter" class="form-label">Cover Letter</label>
+                <textarea class="form-control" id="coverLetter" rows="4" placeholder="Introduce yourself, explain why you're perfect for this project..." required></textarea>
+                <small class="text-muted">Minimum 50 characters</small>
+              </div>
+
+              <div class="proposal-input">
+                <label for="experience" class="form-label">Years of Experience</label>
+                <select class="form-select" id="experience" required>
+                  <option selected disabled>Select experience level...</option>
+                  <option value="0-1">Less than 1 year</option>
+                  <option value="1-3">1-3 years</option>
+                  <option value="3-5">3-5 years</option>
+                  <option value="5plus">5+ years</option>
+                </select>
+              </div>
+
+              <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                <label class="form-check-label" for="agreeTerms">
+                  I agree to the project terms and conditions
+                </label>
+              </div>
+
+              <button type="submit" class="btn btn-primary w-100 btn-lg">
+                <i class="fas fa-send"></i> Submit Proposal
+              </button>
+            </form>
+
+            <button class="btn btn-outline-primary w-100 mt-2">
+              <i class="fas fa-bookmark"></i> Save Job
+            </button>
+
+            <div class="alert alert-info mt-3" style="font-size: 0.9rem;">
+              <i class="fas fa-shield-alt"></i> Your proposal will be reviewed by the client within 24-48 hours.
+            </div>
+          </div>
+
+          <!-- Quick Stats -->
+          <div class="job-details-section" style="margin-top: 2rem;">
+            <h5 style="font-weight: 700; margin-bottom: 1.5rem; color: var(--secondary-color);">Quick Stats</h5>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);">
+              <span>Duration:</span>
+              <strong>2 weeks</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);">
+              <span>Level:</span>
+              <strong>Intermediate</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);">
+              <span>Category:</span>
+              <strong id="qs-category">—</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span>Payment:</span>
+              <strong>Fixed Price</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-3 footer-section">
+          <h5>Home Connect</h5>
+          <p>Connecting clients with expert service providers in your local area.</p>
+          <div class="social-icons">
+            <a href="#" class="social-icon" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-icon" title="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-icon" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+          </div>
+        </div>
+        <div class="col-lg-3 footer-section">
+          <h5>For Clients</h5>
+          <ul style="list-style: none; padding: 0;">
+            <li><a href="post-job.html">Post a Job</a></li>
+            <li><a href="jobs-list.html">Find Providers</a></li>
+            <li><a href="dashboard-client.html">Dashboard</a></li>
+            <li><a href="#">How It Works</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-3 footer-section">
+          <h5>For Providers</h5>
+          <ul style="list-style: none; padding: 0;">
+            <li><a href="#">Browse Jobs</a></li>
+            <li><a href="profile-provider.html">Create Profile</a></li>
+            <li><a href="#">Get Started</a></li>
+            <li><a href="#">Support</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-3 footer-section">
+          <h5>Company</h5>
+          <ul style="list-style: none; padding: 0;">
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2024 Home Connect. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top Button -->
+  <button class="back-to-top" title="Back to top">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+  <!-- Custom JS -->
+  <script src="common.js"></script>
+
+  <script>
+    // Populate services categories in nav
+    if (window.FreelanceMarketplace && window.FreelanceMarketplace.populateServicesCategories) {
+      window.FreelanceMarketplace.populateServicesCategories();
+    }
+
+    // Load job details
+    (async function() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      if (!id) return;
+      const { apiCall, formatCurrency } = window.FreelanceMarketplace || {};
+      try {
+        const res = await apiCall(`/jobs/${id}`, 'GET');
+        if (!res || !res.success) throw new Error(res?.error || 'Failed to load job');
+        const job = res.data;
+        // Fill header
+        const titleEl = document.getElementById('job-title');
+        const subEl = document.getElementById('job-subtitle');
+        const catEl = document.getElementById('job-category');
+        const locEl = document.getElementById('job-location');
+        const budEl = document.getElementById('job-budget');
+        const descEl = document.getElementById('job-description');
+        const qsCat = document.getElementById('qs-category');
+
+        if (titleEl) titleEl.textContent = job.title || 'Untitled Job';
+        if (subEl) subEl.textContent = job.description ? (job.description.length > 140 ? job.description.slice(0, 140) + '…' : job.description) : '';
+        if (catEl) catEl.textContent = job.category || 'General';
+        if (locEl) locEl.textContent = job.location || 'N/A';
+        if (budEl) {
+          const min = job.budget_min ?? null;
+          const max = job.budget_max ?? null;
+          budEl.textContent = (min != null || max != null)
+            ? `₹${(min ?? 0).toLocaleString()}${max != null ? ' - ₹' + max.toLocaleString() : ''}`
+            : '—';
+        }
+        if (descEl) descEl.textContent = job.description || '';
+        if (qsCat) qsCat.textContent = job.category || '—';
+      } catch (err) {
+        console.error(err);
+        if (window.FreelanceMarketplace && window.FreelanceMarketplace.showToast) {
+          window.FreelanceMarketplace.showToast('Failed to load job details', 'danger');
+        }
+      }
+    })();
+
+    (function(){
+      const form = document.getElementById('proposalForm');
+      if (!form) return;
+      const { getCurrentUser, showToast, applyToJob } = window.FreelanceMarketplace || {};
+      const user = getCurrentUser ? getCurrentUser() : null;
+      // Gate the form: only providers can submit
+      if (!user) {
+        const btn = form.querySelector('button[type="submit"]');
+        if (btn) btn.disabled = true;
+        showToast && showToast('Sign in as a provider to submit a proposal', 'warning');
+      } else if (user.role !== 'provider') {
+        const btn = form.querySelector('button[type="submit"]');
+        if (btn) btn.disabled = true;
+        showToast && showToast('Only provider accounts can submit proposals', 'warning');
+      }
+
+      form.addEventListener('submit', async function(e){
+        e.preventDefault();
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+        if (!id) return;
+        const bidAmount = document.getElementById('bidAmount')?.value;
+        const deliveryTime = document.getElementById('deliveryTime')?.value;
+        const coverLetter = document.getElementById('coverLetter')?.value;
+        const timelineDays = deliveryTime ? Number(deliveryTime) * 7 : null; // weeks to days
+        const res = await applyToJob(id, { coverLetter, bidAmount, timelineDays });
+        if (res && res.success) {
+          form.reset();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

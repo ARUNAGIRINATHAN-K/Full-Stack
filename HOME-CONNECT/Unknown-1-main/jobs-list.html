@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse available jobs and find the perfect project. Home Connect job listings with advanced filters.">
+  <meta name="keywords" content="job listings, freelance jobs, service projects, find work">
+  <meta name="author" content="Home Connect">
+  <title>Browse Jobs - Home Connect</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link href="common.css" rel="stylesheet">
+
+  <style>
+    /* Jobs-list specific styles */
+    .filter-sidebar {
+      background-color: var(--light-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      height: fit-content;
+      position: sticky;
+      top: 100px;
+    }
+
+    .filter-group {
+      margin-bottom: 2rem;
+    }
+
+    .filter-group label {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .filter-group input[type="checkbox"],
+    .filter-group input[type="radio"] {
+      margin-right: 0.75rem;
+      cursor: pointer;
+    }
+
+    .job-listing-container {
+      background-color: #ffffff;
+    }
+
+    .job-item {
+      padding: 1.5rem;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      margin-bottom: 1.5rem;
+      transition: var(--transition);
+    }
+
+    .job-item:hover {
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary-color);
+    }
+
+    .filter-section-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--dark-text);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .location-input-group {
+      margin-bottom: 1rem;
+    }
+
+    .results-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding: 1rem;
+      background-color: var(--light-bg);
+      border-radius: 8px;
+    }
+
+    .sort-dropdown {
+      min-width: 200px;
+    }
+
+    @media (max-width: 768px) {
+      .filter-sidebar {
+        position: static;
+        margin-bottom: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Preloader -->
+  <div class="preloader">
+    <div class="spinner-box">
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <i class="fas fa-briefcase"></i> Home Connect
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle active" href="#" data-bs-toggle="dropdown">Services</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="jobs-list.html">Find Jobs</a></li>
+              <li><a class="dropdown-item" href="post-job.html">Post a Job</a></li>
+              <li class="dropdown-submenu">
+                <a class="dropdown-item dropdown-toggle" href="#">Categories</a>
+                <ul class="dropdown-menu" id="services-categories-menu"></ul>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="dashboard-client.html">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="index.html#contact">Contact</a>
+          </li>
+          <li class="nav-item ms-2">
+            <a class="btn btn-primary btn-sm" href="auth.html">Sign In</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Hero -->
+  <section class="hero" style="padding: 4rem 0; min-height: 300px;">
+    <div class="hero-content">
+      <h1>Find Your Next Project</h1>
+      <p>Browse thousands of job opportunities from clients seeking skilled service providers</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <section class="section-padding">
+    <div class="container">
+      <div class="row grid-gap">
+        <!-- Sidebar Filters -->
+        <div class="col-lg-3">
+          <div class="filter-sidebar">
+            <h5 class="filter-section-title">
+              <i class="fas fa-filter"></i> Filters
+            </h5>
+
+            <!-- Location Filter -->
+            <div class="filter-group">
+              <h6 class="filter-section-title" style="font-size: 0.9rem; text-transform: none; letter-spacing: 0;">Location</h6>
+              <div class="location-input-group">
+                <input type="text" class="form-control form-control-sm mb-2" id="locationInput" placeholder="Enter location" value="Lat: 40.7128, Lng: -74.0060">
+                <input type="hidden" id="locationInput-lat" value="40.7128">
+                <input type="hidden" id="locationInput-lng" value="-74.0060">
+                <button class="btn btn-outline-primary btn-sm w-100" data-action="get-location" data-target="#locationInput">
+                  <i class="fas fa-map-marker-alt"></i> Use My Location
+                </button>
+              </div>
+            </div>
+
+            <!-- Category Filter -->
+            <div class="filter-group">
+              <h6 class="filter-section-title" style="font-size: 0.9rem; text-transform: none; letter-spacing: 0;">Category</h6>
+              <label><input type="checkbox" value="cleaning"> House Cleaning</label>
+              <label><input type="checkbox" value="cooking"> Cooking & Catering</label>
+              <label><input type="checkbox" value="laundry"> Laundry & Ironing</label>
+              <label><input type="checkbox" value="appliance"> Appliance Repair</label>
+              <label><input type="checkbox" value="tutoring"> Home Tutoring</label>
+              <label><input type="checkbox" value="childcare"> Childcare & Babysitting</label>
+              <label><input type="checkbox" value="elderly"> Elderly Care</label>
+              <label><input type="checkbox" value="interior"> Interior Decoration</label>
+              <label><input type="checkbox" value="plumbing"> Electricians & Plumbers</label>
+              <label><input type="checkbox" value="carpentry"> Carpenters & Painters</label>
+              <label><input type="checkbox" value="gardening"> Gardening & Landscaping</label>
+              <label><input type="checkbox" value="moving"> Packers & Movers</label>
+              <label><input type="checkbox" value="vehicle"> Vehicle Cleaning & Maintenance</label>
+              <label><input type="checkbox" value="petcare"> Pet Grooming & Sitting</label>
+              <label><input type="checkbox" value="tailoring"> Tailoring & Alterations</label>
+              <label><input type="checkbox" value="events"> Event Support</label>
+            </div>
+
+            <!-- Budget Range Filter -->
+            <div class="filter-group">
+              <h6 class="filter-section-title" style="font-size: 0.9rem; text-transform: none; letter-spacing: 0;">Budget Range</h6>
+              <label><input type="radio" name="budget"> Under ₹5,000</label>
+              <label><input type="radio" name="budget"> ₹5,000 - ₹10,000</label>
+              <label><input type="radio" name="budget"> ₹10,000 - ₹50,000</label>
+              <label><input type="radio" name="budget"> ₹50,000+</label>
+            </div>
+
+            <!-- Status Filter -->
+            <div class="filter-group">
+              <h6 class="filter-section-title" style="font-size: 0.9rem; text-transform: none; letter-spacing: 0;">Status</h6>
+              <label><input type="checkbox" value="open" checked> Open</label>
+              <label><input type="checkbox" value="active"> Active</label>
+              <label><input type="checkbox" value="completed"> Completed</label>
+            </div>
+
+            <button class="btn btn-primary w-100 mt-3">
+              <i class="fas fa-search"></i> Apply Filters
+            </button>
+            <button class="btn btn-outline-secondary w-100 mt-2">
+              <i class="fas fa-redo"></i> Clear All
+            </button>
+          </div>
+        </div>
+
+        <!-- Job Listings -->
+        <div class="col-lg-9">
+          <!-- Results Info & Sort -->
+            <div class="results-info">
+            <div>
+              <strong><span id="jobs-count">0</span> jobs found</strong> matching your criteria
+            </div>
+            <div>
+              <label for="sortJobs" class="me-2">Sort by:</label>
+              <select id="sortJobs" class="form-select form-select-sm sort-dropdown d-inline-block w-auto">
+                <option value="recent">Most Recent</option>
+                <option value="budget-high">Budget: High to Low</option>
+                <option value="budget-low">Budget: Low to High</option>
+                <option value="trending">Most Relevant</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Job Listings -->
+          <div class="job-listing-container">
+            <div class="row" id="jobs-container"></div>
+          </div>
+
+          <!-- Pagination -->
+          <div data-pagination-container style="margin-top: 3rem;"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-3 footer-section">
+          <h5>Home Connect</h5>
+          <p>Connecting clients with expert service providers in your local area.</p>
+          <div class="social-icons">
+            <a href="#" class="social-icon" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-icon" title="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-icon" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+          </div>
+        </div>
+        <div class="col-lg-3 footer-section">
+          <h5>For Clients</h5>
+          <ul style="list-style: none; padding: 0;">
+            <li><a href="post-job.html">Post a Job</a></li>
+            <li><a href="jobs-list.html">Find Providers</a></li>
+            <li><a href="dashboard-client.html">Dashboard</a></li>
+            <li><a href="#">How It Works</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-3 footer-section">
+          <h5>For Providers</h5>
+          <ul style="list-style: none; padding: 0;">
+            <li><a href="#">Browse Jobs</a></li>
+            <li><a href="profile-provider.html">Create Profile</a></li>
+            <li><a href="#">Get Started</a></li>
+            <li><a href="#">Support</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-3 footer-section">
+          <h5>Company</h5>
+          <ul style="list-style: none; padding: 0;">
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2024 Home Connect. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top Button -->
+  <button class="back-to-top" title="Back to top">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+  <!-- Custom JS -->
+  <script src="common.js"></script>
+  <script>
+    // Populate categories
+    if (window.FreelanceMarketplace && window.FreelanceMarketplace.populateServicesCategories) {
+      window.FreelanceMarketplace.populateServicesCategories();
+    }
+
+    // Load jobs and update count
+    async function loadPageJobs() {
+      const params = new URLSearchParams(window.location.search);
+      const category = params.get('category') || undefined;
+      const jobs = await window.FreelanceMarketplace.fetchJobs({ category });
+      window.FreelanceMarketplace.renderJobs(jobs);
+      const countEl = document.getElementById('jobs-count');
+      if (countEl) countEl.textContent = jobs.length;
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadPageJobs);
+    } else {
+      loadPageJobs();
+    }
+  </script>
+</body>
+</html>

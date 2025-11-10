@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Professional provider profile on Home Connect. Showcase your skills, portfolio, and services.">
+  <meta name="keywords" content="freelancer profile, service provider, portfolio, skills, services">
+  <meta name="author" content="Home Connect">
+  <title>Provider Profile - Home Connect</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link href="common.css" rel="stylesheet">
+
+  <style>
+    /* Profile specific styles */
+    .profile-hero {
+      background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+      color: #ffffff;
+      padding: 3rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .profile-hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="1200" height="300" fill="url(%23grid)"/></svg>');
+      opacity: 0.2;
+      z-index: 1;
+    }
+
+    .profile-info {
+      position: relative;
+      z-index: 2;
+    }
+
+    .profile-header-content {
+      display: flex;
+      gap: 2rem;
+      align-items: flex-start;
+    }
+
+    .profile-avatar-large {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 5px solid #ffffff;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .profile-title-section h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    .profile-title-section .title {
+      font-size: 1.2rem;
+      color: var(--accent-color);
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .profile-rating-section {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .rating-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .profile-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+
+    .profile-main {
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .profile-section {
+      background-color: #ffffff;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 2rem;
+    }
+
+    .profile-section-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--secondary-color);
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--primary-color);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .profile-section-title i {
+      color: var(--primary-color);
+      font-size: 1.5rem;
+    }
+
+    .bio-text {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: #666;
+      margin-bottom: 1.5rem;
+    }
+
+    .service-item {
+      padding: 1.5rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      transition: var(--transition);
+    }
+
+    .service-item:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary-color);
+    }
+
+    .service-name {
+      font-weight: 700;
+      color: var(--secondary-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .service-price {
+      color: var(--primary-color);
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .portfolio-item {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .portfolio-item:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .portfolio-image {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      background-color: var(--light-bg);
+    }
+
+    .portfolio-info {
+      padding: 1rem;
+      background-color: #ffffff;
+    }
+
+    .portfolio-title {
+      font-weight: 700;
+      color: var(--secondary-color);
+      margin-bottom: 0.25rem;
+      font-size: 0.95rem;
+    }
+
+    .portfolio-category {
+      font-size: 0.85rem;
+      color: #999;
+    }
+
+    .review-card {
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      background-color: #f8f9fa;
+    }
+
+    .review-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .review-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--primary-color);
+    }
+
+    .review-meta h6 {
+      margin-bottom: 0.25rem;
+      font-weight: 700;
+    }
+
+    .review-meta p {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #999;
+    }
+
+    .review-rating {
+      color: #ffc107;
+      margin-bottom: 0.75rem;
+    }
+
+    .review-text {
+      color: #666;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .sidebar-card {
+      background-color: #ffffff;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 1.5rem;
+      position: sticky;
+      top: 100px;
+    }
+
+    .sidebar-stat {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .sidebar-stat:last-child {
+      border-bottom: none;
+    }
+
+    .sidebar-stat-label {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .sidebar-stat-value {
+      font-weight: 700;
+      color: var(--primary-color);
+      font-size: 1.1rem;
+    }
+
+    .skill-badge {
+      display: inline-block;
+      background-color: var(--light-bg);
+      color: var(--primary-color);
+      padding: 0.6rem 1rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+      border: 1px solid var(--primary-color);
+    }
+
+    @media (max-width: 768px) {
+      .profile-header-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .profile-main {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-rating-section {
+        justify-content: center;
+      }
+
+      .profile-buttons {
+        justify-content: center;
+      }
+
+      .sidebar-card {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Preloader -->
+  <div class="preloader">
+    <div class="spinner-box">
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <i class="fas fa-briefcase"></i> Home Connect
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Services</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="jobs-list.html">Find Jobs</a></li>
+              <li><a class="dropdown-item" href="post-job.html">Post a Job</a></li>
+              <li class="dropdown-submenu">
+                <a class="dropdown-item dropdown-toggle" href="#">Categories</a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">Design & Creative</a></li>
+                  <li><a class="dropdown-item" href="#">Writing & Translation</a></li>
+                  <li><a class="dropdown-item" href="#">Programming & Tech</a></li>
+                  <li><a class="dropdown-item" href="#">Marketing</a></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="dashboard-client.html">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="index.html#contact">Contact</a>
+          </li>
+          <li class="nav-item ms-2">
+            <a class="btn btn-primary btn-sm" href="profile-provider.html">Sign In</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Profile Hero -->
+  <section class="profile-hero">
+    <div class="container profile-info">
+      <div class="profile-header-content">
+        <img src="https://via.placeholder.com/150?text=Provider" alt="Profile" class="profile-avatar-large">
+
+        <div class="profile-title-section">
+          <h1>Sarah Designer</h1>
+          <div class="title">Professional Web & UI/UX Designer</div>
+
+          <div class="profile-rating-section">
+            <div class="rating-item">
+              <i class="fas fa-star" style="color: #ffc107;"></i>
+              <span><strong>4.9</strong>/5.0</span>
+            </div>
+            <div class="rating-item">
+              <i class="fas fa-check-circle"></i>
+              <span><strong>47</strong> Projects Completed</span>
+            </div>
+            <div class="rating-item">
+              <i class="fas fa-trophy"></i>
+              <span><strong>Top Rated</strong> Provider</span>
+            </div>
+          </div>
+
+          <div class="profile-buttons">
+            <button class="btn btn-light btn-lg">
+              <i class="fas fa-envelope"></i> Contact Me
+            </button>
+            <button class="btn btn-outline-light btn-lg">
+              <i class="fas fa-briefcase"></i> Hire Me
+            </button>
+            <button class="btn btn-outline-light btn-lg">
+              <i class="fas fa-star"></i> Leave Review
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <section style="padding: 2rem 0;">
+    <div class="container">
+      <div class="profile-main">
+        <!-- Main Content Column -->
+        <div>
+          <!-- About Section -->
+          <div class="profile-section">
+            <h3 class="profile-section-title">
+              <i class="fas fa-user"></i> About
+            </h3>
+            <p class="bio-text">
+              Hi! I'm Sarah, a passionate web and UI/UX designer with over 8 years of experience creating beautiful, 
+              functional digital experiences. I specialize in responsive web design, mobile app UI, and e-commerce platforms. 
+              My approach is user-centric, ensuring every design is not just visually appealing but also highly functional.
+            </p>
+            <p class="bio-text">
+              I have worked with startups, SMEs, and enterprise-level companies across various industries. My clients 
+              appreciate my attention to detail, quick turnaround times, and commitment to their project success.
+            </p>
+          </div>
+
+          <!-- Skills Section -->
+          <div class="profile-section">
+            <h3 class="profile-section-title">
+              <i class="fas fa-tools"></i> Skills
+            </h3>
+            <div>
+              <span class="skill-badge">Web Design</span>
+              <span class="skill-badge">UI/UX Design</span>
+              <span class="skill-badge">Figma</span>
+              <span class="skill-badge">Adobe XD</span>
+              <span class="skill-badge">Responsive Design</span>
+              <span class="skill-badge">HTML/CSS</span>
+              <span class="skill-badge">Wireframing</span>
+              <span class="skill-badge">Prototyping</span>
+              <span class="skill-badge">User Research</span>
+              <span class="skill-badge">Usability Testing</span>
+            </div>
+          </div>
+
+          <!-- Services Section -->
+          <div class="profile-section">
+            <h3 class="profile-section-title">
+              <i class="fas fa-briefcase"></i> Services Offered
+            </h3>
+
+            <div class="service-item">
+              <div class="service-name">Web Design</div>
+              <p style="margin: 0.5rem 0; color: #666;">Complete website design from concept to delivery. Responsive, modern, and SEO-friendly.</p>
+              <div class="service-price">From $1,500</div>
+            </div>
+
+            <div class="service-item">
+              <div class="service-name">UI/UX Design</div>
+              <p style="margin: 0.5rem 0; color: #666;">Mobile app and web application interface design with user experience optimization.</p>
+              <div class="service-price">From $2,000</div>
+            </div>
+
+            <div class="service-item">
+              <div class="service-name">E-Commerce Platform Design</div>
+              <p style="margin: 0.5rem 0; color: #666;">Complete e-shop design focusing on conversion optimization and user journey.</p>
+              <div class="service-price">From $3,000</div>
+            </div>
+
+            <div class="service-item">
+              <div class="service-name">Logo & Brand Identity</div>
+              <p style="margin: 0.5rem 0; color: #666;">Professional logo design and complete brand identity package.</p>
+              <div class="service-price">From $800</div>
+            </div>
+          </div>
+
+          <!-- Portfolio Section -->
+          <div class="profile-section">
+            <h3 class="profile-section-title">
+              <i class="fas fa-images"></i> Portfolio
+            </h3>
+
+            <div class="portfolio-grid">
+              <div class="portfolio-item">
+                <img src="https://via.placeholder.com/200x150?text=E-Commerce" alt="Project" class="portfolio-image">
+                <div class="portfolio-info">
+                  <div class="portfolio-title">E-Commerce Platform</div>
+                  <div class="portfolio-category">Web Design</div>
+                </div>
+              </div>
+
+              <div class="portfolio-item">
+                <img src="https://via.placeholder.com/200x150?text=SaaS+App" alt="Project" class="portfolio-image">
+                <div class="portfolio-info">
+                  <div class="portfolio-title">SaaS Application</div>
+                  <div class="portfolio-category">UI/UX Design</div>
+                </div>
+              </div>
+
+              <div class="portfolio-item">
+                <img src="https://via.placeholder.com/200x150?text=Mobile+App" alt="Project" class="portfolio-image">
+                <div class="portfolio-info">
+                  <div class="portfolio-title">Fitness Mobile App</div>
+                  <div class="portfolio-category">Mobile UI</div>
+                </div>
+              </div>
+
+              <div class="portfolio-item">
+                <img src="https://via.placeholder.com/200x150?text=Landing+Page" alt="Project" class="portfolio-image">
+                <div class="portfolio-info">
+                  <div class="portfolio-title">Landing Page</div>
+                  <div class="portfolio-category">Web Design</div>
+                </div>
+              </div>
+
+              <div class="portfolio-item">
+                <img src="https://via.placeholder.com/200x150?text=Dashboard" alt="Project" class="portfolio-image">
+                <div class="portfolio-info">
+                  <div class="portfolio-title">Analytics Dashboard</div>
+                  <div class="portfolio-category">UI Design</div>
+                </div>
+              </div>
+
+              <div class="portfolio-item">
+                <img src="https://via.placeholder.com/200x150?text=Brand+Identity" alt="Project" class="portfolio-image">
+                <div class="portfolio-info">
+                  <div class="portfolio-title">Brand Identity</div>
+                  <div class="portfolio-category">Branding</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reviews Section -->
+          <div class="profile-section">
+            <h3 class="profile-section-title">
+              <i class="fas fa-comments"></i> Client Reviews
+            </h3>
+
+            <div class="review-card">
+              <div class="review-header">
+                <img src="https://via.placeholder.com/50?text=Client1" alt="Client" class="review-avatar">
+                <div class="review-meta">
+                  <h6>John Doe</h6>
+                  <p>E-Commerce Website Redesign</p>
+                </div>
+              </div>
+              <div class="review-rating">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <strong style="margin-left: 0.5rem;">5.0</strong>
+              </div>
+              <p class="review-text">
+                "Sarah exceeded our expectations! She understood our vision perfectly and delivered a stunning website that has improved our conversion rates by 35%. Her attention to detail and professionalism are outstanding."
+              </p>
+            </div>
+
+            <div class="review-card">
+              <div class="review-header">
+                <img src="https://via.placeholder.com/50?text=Client2" alt="Client" class="review-avatar">
+                <div class="review-meta">
+                  <h6>Emma Wilson</h6>
+                  <p>Mobile App UI Design</p>
+                </div>
+              </div>
+              <div class="review-rating">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+                <strong style="margin-left: 0.5rem;">4.8</strong>
+              </div>
+              <p class="review-text">
+                "Great designer with excellent communication skills. She provided multiple design iterations and incorporated our feedback seamlessly. The final product is exactly what we needed!"
+              </p>
+            </div>
+
+            <div class="review-card">
+              <div class="review-header">
+                <img src="https://via.placeholder.com/50?text=Client3" alt="Client" class="review-avatar">
+                <div class="review-meta">
+                  <h6>Michael Chen</h6>
+                  <p>Brand Identity Package</p>
+                </div>
+              </div>
+              <div class="review-rating">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <strong style="margin-left: 0.5rem;">5.0</strong>
+              </div>
+              <p class="review-text">
+                "Absolutely professional and talented. Sarah created a complete brand identity that perfectly represents our startup. Highly recommended for anyone looking for quality design work."
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div>
+          <!-- Quick Info Card -->
+          <div class="sidebar-card">
+            <h5 style="font-weight: 700; margin-bottom: 1.5rem; color: var(--secondary-color);">Quick Info</h5>
+
+            <div class="sidebar-stat">
+              <span class="sidebar-stat-label">Member Since</span>
+              <span class="sidebar-stat-value">2018</span>
+            </div>
+
+            <div class="sidebar-stat">
+              <span class="sidebar-stat-label">Response Time</span>
+              <span class="sidebar-stat-value">&lt;2 hours</span>
+            </div>
+
+            <div class="sidebar-stat">
+              <span class="sidebar-stat-label">Projects</span>
+              <span class="sidebar-stat-value">47</span>
+            </div>
+
+            <div class="sidebar-stat">
+              <span class="sidebar-stat-label">Success Rate</span>
+              <span class="sidebar-stat-value">98%</span>
+            </div>
+
+            <div class="sidebar-stat">
+              <span class="sidebar-stat-label">Total Earned</span>
+              <span class="sidebar-stat-value">$85K+</span>
+            </div>
+
+            <div class="sidebar-stat">
+              <span class="sidebar-stat-label">Location</span>
+              <span class="sidebar-stat-value">USA</span>
+            </div>
+          </div>
+
+          <!-- Certifications Card -->
+          <div class="sidebar-card">
+            <h5 style="font-weight: 700; margin-bottom: 1.5rem; color: var(--secondary-color);">Certifications</h5>
+            <ul style="list-style: none; padding: 0;">
+              <li style="padding: 0.75rem 0; border-bottom: 1px solid var(--border-color);">
+                <i class="fas fa-certificate" style="color: var(--primary-color);"></i> Google UX Design Certification
+              </li>
+              <li style="padding: 0.75rem 0; border-bottom: 1px solid var(--border-color);">
+                <i class="fas fa-certificate" style="color: var(--primary-color);"></i> Adobe Certified Expert
+              </li>
+              <li style="padding: 0.75rem 0;">
+                <i class="fas fa-certificate" style="color: var(--primary-color);"></i> Figma Advanced Training
+              </li>
+            </ul>
+          </div>
+
+          <!-- CTA Card -->
+          <div class="sidebar-card" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%); color: #ffffff; border: none;">
+            <h5 style="font-weight: 700; margin-bottom: 1rem; color: #ffffff;">Ready to Start?</h5>
+            <p style="margin-bottom: 1.5rem; opacity: 0.95;">Hire Sarah for your next design project and get exceptional results.</p>
+            <button class="btn btn-light w-100 mb-2">
+              <i class="fas fa-envelope"></i> Send Message
+            </button>
+            <button class="btn btn-outline-light w-100">
+              <i class="fas fa-briefcase"></i> Hire Now
+            </button>
+          </div>
+
+          <!-- Social Links -->
+          <div class="sidebar-card">
+            <h5 style="font-weight: 700; margin-bottom: 1.5rem; color: var(--secondary-color);">Connect</h5>
+            <div class="social-icons" style="margin: 0;">
+              <a href="#" class="social-icon" title="Twitter"><i class="fab fa-twitter"></i></a>
+              <a href="#" class="social-icon" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+              <a href="#" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+              <a href="#" class="social-icon" title="Portfolio"><i class="fas fa-globe"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-3 footer-section">
+          <h5>Home Connect</h5>
+          <p>Connecting clients with expert service providers in your local area.</p>
+          <div class="social-icons">
+            <a href="#" class="social-icon" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-icon" title="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-icon" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+          </div>
+        </div>
+        <div class="col-lg-3 footer-section">
+          <h5>For Clients</h5>
+          <ul style="list-style: none; padding: 0;">
+            <li><a href="post-job.html">Post a Job</a></li>
+            <li><a href="jobs-list.html">Find Providers</a></li>
+            <li><a href="dashboard-client.html">Dashboard</a></li>
+            <li><a href="#">How It Works</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-3 footer-section">
+          <h5>For Providers</h5>
+          <ul style="list-style: none; padding: 0;">
+            <li><a href="#">Browse Jobs</a></li>
+            <li><a href="profile-provider.html">Create Profile</a></li>
+            <li><a href="#">Get Started</a></li>
+            <li><a href="#">Support</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-3 footer-section">
+          <h5>Company</h5>
+          <ul style="list-style: none; padding: 0;">
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2024 Home Connect. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top Button -->
+  <button class="back-to-top" title="Back to top">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+  <!-- Custom JS -->
+  <script src="common.js"></script>
+</body>
+</html>

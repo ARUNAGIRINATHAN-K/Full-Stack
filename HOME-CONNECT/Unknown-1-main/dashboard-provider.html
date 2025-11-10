@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Provider Dashboard - Manage your profile and proposals">
+  <meta name="author" content="Home Connect">
+  <title>Provider Dashboard - Home Connect</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link href="common.css" rel="stylesheet">
+
+  <style>
+    .dashboard-container {
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      gap: 2rem;
+      padding: 2rem 0;
+      min-height: calc(100vh - 100px);
+    }
+
+    .sidebar {
+      background: white;
+      padding: 2rem 1.5rem;
+      border-radius: 12px;
+      height: fit-content;
+      position: sticky;
+      top: 100px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-menu li {
+      margin-bottom: 0.5rem;
+    }
+
+    .sidebar-menu a {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem 1rem;
+      color: var(--secondary-color);
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .sidebar-menu a:hover,
+    .sidebar-menu a.active {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .dashboard-content {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .stat-icon {
+      font-size: 2.5rem;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      background: var(--light-bg);
+    }
+
+    .stat-icon.active {
+      background: rgba(255, 107, 53, 0.1);
+      color: var(--primary-color);
+    }
+
+    .stat-icon.pending {
+      background: rgba(255, 193, 7, 0.1);
+      color: #ffc107;
+    }
+
+    .stat-icon.completed {
+      background: rgba(76, 175, 80, 0.1);
+      color: #4caf50;
+    }
+
+    .stat-content h4 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .stat-content p {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #999;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      color: var(--secondary-color);
+    }
+
+    .job-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: var(--shadow-md);
+      border-left: 4px solid var(--primary-color);
+      transition: all 0.3s ease;
+    }
+
+    .job-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-3px);
+    }
+
+    .job-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 1rem;
+    }
+
+    .job-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--secondary-color);
+    }
+
+    .job-status {
+      display: inline-block;
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .status-active {
+      background: rgba(76, 175, 80, 0.1);
+      color: #4caf50;
+    }
+
+    .status-pending {
+      background: rgba(255, 193, 7, 0.1);
+      color: #ffc107;
+    }
+
+    .status-closed {
+      background: rgba(244, 67, 54, 0.1);
+      color: #f44336;
+    }
+
+    .job-meta {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .job-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .job-description {
+      color: #666;
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+
+    .job-actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-small {
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      border: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-view {
+      background: var(--light-bg);
+      color: var(--secondary-color);
+    }
+
+    .btn-view:hover {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .btn-propose {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .btn-propose:hover {
+      opacity: 0.9;
+    }
+
+    .proposal-item {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      border-left: 4px solid var(--accent-color);
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow-md);
+    }
+
+    .proposal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 1rem;
+    }
+
+    .proposal-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--secondary-color);
+    }
+
+    .proposal-status {
+      display: inline-block;
+      padding: 0.3rem 0.6rem;
+      border-radius: 15px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: rgba(76, 175, 80, 0.1);
+      color: #4caf50;
+    }
+
+    .proposal-content {
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .proposal-budget {
+      font-weight: 700;
+      color: var(--primary-color);
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .empty-state-icon {
+      font-size: 4rem;
+      color: #ddd;
+      margin-bottom: 1rem;
+    }
+
+    .empty-state-text {
+      color: #999;
+      margin-bottom: 1.5rem;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .profile-header {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .profile-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: var(--light-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      flex-shrink: 0;
+    }
+
+    .profile-info h3 {
+      margin: 0 0 0.5rem 0;
+      color: var(--secondary-color);
+    }
+
+    .profile-info p {
+      margin: 0.25rem 0;
+      color: #666;
+    }
+
+    .rating {
+      color: #ffc107;
+      font-size: 1.1rem;
+    }
+
+    .btn-edit-profile {
+      background: var(--primary-color);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-edit-profile:hover {
+      opacity: 0.9;
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-container {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+      }
+
+      .job-header {
+        flex-direction: column;
+      }
+
+      .profile-header {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Preloader -->
+  <div class="preloader">
+    <div class="spinner-box">
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="index.html">
+        <i class="fas fa-briefcase"></i> Home Connect
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="jobs-list.html">Find Jobs</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="dashboard-provider.html">Dashboard</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+              <i class="fas fa-user"></i> Profile
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="#my-profile">My Profile</a></li>
+              <li><a class="dropdown-item" href="#portfolio">Portfolio</a></li>
+              <li><a class="dropdown-item" href="#settings">Settings</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="index.html">Sign Out</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Dashboard Container -->
+  <div class="container-fluid">
+    <div class="dashboard-container">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <h5 style="margin-bottom: 1.5rem; font-weight: 800; color: var(--secondary-color);">
+          <i class="fas fa-chart-line"></i> Menu
+        </h5>
+        <ul class="sidebar-menu">
+          <li>
+            <a href="#overview" onclick="switchTab(event, 'overview')" class="active">
+              <i class="fas fa-chart-pie"></i> Overview
+            </a>
+          </li>
+          <li>
+            <a href="#available-jobs" onclick="switchTab(event, 'available-jobs')">
+              <i class="fas fa-search"></i> Available Jobs
+            </a>
+          </li>
+          <li>
+            <a href="#my-proposals" onclick="switchTab(event, 'my-proposals')">
+              <i class="fas fa-paper-plane"></i> My Proposals
+            </a>
+          </li>
+          <li>
+            <a href="#active-projects" onclick="switchTab(event, 'active-projects')">
+              <i class="fas fa-tasks"></i> Active Projects
+            </a>
+          </li>
+          <li>
+            <a href="#earnings" onclick="switchTab(event, 'earnings')">
+              <i class="fas fa-chart-bar"></i> Earnings
+            </a>
+          </li>
+          <li>
+            <a href="#reviews" onclick="switchTab(event, 'reviews')">
+              <i class="fas fa-star"></i> Reviews
+            </a>
+          </li>
+        </ul>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="dashboard-content">
+        <!-- Overview Tab -->
+        <div id="overview" class="tab-content active">
+          <h2 class="section-title">Welcome back, <span id="provider-name">Provider</span>! 👋</h2>
+
+          <!-- Profile Header -->
+          <div class="profile-header">
+            <div class="profile-avatar">
+              <i class="fas fa-user"></i>
+            </div>
+            <div class="profile-info">
+              <h3 id="provider-fullname">—</h3>
+              <p>📍 Midtown, 2.5 km away</p>
+              <p class="rating">⭐ 4.8 (45 reviews)</p>
+              <p style="font-size: 0.9rem;">Electricians & Plumbers • 15 years experience</p>
+            </div>
+            <button class="btn-edit-profile" style="margin-left: auto; align-self: flex-start;">
+              <i class="fas fa-edit"></i> Edit Profile
+            </button>
+          </div>
+
+          <!-- Stats Grid -->
+          <div class="stats-grid" id="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon active">
+                <i class="fas fa-tasks"></i>
+              </div>
+              <div class="stat-content">
+                <h4 id="stat-active-projects">0</h4>
+                <p>Active Projects</p>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon pending">
+                <i class="fas fa-hourglass-half"></i>
+              </div>
+              <div class="stat-content">
+                <h4 id="stat-pending-proposals">0</h4>
+                <p>Pending Proposals</p>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon completed">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <div class="stat-content">
+                <h4 id="stat-completed-projects">0</h4>
+                <p>Completed Projects</p>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-wallet"></i>
+              </div>
+              <div class="stat-content">
+                <h4 id="stat-total-earned">₹0</h4>
+                <p>Total Earned</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Active Projects -->
+          <div style="margin-top: 3rem;">
+            <h3 class="section-title">Your Active Projects</h3>
+            <div id="active-projects-list">
+              <div class="text-center py-4"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>
+            </div>
+          </div>
+
+          <!-- Recent Opportunities -->
+          <div style="margin-top: 3rem;">
+            <h3 class="section-title">Recent Opportunities (Match Your Skills)</h3>
+
+            <div class="job-card">
+              <div class="job-header">
+                <div>
+                  <h4 class="job-title">Water Line Repair</h4>
+                  <span class="job-status status-pending">New</span>
+                </div>
+              </div>
+              <div class="job-meta">
+                <div class="job-meta-item">
+                  <i class="fas fa-map-marker-alt"></i> North City
+                </div>
+                <div class="job-meta-item">
+                  <i class="fas fa-money-bill"></i> ₹28,000 - ₹68,000
+                </div>
+                <div class="job-meta-item">
+                  <i class="fas fa-user"></i> 4 Proposals
+                </div>
+              </div>
+              <p class="job-description">
+                Need experienced plumber for water line repair and inspection. Looking for someone with leak detection experience.
+              </p>
+              <div class="job-actions">
+                <button class="btn-small btn-propose">Submit Proposal</button>
+                <button class="btn-small btn-view">View Details</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Available Jobs Tab -->
+        <div id="available-jobs" class="tab-content">
+          <h2 class="section-title">Available Jobs in Your Category</h2>
+          <div id="available-jobs-list">
+            <div class="text-center py-4"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>
+          </div>
+        </div>
+
+        <!-- My Proposals Tab -->
+        <div id="my-proposals" class="tab-content">
+          <h2 class="section-title">My Proposals</h2>
+          <div id="my-proposals-list">
+            <div class="text-center py-4"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>
+          </div>
+        </div>
+
+        <!-- Active Projects Tab -->
+        <div id="active-projects" class="tab-content">
+          <h2 class="section-title">Your Active Projects</h2>
+          <div id="active-projects-tab-list">
+            <div class="text-center py-4"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>
+          </div>
+        </div>
+
+        <!-- Earnings Tab -->
+        <div id="earnings" class="tab-content">
+          <h2 class="section-title">Earnings & Payments</h2>
+          <table class="table" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-md);">
+            <thead style="background: var(--light-bg);">
+              <tr>
+                <th>Date</th>
+                <th>Project</th>
+                <th>Client</th>
+                <th>Amount</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Oct 18, 2025</td>
+                <td>Kitchen Renovation (50% Milestone)</td>
+                <td>John Doe</td>
+                <td>₹82,500</td>
+                <td><span class="job-status status-active">Received</span></td>
+              </tr>
+              <tr>
+                <td>Oct 10, 2025</td>
+                <td>Electrical Rewiring (Advance)</td>
+                <td>Sarah Smith</td>
+                <td>₹90,000</td>
+                <td><span class="job-status status-active">Received</span></td>
+              </tr>
+              <tr>
+                <td>Oct 5, 2025</td>
+                <td>Water Line Repair (Completed)</td>
+                <td>Mike Wilson</td>
+                <td>₹50,000</td>
+                <td><span class="job-status status-active">Received</span></td>
+              </tr>
+              <tr>
+                <td>Oct 1, 2025</td>
+                <td>Bathroom Plumbing</td>
+                <td>Emily Johnson</td>
+                <td>₹45,000</td>
+                <td><span class="job-status status-active">Received</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Reviews Tab -->
+        <div id="reviews" class="tab-content">
+          <h2 class="section-title">Your Reviews</h2>
+
+          <div style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: var(--shadow-md); margin-bottom: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+              <div>
+                <h5 style="margin: 0 0 0.5rem 0; color: var(--secondary-color);">John Doe</h5>
+                <div style="color: #ffc107; font-size: 1.2rem;">⭐⭐⭐⭐⭐ 5.0</div>
+              </div>
+              <span style="font-size: 0.85rem; color: #999;">Oct 18, 2025</span>
+            </div>
+            <p style="margin: 0; color: #666; line-height: 1.6;">
+              Excellent work on the kitchen and bathroom renovation. Rajesh was professional, punctual, and paid great attention to detail. Highly recommended!
+            </p>
+          </div>
+
+          <div style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: var(--shadow-md); margin-bottom: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+              <div>
+                <h5 style="margin: 0 0 0.5rem 0; color: var(--secondary-color);">Sarah Smith</h5>
+                <div style="color: #ffc107; font-size: 1.2rem;">⭐⭐⭐⭐⭐ 5.0</div>
+              </div>
+              <span style="font-size: 0.85rem; color: #999;">Oct 10, 2025</span>
+            </div>
+            <p style="margin: 0; color: #666; line-height: 1.6;">
+              Very experienced electrician. Provided detailed analysis and recommendations. Work completed on schedule with excellent quality.
+            </p>
+          </div>
+
+          <div style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: var(--shadow-md);">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+              <div>
+                <h5 style="margin: 0 0 0.5rem 0; color: var(--secondary-color);">Mike Wilson</h5>
+                <div style="color: #ffc107; font-size: 1.2rem;">⭐⭐⭐⭐ 4.5</div>
+              </div>
+              <span style="font-size: 0.85rem; color: #999;">Oct 5, 2025</span>
+            </div>
+            <p style="margin: 0; color: #666; line-height: 1.6;">
+              Good work. Quick response and efficient service. Would have preferred more detailed communication during the process.
+            </p>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer style="background: var(--secondary-color); color: white; padding: 2rem 0; margin-top: 4rem; text-align: center;">
+    <p>&copy; 2025 Home Connect. All rights reserved.</p>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+  <!-- Common JS -->
+  <script src="common.js"></script>
+
+  <script>
+    // Initialize Provider Dashboard: fetch and render proposals, projects, and jobs
+    async function initProviderDashboard() {
+      const FM = window.FreelanceMarketplace || {};
+      // Require provider role; redirect to auth if not
+      if (typeof ensureRole === 'function') {
+        if (!ensureRole('provider', { redirectTo: 'auth.html' })) return;
+      }
+
+  const user = FM.getCurrentUser ? FM.getCurrentUser() : null;
+      // Set header names
+      if (user && user.name) {
+        const shortName = user.name.split(' ')[0];
+        const nameEl = document.getElementById('provider-name');
+        const fullEl = document.getElementById('provider-fullname');
+        if (nameEl) nameEl.textContent = shortName;
+        if (fullEl) fullEl.textContent = user.name;
+      }
+
+      // Load all data in parallel
+      try {
+        const [proposals, activeProjects, openJobs] = await Promise.all([
+          FM.fetchProviderProposals?.() || [],
+          FM.fetchProviderActiveProjects?.() || [],
+          FM.fetchOpenJobs?.() || []
+        ]);
+
+        // Render stats
+        renderStats(proposals, activeProjects);
+        // Render lists
+        renderActiveProjects('active-projects-list', activeProjects);
+        renderActiveProjects('active-projects-tab-list', activeProjects);
+        renderAvailableJobs(openJobs);
+        renderProposals(proposals);
+      } catch (e) {
+        console.error(e);
+        FM.showToast && FM.showToast('Failed to load dashboard data', 'danger');
+      }
+    }
+
+    function renderStats(proposals, activeProjects) {
+      const byStatus = (status) => proposals.filter(p => (p.proposal_status || '').toLowerCase() === status);
+      const accepted = byStatus('accepted');
+      const submitted = proposals.filter(p => ['submitted','pending'].includes((p.proposal_status||'').toLowerCase()));
+      const completed = proposals.filter(p => (p.job_status||'').toLowerCase() === 'completed' && (p.proposal_status||'').toLowerCase() === 'accepted');
+
+      const sum = (arr) => arr.reduce((acc, x) => acc + (Number(x.bid_amount) || 0), 0);
+      const fmtINR = (n) => `₹${Math.round(n).toLocaleString('en-IN')}`;
+
+      const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+      set('stat-active-projects', activeProjects.length);
+      set('stat-pending-proposals', submitted.length);
+      set('stat-completed-projects', completed.length);
+      set('stat-total-earned', fmtINR(sum(completed)));
+    }
+
+    function renderActiveProjects(containerId, items) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      if (!items || items.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon"><i class="fas fa-briefcase"></i></div>
+            <p class="empty-state-text">No active projects yet. Apply to open jobs to get started.</p>
+            <a class="btn btn-primary btn-sm" href="#available-jobs" onclick="switchTab(event, 'available-jobs')">Find Jobs</a>
+          </div>`;
+        return;
+      }
+      container.innerHTML = '';
+      items.forEach(p => {
+        const amount = p.bid_amount != null ? `₹${Number(p.bid_amount).toLocaleString('en-IN')}` : '—';
+        const statusLabel = (p.job_status || 'In Progress').replace(/_/g, ' ');
+        const card = document.createElement('div');
+        card.className = 'job-card mb-3';
+        card.innerHTML = `
+          <div class="job-header">
+            <div>
+              <h4 class="job-title">${p.title || 'Project'}</h4>
+              <span class="job-status status-active">${statusLabel}</span>
+            </div>
+          </div>
+          <div class="job-meta">
+            <div class="job-meta-item"><i class="fas fa-map-marker-alt"></i> ${p.location || '—'}</div>
+            <div class="job-meta-item"><i class="fas fa-money-bill"></i> ${amount}</div>
+            <div class="job-meta-item"><i class="fas fa-calendar"></i> ${new Date(p.proposal_created_at).toLocaleDateString()}</div>
+          </div>
+          <div class="job-actions">
+            <button class="btn-small btn-view" onclick="window.location.href='job-details.html?id=${p.job_id}'">View Details</button>
+          </div>`;
+        container.appendChild(card);
+      });
+    }
+
+    function renderAvailableJobs(jobs) {
+      const container = document.getElementById('available-jobs-list');
+      const FM = window.FreelanceMarketplace || {};
+      if (!container) return;
+      if (!jobs || jobs.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon"><i class="fas fa-inbox"></i></div>
+            <p class="empty-state-text">No open jobs right now. Check back soon!</p>
+          </div>`;
+        return;
+      }
+      const grid = document.createElement('div');
+      grid.className = 'row';
+      jobs.forEach(job => {
+        const col = FM.createJobCard ? FM.createJobCard(job) : null;
+        if (col) grid.appendChild(col); else {
+          const fallback = document.createElement('div');
+          fallback.className = 'job-card mb-3';
+          fallback.innerHTML = `<div class="job-header"><div><h4 class="job-title">${job.title}</h4></div></div>
+            <div class='job-meta'><div class='job-meta-item'><i class='fas fa-map-marker-alt'></i> ${job.location||'—'}</div>
+            <div class='job-meta-item'><i class='fas fa-money-bill'></i> ₹${(job.budget_min||0).toLocaleString('en-IN')}${job.budget_max? ' - ₹'+Number(job.budget_max).toLocaleString('en-IN'):''}</div></div>
+            <div class='job-actions'><button class='btn-small btn-view' onclick="window.location.href='job-details.html?id=${job.id}'">View Details</button></div>`;
+          grid.appendChild(fallback);
+        }
+      });
+      container.innerHTML = '';
+      container.appendChild(grid);
+    }
+
+    function renderProposals(proposals) {
+      const container = document.getElementById('my-proposals-list');
+      if (!container) return;
+      if (!proposals || proposals.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon"><i class="fas fa-paper-plane"></i></div>
+            <p class="empty-state-text">You haven't submitted any proposals yet.</p>
+            <a class="btn btn-primary btn-sm" href="#available-jobs" onclick="switchTab(event, 'available-jobs')">Browse Jobs</a>
+          </div>`;
+        return;
+      }
+      const groups = {
+        pending: [],
+        accepted: [],
+        rejected: []
+      };
+      proposals.forEach(p => {
+        const s = (p.proposal_status || 'submitted').toLowerCase();
+        if (s === 'accepted') groups.accepted.push(p);
+        else if (s === 'rejected') groups.rejected.push(p);
+        else groups.pending.push(p);
+      });
+      const section = (title, items, style = '') => {
+        if (items.length === 0) return '';
+        const cards = items.map(p => {
+          const bid = p.bid_amount != null ? `Bid: ₹${Number(p.bid_amount).toLocaleString('en-IN')}` : '';
+          const statusBadge = title === 'Approved' ? 'background: rgba(76, 175, 80, 0.1); color: #4caf50;' : title === 'Rejected' ? 'background: rgba(244, 67, 54, 0.1); color: #f44336;' : '';
+          const borderColor = title === 'Approved' ? '#4caf50' : title === 'Rejected' ? '#f44336' : 'var(--accent-color)';
+          return `
+            <div class="proposal-item" style="border-left-color: ${borderColor};">
+              <div class="proposal-header">
+                <div>
+                  <h5 class="proposal-title">${p.title || 'Job'}</h5>
+                  <p style="margin: 0.5rem 0; color: #666;">${p.location || '—'} • ${new Date(p.proposal_created_at).toLocaleDateString()}</p>
+                </div>
+                <span class="proposal-status" style="${statusBadge}">${title === 'Pending Review' ? 'Awaiting Response' : title === 'Approved' ? '✓ Hired' : '✗ Not Selected'}</span>
+              </div>
+              ${bid ? `<p class="proposal-budget">${bid}</p>` : ''}
+              <div class="job-actions">
+                <button class="btn-small btn-view" onclick="window.location.href='job-details.html?id=${p.job_id}'">View Job</button>
+              </div>
+            </div>`;
+        }).join('');
+        return `<div style="margin-bottom: 2rem;"><h4 style="color: var(--secondary-color); margin-bottom: 1rem;">${title} (${items.length})</h4>${cards}</div>`;
+      };
+      container.innerHTML = [
+        section('Pending Review', groups.pending),
+        section('Approved', groups.accepted),
+        section('Rejected', groups.rejected)
+      ].join('');
+    }
+
+    // Run on load
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initProviderDashboard);
+    } else {
+      initProviderDashboard();
+    }
+
+    function switchTab(event, tabName) {
+      event.preventDefault();
+
+      // Hide all tabs
+      const contents = document.querySelectorAll('.tab-content');
+      contents.forEach(content => content.classList.remove('active'));
+
+      // Remove active class from all sidebar links
+      const links = document.querySelectorAll('.sidebar-menu a');
+      links.forEach(link => link.classList.remove('active'));
+
+      // Show selected tab
+      document.getElementById(tabName).classList.add('active');
+
+      // Add active class to clicked link
+      event.target.closest('a').classList.add('active');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Client Dashboard - Manage jobs, track proposals, and view payments on ServiceHub.">
+  <meta name="keywords" content="client dashboard, job management, proposals, payments">
+  <meta name="author" content="ServiceHub">
+  <title>Client Dashboard - ServiceHub</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link href="common.css" rel="stylesheet">
+
+  <style>
+    /* Dashboard specific styles */
+    .dashboard-container {
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      gap: 2rem;
+      min-height: calc(100vh - 200px);
+    }
+
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .dashboard-header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--secondary-color);
+      margin: 0;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 1.5rem;
+      border-left: 4px solid var(--primary-color);
+      transition: var(--transition);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--primary-color);
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #666;
+      margin-top: 0.5rem;
+      font-weight: 600;
+    }
+
+    .dashboard-content {
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+
+    .tabs-custom {
+      border-bottom: 2px solid var(--border-color);
+      background-color: #f8f9fa;
+      padding: 0 1.5rem;
+    }
+
+    .tabs-custom .nav-link {
+      border: none;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      padding: 1rem 1.5rem;
+      color: var(--dark-text);
+      font-weight: 600;
+      transition: var(--transition);
+    }
+
+    .tabs-custom .nav-link:hover {
+      border-bottom-color: var(--primary-color);
+      color: var(--primary-color);
+    }
+
+    .tabs-custom .nav-link.active {
+      border-bottom-color: var(--primary-color);
+      background-color: transparent;
+      color: var(--primary-color);
+    }
+
+    .tab-pane {
+      padding: 2rem;
+    }
+
+    .job-card-dashboard {
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      transition: var(--transition);
+    }
+
+    .job-card-dashboard:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary-color);
+    }
+
+    .job-title-dashboard {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--secondary-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .proposal-item {
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      background-color: #f8f9fa;
+      transition: var(--transition);
+    }
+
+    .proposal-item:hover {
+      background-color: #ffffff;
+      border-color: var(--primary-color);
+    }
+
+    .proposal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .provider-name {
+      font-weight: 700;
+      color: var(--secondary-color);
+      margin-bottom: 0.25rem;
+    }
+
+    .proposal-amount {
+      background-color: var(--light-bg);
+      color: var(--primary-color);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .review-item {
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      background-color: #ffffff;
+    }
+
+    .review-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .reviewer-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--primary-color);
+    }
+
+    .reviewer-info h6 {
+      margin-bottom: 0.25rem;
+      font-weight: 700;
+    }
+
+    .reviewer-info p {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #666;
+    }
+
+    .review-rating {
+      color: #ffc107;
+      margin-bottom: 0.75rem;
+    }
+
+    .payment-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .payment-table th {
+      background-color: var(--light-bg);
+      padding: 1rem;
+      text-align: left;
+      font-weight: 700;
+      color: var(--secondary-color);
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .payment-table td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .payment-status {
+      display: inline-block;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .status-completed {
+      background-color: #e8f5e9;
+      color: var(--success-color);
+    }
+
+    .status-pending {
+      background-color: #fff3e0;
+      color: var(--accent-color);
+    }
+
+    .sidebar-nav a {
+      display: block;
+      padding: 1rem;
+      color: var(--dark-text);
+      text-decoration: none;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+      transition: var(--transition);
+      border-left: 3px solid transparent;
+      font-weight: 500;
+    }
+
+    .sidebar-nav a:hover,
+    .sidebar-nav a.active {
+      background-color: var(--light-bg);
+      color: var(--primary-color);
+      border-left-color: var(--primary-color);
+    }
+
+    .sidebar-nav a i {
+      margin-right: 0.75rem;
+      width: 20px;
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-container {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+
+      .header-actions {
+        width: 100%;
+      }
+
+      .header-actions button {
+        flex: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Preloader -->
+  <div class="preloader">
+    <div class="spinner-box">
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <i class="fas fa-briefcase"></i> ServiceHub
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Services</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="jobs-list.html">Find Jobs</a></li>
+              <li><a class="dropdown-item" href="post-job.html">Post a Job</a></li>
+              <li class="dropdown-submenu">
+                <a class="dropdown-item dropdown-toggle" href="#">Categories</a>
+                <ul class="dropdown-menu" id="services-categories-menu"></ul>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="dashboard-client.html">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="index.html#contact">Contact</a>
+          </li>
+          <li class="nav-item ms-2">
+            <a class="btn btn-primary btn-sm" href="auth.html">Sign In</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Dashboard Header -->
+  <section style="background-color: var(--light-bg); padding: 2rem 0; border-bottom: 2px solid var(--border-color);">
+    <div class="container">
+      <div class="dashboard-header">
+        <div>
+          <h1>Client Dashboard</h1>
+          <p style="margin: 0; color: #666;">Manage your jobs, proposals, and payments</p>
+        </div>
+        <div class="header-actions">
+          <a href="post-job.html" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Post New Job
+          </a>
+          <button class="btn btn-outline-secondary">
+            <i class="fas fa-bell"></i> Notifications
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Dashboard Content -->
+  <section style="padding: 2rem 0;">
+    <div class="container">
+      <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside>
+          <div class="sidebar-nav">
+            <a href="#" class="active" onclick="switchTab('active'); return false;">
+              <i class="fas fa-briefcase"></i> Active Jobs
+            </a>
+            <a href="#" onclick="switchTab('completed'); return false;">
+              <i class="fas fa-check-circle"></i> Completed Jobs
+            </a>
+            <a href="#" onclick="switchTab('proposals'); return false;">
+              <i class="fas fa-handshake"></i> Proposals Received
+            </a>
+            <a href="#" onclick="switchTab('reviews'); return false;">
+              <i class="fas fa-star"></i> Reviews
+            </a>
+            <a href="#" onclick="switchTab('payments'); return false;">
+              <i class="fas fa-credit-card"></i> Payments
+            </a>
+            <a href="#" onclick="switchTab('profile'); return false;">
+              <i class="fas fa-user"></i> Profile Settings
+            </a>
+          </div>
+
+          <!-- Quick Stats -->
+          <div style="margin-top: 2rem;">
+            <h5 style="font-weight: 700; margin-bottom: 1rem;">Quick Stats</h5>
+            <div class="stat-card">
+              <div class="stat-number">5</div>
+              <div class="stat-label">Active Projects</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">$12,500</div>
+              <div class="stat-label">Total Spent</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">4.8</div>
+              <div class="stat-label">Average Rating</div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="dashboard-content">
+          <!-- Tab Navigation -->
+          <ul class="nav tabs-custom" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="active-tab" data-bs-toggle="tab" data-bs-target="#activeContent" role="tab">
+                <i class="fas fa-briefcase"></i> Active Jobs
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="completed-tab" data-bs-toggle="tab" data-bs-target="#completedContent" role="tab">
+                <i class="fas fa-check-circle"></i> Completed
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="proposals-tab" data-bs-toggle="tab" data-bs-target="#proposalsContent" role="tab">
+                <i class="fas fa-handshake"></i> Proposals
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviewsContent" role="tab">
+                <i class="fas fa-star"></i> Reviews
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="payments-tab" data-bs-toggle="tab" data-bs-target="#paymentsContent" role="tab">
+                <i class="fas fa-credit-card"></i> Payments
+              </button>
+            </li>
+          </ul>
+
+          <!-- Tab Content -->
+          <div class="tab-content">
+            <!-- Active Jobs -->
+            <div class="tab-pane fade show active" id="activeContent" role="tabpanel">
+              <h5 style="font-weight: 700; margin-bottom: 1.5rem;">Your Active Projects</h5>
+              <div id="client-jobs-active"></div>
+            </div>
+
+            <!-- Completed Jobs -->
+            <div class="tab-pane fade" id="completedContent" role="tabpanel">
+              <h5 style="font-weight: 700; margin-bottom: 1.5rem;">Completed Projects</h5>
+              <div id="client-jobs-completed"></div>
+            </div>
+
+            <!-- Proposals Received -->
+            <div class="tab-pane fade" id="proposalsContent" role="tabpanel">
+              <h5 style="font-weight: 700; margin-bottom: 1.5rem;">Proposals for Your Jobs</h5>
+
+              <div class="proposal-item">
+                <div class="proposal-header">
+                  <div>
+                    <div class="provider-name">Alex Rodriguez</div>
+                    <div style="font-size: 0.9rem; color: #666;">
+                      <i class="fas fa-star"></i> 4.9 (28 reviews) • Web Designer
+                    </div>
+                  </div>
+                  <div class="proposal-amount">$3,200</div>
+                </div>
+                <p style="color: #666; margin: 1rem 0;">I have extensive experience in e-commerce platform redesign. I've completed similar projects for 10+ clients with excellent results.</p>
+                <div style="display: flex; gap: 0.75rem;">
+                  <span style="background-color: #e8f5e9; color: var(--success-color); padding: 0.3rem 0.8rem; border-radius: 4px; font-size: 0.85rem;">2 weeks</span>
+                  <span style="background-color: #f5f5f5; color: #666; padding: 0.3rem 0.8rem; border-radius: 4px; font-size: 0.85rem;">Submitted 2 days ago</span>
+                </div>
+                <div style="margin-top: 1rem;">
+                  <button class="btn btn-sm btn-primary">Accept Proposal</button>
+                  <button class="btn btn-sm btn-outline-secondary">View Profile</button>
+                  <button class="btn btn-sm btn-outline-secondary">Send Message</button>
+                </div>
+              </div>
+
+              <div class="proposal-item">
+                <div class="proposal-header">
+                  <div>
+                    <div class="provider-name">Jordan Smith</div>
+                    <div style="font-size: 0.9rem; color: #666;">
+                      <i class="fas fa-star"></i> 4.7 (15 reviews) • UI/UX Designer
+                    </div>
+                  </div>
+                  <div class="proposal-amount">$3,500</div>
+                </div>
+                <p style="color: #666; margin: 1rem 0;">Specialized in conversion-focused e-commerce designs. Portfolio includes Amazon, Shopify theme customizations.</p>
+                <div style="display: flex; gap: 0.75rem;">
+                  <span style="background-color: #e8f5e9; color: var(--success-color); padding: 0.3rem 0.8rem; border-radius: 4px; font-size: 0.85rem;">3 weeks</span>
+                  <span style="background-color: #f5f5f5; color: #666; padding: 0.3rem 0.8rem; border-radius: 4px; font-size: 0.85rem;">Submitted 1 day ago</span>
+                </div>
+                <div style="margin-top: 1rem;">
+                  <button class="btn btn-sm btn-primary">Accept Proposal</button>
+                  <button class="btn btn-sm btn-outline-secondary">View Profile</button>
+                  <button class="btn btn-sm btn-outline-secondary">Send Message</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Reviews -->
+            <div class="tab-pane fade" id="reviewsContent" role="tabpanel">
+              <h5 style="font-weight: 700; margin-bottom: 1.5rem;">Reviews Received</h5>
+
+              <div class="review-item">
+                <div class="review-header">
+                  <img src="https://via.placeholder.com/50?text=Reviewer" alt="Reviewer" class="reviewer-avatar">
+                  <div class="reviewer-info">
+                    <h6>Sarah Designer</h6>
+                    <p>Web Designer • E-Commerce Website Redesign</p>
+                  </div>
+                </div>
+                <div class="review-rating">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <strong style="margin-left: 0.5rem; color: var(--dark-text);">5.0</strong>
+                </div>
+                <p style="color: #666; margin: 0;">"Excellent communication and clear project requirements. Very professional and responsive client. Would work with again!"</p>
+              </div>
+
+              <div class="review-item">
+                <div class="review-header">
+                  <img src="https://via.placeholder.com/50?text=Reviewer2" alt="Reviewer" class="reviewer-avatar">
+                  <div class="reviewer-info">
+                    <h6>Content Writer Pro</h6>
+                    <p>Content Writer • Content Writing - Tech Blog</p>
+                  </div>
+                </div>
+                <div class="review-rating">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star-half-alt"></i>
+                  <strong style="margin-left: 0.5rem; color: var(--dark-text);">4.5</strong>
+                </div>
+                <p style="color: #666; margin: 0;">"Great feedback throughout the project. Timely payments. Minor delays in final review but overall satisfied."</p>
+              </div>
+            </div>
+
+            <!-- Payments -->
+            <div class="tab-pane fade" id="paymentsContent" role="tabpanel">
+              <h5 style="font-weight: 700; margin-bottom: 1.5rem;">Payment History</h5>
+
+              <table class="payment-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Project</th>
+                    <th>Provider</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Oct 20, 2024</td>
+                    <td>Logo Design</td>
+                    <td>Creative Designer</td>
+                    <td>$800.00</td>
+                    <td><span class="payment-status status-completed">Completed</span></td>
+                  </tr>
+                  <tr>
+                    <td>Oct 15, 2024</td>
+                    <td>Website Redesign - Milestone 1</td>
+                    <td>Sarah Designer</td>
+                    <td>$1,750.00</td>
+                    <td><span class="payment-status status-completed">Completed</span></td>
+                  </tr>
+                  <tr>
+                    <td>Oct 10, 2024</td>
+                    <td>Content Writing - 5 Posts</td>
+                    <td>Content Writer Pro</td>
+                    <td>$500.00</td>
+                    <td><span class="payment-status status-pending">Pending</span></td>
+                  </tr>
+                  <tr>
+                    <td>Sep 28, 2024</td>
+                    <td>Marketing Strategy</td>
+                    <td>Marketing Expert</td>
+                    <td>$1,200.00</td>
+                    <td><span class="payment-status status-completed">Completed</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-3 footer-section">
+          <h5>ServiceHub</h5>
+          <p>Connecting clients with expert service providers in your local area.</p>
+          <div class="social-icons">
+            <a href="#" class="social-icon" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-icon" title="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-icon" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+          </div>
+        </div>
+        <div class="col-lg-3 footer-section">
+          <h5>For Clients</h5>
+          <ul style="list-style: none; padding: 0;">
+            <li><a href="post-job.html">Post a Job</a></li>
+            <li><a href="jobs-list.html">Find Providers</a></li>
+            <li><a href="dashboard-client.html">Dashboard</a></li>
+            <li><a href="#">How It Works</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-3 footer-section">
+          <h5>For Providers</h5>
+          <ul style="list-style: none; padding: 0;">
+            <li><a href="#">Browse Jobs</a></li>
+            <li><a href="profile-provider.html">Create Profile</a></li>
+            <li><a href="#">Get Started</a></li>
+            <li><a href="#">Support</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-3 footer-section">
+          <h5>Company</h5>
+          <ul style="list-style: none; padding: 0;">
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2024 ServiceHub. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top Button -->
+  <button class="back-to-top" title="Back to top">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+  <!-- Custom JS -->
+  <script src="common.js"></script>
+
+  <script>
+    function switchTab(tabName) {
+      const tabs = {
+        'active': 'active-tab',
+        'completed': 'completed-tab',
+        'proposals': 'proposals-tab',
+        'reviews': 'reviews-tab',
+        'payments': 'payments-tab'
+      };
+
+      if (tabs[tabName]) {
+        const tab = new bootstrap.Tab(document.getElementById(tabs[tabName]));
+        tab.show();
+      }
+    }
+
+    // =================== CLIENT JOBS LOADER ===================
+    async function loadClientJobs() {
+      const activeContainer = document.getElementById('client-jobs-active');
+      const completedContainer = document.getElementById('client-jobs-completed');
+      if (!activeContainer || !completedContainer) return;
+
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        activeContainer.innerHTML = `<div class="alert alert-warning">Please sign in to view your jobs.</div>`;
+        completedContainer.innerHTML = '';
+        return;
+      }
+
+      try {
+        // Get current user from token
+        const verify = await window.FreelanceMarketplace.apiCall('/auth/verify-token', 'GET');
+        if (!verify.success) {
+          activeContainer.innerHTML = `<div class="alert alert-danger">Session expired. Please log in again.</div>`;
+          completedContainer.innerHTML = '';
+          return;
+        }
+        const currentUser = verify.data.user;
+
+        // Loading state
+        activeContainer.innerHTML = `<div class="text-muted">Loading your active jobs...</div>`;
+        completedContainer.innerHTML = `<div class="text-muted">Loading your completed jobs...</div>`;
+
+        // Fetch jobs
+        const res = await window.FreelanceMarketplace.apiCall('/jobs?page=1&pageSize=100', 'GET');
+        if (!res.success) throw new Error(res.error || 'Failed to load jobs');
+
+        const jobs = (res.data && res.data.results) ? res.data.results : [];
+        const myJobs = jobs.filter(j => j.client_id === currentUser.id);
+
+        const actives = myJobs.filter(j => j.status === 'open' || j.status === 'in_progress');
+        const completed = myJobs.filter(j => j.status === 'completed');
+
+        const renderCard = (job) => {
+          const isCompleted = job.status === 'completed';
+          const isClosed = job.status === 'cancelled';
+          let actions = `<button class="btn btn-sm btn-outline-primary" onclick="window.location.href='job-details.html?id=${job.id}'">View Details</button>`;
+          if (!isCompleted) {
+            actions += ` <button class="btn btn-sm btn-outline-secondary" onclick="(async()=>{ if(await window.FreelanceMarketplace.updateJobStatus(${job.id}, 'completed')) loadClientJobs(); })()">Complete</button>`;
+          }
+          if (!isClosed) {
+            actions += ` <button class="btn btn-sm btn-outline-danger" onclick="(async()=>{ if(await window.FreelanceMarketplace.updateJobStatus(${job.id}, 'cancelled')) loadClientJobs(); })()">Close</button>`;
+          }
+
+          return `
+            <div class="job-card-dashboard">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem;">
+                <div>
+                  <div class="job-title-dashboard">${job.title}</div>
+                  <p style="margin:0;color:#666;font-size:0.9rem;">
+                    <i class="fas fa-briefcase"></i> ${job.category || 'General'} • 
+                    <i class="fas fa-map-marker-alt"></i> ${job.location || 'Remote'}
+                  </p>
+                </div>
+                <span class="badge ${isCompleted ? '' : 'badge-active'}" style="background-color:${isCompleted ? 'var(--success-color)' : 'var(--accent-color)'};">${job.status.replace('_',' ')}</span>
+              </div>
+              <div style="display:flex;gap:1rem;margin-bottom:1rem;">
+                <strong style="color:var(--primary-color);">₹${(job.budget_min||0).toLocaleString()}${job.budget_max ? ' - ₹' + job.budget_max.toLocaleString() : ''}</strong>
+                <span style="color:#999;">•</span>
+                <span style="color:#666;">Posted: ${new Date(job.created_at).toLocaleDateString()}</span>
+              </div>
+              <div>
+                ${actions}
+              </div>
+            </div>`;
+        };
+
+        activeContainer.innerHTML = actives.length ? actives.map(renderCard).join('') : `<div class="alert alert-info">No active jobs yet. <a href="post-job.html">Post one now</a>.</div>`;
+        completedContainer.innerHTML = completed.length ? completed.map(renderCard).join('') : `<div class="alert alert-light">No completed jobs yet.</div>`;
+      } catch (err) {
+        console.error(err);
+        activeContainer.innerHTML = `<div class="alert alert-danger">Error loading jobs.</div>`;
+        completedContainer.innerHTML = '';
+      }
+    }
+
+    // Load on page ready
+    // Populate services categories if present
+    if (window.FreelanceMarketplace && window.FreelanceMarketplace.populateServicesCategories) {
+      window.FreelanceMarketplace.populateServicesCategories();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadClientJobs);
+    } else {
+      loadClientJobs();
+    }
+  </script>
+</body>
+</html>

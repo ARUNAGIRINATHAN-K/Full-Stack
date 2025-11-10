@@ -1,0 +1,63 @@
+### Register
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Client One",
+  "email": "client1@example.com",
+  "password": "Password123!",
+  "role": "client"
+}
+
+### Login
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "client1@example.com",
+  "password": "Password123!"
+}
+
+### Verify Token
+GET http://localhost:3000/api/auth/verify-token
+Authorization: Bearer {{token}}
+
+### List Jobs (public)
+GET http://localhost:3000/api/jobs?page=1&pageSize=10&category=&q=
+
+### Create Job (requires client token)
+POST http://localhost:3000/api/jobs
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "House cleaning for 2BHK",
+  "description": "Need a deep clean this weekend.",
+  "category": "House Cleaning",
+  "location": "Bangalore",
+  "budget_min": 1500,
+  "budget_max": 2500
+}
+
+### Get Job Details (public)
+GET http://localhost:3000/api/jobs/1
+
+### Update Job Status (requires client token and ownership)
+PUT http://localhost:3000/api/jobs/1/status
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "status": "completed"
+}
+
+### Apply to a Job (requires provider token)
+POST http://localhost:3000/api/jobs/1/apply
+Authorization: Bearer {{provider_token}}
+Content-Type: application/json
+
+{
+  "cover_letter": "I'd love to help. 6+ years experience in similar projects.",
+  "bid_amount": 2200,
+  "timeline_days": 7
+}
